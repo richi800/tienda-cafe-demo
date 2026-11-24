@@ -14,7 +14,7 @@ tomaron las decisiones técnicas principales.
 | `src/data`           | Datos de ejemplo para desarrollo local y pruebas.                               |
 | `public/brand`       | Recursos de marca servidos tal cual, como el logo (`logo.svg`).                 |
 | `docs`               | Documentación técnica del proyecto.                                             |
-| `.github/workflows`  | Integración continua.                                                           |
+| `.github`            | Workflows de CI y CodeQL, Dependabot y plantilla de pull request.               |
 
 Las pruebas se ubican junto al archivo que prueban, con el sufijo `.test.ts`.
 
@@ -53,5 +53,6 @@ misma forma, de modo que la interfaz se puede construir sin depender de la API.
   de compilación.
 - **Vitest** por su velocidad y compatibilidad nativa con TypeScript y ESM; resuelve el alias `@/`
   directamente desde `tsconfig.json`.
-- **GitHub Actions** ejecuta lint, pruebas y build en cada push y pull request.
+- **GitHub Actions** ejecuta lint, pruebas, build y CodeQL en cada pull request y en cada push a
+  `main`. El flujo completo está en [`ci-cd.md`](ci-cd.md).
 - **Vercel (plan gratuito)** como destino de despliegue, por su integración directa con Next.js.

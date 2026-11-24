@@ -1,19 +1,32 @@
 name: CI
 
+# En las ramas de trabajo la verificación corre solo desde el pull request; en main corre al
+# recibir el merge. Así cada cambio se verifica una sola vez.
 on:
-  push:
   pull_request:
+  push:
+    branches: [main]
+
+# Un push nuevo a la misma rama cancela la ejecución anterior del pull request. En main no se
+# cancela, para que cada commit que llega a producción quede verificado.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
 
 jobs:
   verify:
     name: Lint, pruebas y build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Obtener el código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
