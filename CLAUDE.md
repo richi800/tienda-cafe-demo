@@ -14,6 +14,7 @@ ventas reales.
 - `src/domain`: tipos y reglas de negocio puras, sin React, Next.js ni red. No importa de otras carpetas.
 - `src/lib`: clientes de APIs externas (por ejemplo `src/lib/shopify`) e infraestructura.
 - `src/data`: datos de ejemplo.
+- `public/brand`: logo de la marca (`logo.svg`), proporcionado por el dueño del proyecto.
 - `docs`: documentación técnica (`docs/arquitectura.md`). Actualízala si cambian la estructura,
   el flujo de datos o una decisión técnica.
 - Las pruebas van junto al archivo probado con sufijo `.test.ts` / `.test.tsx`.
@@ -32,6 +33,12 @@ ventas reales.
 - Comentarios en línea solo para explicar el porqué de una decisión, nunca para repetir lo que
   el código ya dice.
 - Texto plano y profesional: sin emojis, iconos, dibujos ni arte ASCII.
+
+## Agentes
+
+- Todo trabajo de interfaz (páginas, componentes, estilos y flujos) se delega al subagente
+  `ui-ux-designer`, definido en `.claude/agents/ui-ux-designer.md`.
+- El subagente mantiene el sistema de diseño en `docs/diseno.md` y sigue las reglas de este archivo.
 
 ## Seguridad y configuración
 

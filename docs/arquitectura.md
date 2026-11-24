@@ -12,6 +12,7 @@ tomaron las decisiones técnicas principales.
 | `src/domain`         | Tipos y reglas de negocio puras, sin React, sin Next.js y sin acceso a red.     |
 | `src/lib`            | Clientes de APIs externas y utilidades de infraestructura (por ejemplo Shopify). |
 | `src/data`           | Datos de ejemplo para desarrollo local y pruebas.                               |
+| `public/brand`       | Recursos de marca servidos tal cual, como el logo (`logo.svg`).                 |
 | `docs`               | Documentación técnica del proyecto.                                             |
 | `.github/workflows`  | Integración continua.                                                           |
 
