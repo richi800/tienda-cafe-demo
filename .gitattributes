@@ -1,0 +1,3 @@
+# Normaliza los finales de línea a LF para que el repositorio sea idéntico en Windows y en la CI.
+* text=auto eol=lf
+*.ico binary
