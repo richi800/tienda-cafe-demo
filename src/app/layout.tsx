@@ -41,9 +41,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es" className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
+        {/*
+          Al recibir foco, el enlace aparece como franja completa sobre fondo cream-50 y el
+          contorno se dibuja hacia dentro: así el foco cherry-700 nunca queda sobre el fondo
+          oscuro del aviso de demostración, donde no alcanzaría el contraste de 3:1.
+        */}
         <a
           href="#contenido"
-          className="sr-only rounded-md bg-cream-50 px-4 py-3 font-semibold text-coffee-900 focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-10"
+          className="sr-only bg-cream-50 font-semibold text-coffee-900 underline underline-offset-4 focus:not-sr-only focus:flex focus:min-h-11 focus:items-center focus:px-gutter focus-visible:-outline-offset-4"
         >
           Saltar al contenido
         </a>
