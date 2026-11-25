@@ -17,7 +17,8 @@ actualizan ambos archivos en el mismo cambio.
 ## Paleta
 
 Solo hay tema claro. Valores y contrastes calculados con la fórmula de luminancia relativa
-de WCAG 2.x.
+de WCAG 2.x (con un script, no a ojo). Texto normal exige 4.5:1; texto grande, bordes de
+componentes e indicadores de foco, 3:1.
 
 | Token        | Valor     | Uso                                                       |
 | ------------ | --------- | --------------------------------------------------------- |
@@ -47,7 +48,9 @@ de WCAG 2.x.
 | `cream-50`         | `cherry-800` | 9.03:1    | AA y AAA                          |
 | `cherry-700`       | `cream-50`   | 6.83:1    | AA (texto y anillo de foco)       |
 | `cherry-700`       | `cream-100`  | 6.12:1    | AA                                |
-| `cream-50`         | `coffee-900` | 15.62:1   | AA y AAA                          |
+| `cream-50`         | `coffee-900` | 15.62:1   | AA y AAA (texto y anillo de foco) |
+| `cream-100`        | `coffee-900` | 13.98:1   | AA y AAA                          |
+| `cherry-700`       | `cream-200`  | 5.16:1    | Apto como anillo de foco          |
 | `cherry-700`       | `coffee-900` | 2.28:1    | No apto: ni texto ni foco         |
 
 Notas:
@@ -57,6 +60,7 @@ Notas:
 - `coffee-500` no se usa sobre `cream-200`.
 - Sobre fondos `coffee-900` (pie de página) el foco usa `cream-50`, porque el acento no alcanza
   el 3:1 exigido a indicadores de foco.
+- El texto del pie de página usa `cream-100` sobre `coffee-900`.
 
 ## Tipografía
 
@@ -131,6 +135,10 @@ El espacio de imagen se reserva siempre con la proporción para evitar saltos de
 - Regla global en `@layer base`: `:focus-visible` con contorno de 2 px `cherry-700` y
   separación de 2 px. Aplica a todo elemento interactivo sin código adicional.
 - Sobre fondos oscuros se cambia el color con `focus-visible:outline-cream-50`.
+- El enlace "Saltar al contenido" es el primer elemento tabulable. Al recibir foco aparece como
+  franja completa de 44 px sobre `cream-50`, por encima del aviso de demostración, y su contorno
+  se dibuja hacia dentro (`focus-visible:-outline-offset-4`). Así el anillo `cherry-700` siempre
+  queda sobre `cream-50` (6.83:1) y nunca sobre el `coffee-900` del aviso (2.28:1).
 - No se elimina el contorno en elementos interactivos. La única excepción es `<main>`, que
   recibe foco programático desde el enlace "Saltar al contenido" y no es interactivo.
 
@@ -148,7 +156,8 @@ Estados de datos por vista (carga, vacío, error y éxito): se definirán con ca
 
 ## Reglas de uso
 
-- Áreas táctiles: `min-h-11` (44 px) en botones y enlaces de navegación.
+- Áreas táctiles: `min-h-11` (44 px) en botones, enlaces de navegación, carrito, enlaces del
+  pie y enlace para saltar al contenido.
 - Una acción `primary` por pantalla.
 - Textos de interfaz en español, breves y orientados a la acción.
 - Imágenes: tamaño reservado (proporción o `width`/`height`), `loading="lazy"` fuera de la
