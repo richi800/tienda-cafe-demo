@@ -21,6 +21,11 @@ export type Product = {
   title: string;
   /** Descripción breve en texto plano. */
   description: string;
+  /**
+   * Notas de sabor del café, en el orden en que se muestran (por ejemplo `["Chocolate", "Nuez"]`).
+   * En Shopify provendrán de un metafield del producto.
+   */
+  flavorNotes: readonly string[];
   /** Precio de venta. */
   price: Money;
   /** Indica si hay existencias disponibles para comprar. */
