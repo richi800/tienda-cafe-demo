@@ -179,11 +179,99 @@ Estados de datos por vista (carga, vacío, error y éxito): se definirán con ca
 | `Footer`      | `src/components/Footer.tsx`      | Aviso de demostración y enlaces del proyecto         |
 | `DemoNotice`  | `src/components/DemoNotice.tsx`  | Franja superior de tienda de demostración            |
 
-### Encabezado
+### Container
 
-- Celular: fila 1 con la marca y el carrito; fila 2 con la navegación.
-- Desde `md`: una sola fila (marca, navegación centrada, carrito).
-- Sin JavaScript de cliente. El orden de tabulación es marca, navegación y carrito en todos los
-  tamaños.
-- El carrito muestra el texto "Carrito" y un contador; su nombre accesible es, por ejemplo,
-  "Carrito, 0 productos".
+- **Propósito:** centrar el contenido y alinear todas las secciones al mismo ancho.
+- **Props:** `children`; `className` opcional para añadir disposición (rejilla, flex).
+- **Variantes y estados:** ninguno.
+- **Celular y escritorio:** ancho completo con margen `--spacing-gutter` (16 px en celular,
+  32 px desde `md`); el ancho máximo es `--container-content` (72rem).
+- **Accesibilidad:** es un `div` sin semántica; la estructura la aportan `header`, `section`,
+  `footer` y `nav` que lo envuelven.
+
+### Button
+
+- **Propósito:** acción o enlace con aspecto de botón.
+- **Props:** `children` (texto que describe la acción); `variant` (`primary` por defecto o
+  `secondary`); `href` opcional.
+- **Variantes:** `primary` (fondo `cherry-700`, texto `cream-50`), solo una por pantalla;
+  `secondary` (borde `coffee-700`, texto `coffee-900`, sin fondo).
+- **Estados:** reposo, hover y activo según la tabla de estados; foco con el contorno global.
+  Aún no tiene estado deshabilitado ni de carga: se añadirán con el carrito.
+- **Celular y escritorio:** alto mínimo de 44 px y relleno lateral de 24 px. Quien lo usa decide
+  el ancho; en la portada ocupa todo el ancho en celular y se ajusta al texto desde `sm`.
+- **Accesibilidad:** con `href` renderiza un enlace de `next/link` (navega); sin `href`, un
+  `<button type="button">` (actúa), para que lectores de pantalla anuncien el rol correcto.
+
+### Header
+
+- **Propósito:** marca, navegación principal y acceso al carrito.
+- **Props:** `logoSrc` (ruta del logo o `null`); `cartCount` opcional (0 por defecto).
+- **Variantes:** con logo (`next/image` de 40 px de alto, `alt="Café Ladera"`) o con el nombre
+  en texto con `--font-display` si no existe `public/brand/logo.svg`.
+- **Estados:** enlace de la página actual con subrayado `cherry-700` y `aria-current="page"`;
+  hover de enlaces y del carrito según la tabla de estados.
+- **Celular:** fila 1 con la marca y el carrito; fila 2 con la navegación, alineada con el borde
+  del contenido. **Desde `md`:** una sola fila (marca, navegación centrada, carrito).
+- **Accesibilidad:** sin JavaScript de cliente. El orden de tabulación es marca, navegación y
+  carrito en todos los tamaños. `nav` con `aria-label="Principal"`. El carrito muestra
+  "Carrito" y un contador oculto a lectores de pantalla; su nombre accesible es, por ejemplo,
+  "Carrito, 0 productos". Todos los enlaces y el carrito miden al menos 44 px de alto.
+
+### Hero
+
+- **Propósito:** presentar la tienda y llevar a la compra con la acción principal.
+- **Props:** ninguna; el texto es fijo de la portada.
+- **Contenido:** antetítulo `cherry-700` en mayúsculas, `h1`, texto destacado y dos botones:
+  "Ver productos" (`primary`, lleva a `#productos`) y "Conocer el origen" (`secondary`).
+- **Celular:** botones apilados a ancho completo. **Escritorio:** botones en fila y texto
+  limitado a `max-w-3xl` para que las líneas no sean demasiado largas.
+- **Accesibilidad:** contiene el único `h1` de la portada y la sección se nombra con él
+  (`aria-labelledby`). Fondo `cream-100`; foco `cherry-700` a 6.12:1.
+
+### Section
+
+- **Propósito:** bloque de página con título y contenido, separado por `--spacing-section`.
+- **Props:** `id` (ancla de navegación), `title` (`h2`), `description` opcional, `tone`
+  (`default` con `cream-50` o `muted` con `cream-100`) y `children`.
+- **Variantes:** `default` y `muted`, que se alternan para separar secciones sin sombras.
+- **Celular y escritorio:** relleno vertical de 64 px en celular y 96 px desde `md`; título
+  `text-3xl` que sube a `text-4xl` desde `md`.
+- **Accesibilidad:** `<section>` nombrada por su `h2` (`aria-labelledby`), por lo que aparece
+  como región en lectores de pantalla. El contenido interno empieza en `h3`.
+
+### ProductCard
+
+- **Propósito:** mostrar un producto en listados y destacados.
+- **Props:** `product` (`Product` del dominio).
+- **Contenido:** espacio de imagen, nombre (`h3`), notas de sabor, descripción, precio con
+  `formatPrice` e insignia "Agotado" si `availableForSale` es falso.
+- **Estados:** disponible y agotado. Aún no es interactiva: el enlace a la ficha y el botón de
+  compra llegarán con el catálogo.
+- **Celular:** una columna; imagen 4:3 (`--aspect-product-compact`) para que cada tarjeta no
+  ocupe toda la pantalla. **Desde `md`:** tres columnas e imagen 4:5 (`--aspect-product`). El
+  precio queda alineado al pie de la tarjeta (`mt-auto`) aunque las descripciones difieran.
+- **Accesibilidad:** `<article>`; el espacio de imagen es decorativo (`aria-hidden`). Las notas
+  son una lista con `aria-label="Notas de sabor"`. El agotado se comunica con texto, no solo con
+  color.
+
+### Footer
+
+- **Propósito:** aviso de proyecto de demostración y enlaces al código y la documentación.
+- **Props:** ninguna.
+- **Celular:** marca, texto y enlaces apilados. **Desde `md`:** texto a la izquierda y enlaces
+  alineados a la derecha.
+- **Accesibilidad:** `<footer>` con `nav aria-label="Proyecto"`. Fondo `coffee-900` con texto
+  `cream-100` (13.98:1) y enlaces `cream-50` subrayados; el foco usa `cream-50` (15.62:1) porque
+  `cherry-700` no alcanza 3:1. Enlaces de 44 px de alto. La marca es un párrafo, no un
+  encabezado, para no alterar la jerarquía de la página.
+
+### DemoNotice
+
+- **Propósito:** recordar en todas las páginas que no se realizan ventas reales.
+- **Props:** ninguna.
+- **Celular y escritorio:** franja `coffee-900` de texto centrado `text-sm`; en 375 px ocupa dos
+  líneas.
+- **Accesibilidad:** texto `cream-50` sobre `coffee-900` (15.62:1) y `role="status"`. No contiene
+  elementos interactivos; el enlace para saltar al contenido aparece por encima de él al recibir
+  foco (ver la sección Foco).
