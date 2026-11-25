@@ -1,4 +1,10 @@
 /**
+ * Aviso de tienda de demostración.
+ *
+ * @packageDocumentation
+ */
+
+/**
  * Aviso visible que indica que el sitio es una tienda de demostración.
  *
  * Se muestra en todas las páginas para que ningún visitante crea que puede
@@ -10,7 +16,7 @@ export function DemoNotice() {
   return (
     <p
       role="status"
-      className="bg-amber-900 px-4 py-2 text-center text-sm font-medium text-amber-50"
+      className="bg-coffee-900 px-4 py-2 text-center text-sm font-medium text-cream-50"
     >
       Tienda de demostración, no se realizan ventas reales.
     </p>
