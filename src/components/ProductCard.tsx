@@ -23,7 +23,8 @@ export type ProductCardProps = {
 
 /**
  * Muestra un producto en una tarjeta blanca: imagen con cinta de descuento, colores, nombre,
- * frase corta, precio y el botón "Ver detalles y comprar".
+ * frase corta, precio y el botón "Ver detalles y comprar" (o "Próximamente", atenuado, mientras
+ * la compra no esté disponible).
  *
  * Mientras no haya fotografías, el espacio de la imagen se reserva con la proporción
  * `--aspect-product` (4:5), o `--aspect-product-compact` (4:3) en celular, para que la tarjeta
@@ -34,6 +35,7 @@ export type ProductCardProps = {
  */
 export function ProductCard({ product, purchaseNoteId }: ProductCardProps) {
   const discount = getDiscountPercentage(product.price, product.compareAtPrice);
+  const purchaseUnavailable = purchaseNoteId !== undefined;
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white text-center">
@@ -82,11 +84,11 @@ export function ProductCard({ product, purchaseNoteId }: ProductCardProps) {
           <ProductPrice product={product} discounted={discount > 0} />
           <Button
             href={`/productos/${product.handle}`}
-            unavailable={purchaseNoteId !== undefined}
+            unavailable={purchaseUnavailable}
             describedBy={purchaseNoteId}
             className="w-full"
           >
-            Ver detalles y comprar
+            {purchaseUnavailable ? "Próximamente" : "Ver detalles y comprar"}
           </Button>
         </div>
       </div>

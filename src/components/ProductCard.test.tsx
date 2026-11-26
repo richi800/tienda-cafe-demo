@@ -81,12 +81,15 @@ describe("ProductCard", () => {
     expect(html).toMatch(/<a[^>]*href="\/productos\/cafe-de-prueba"[^>]*>Ver detalles y comprar<\/a>/);
   });
 
-  it("muestra el botón como no disponible y lo describe con la nota", () => {
+  it("muestra Próximamente, atenuado y descrito por la nota, si la compra no está disponible", () => {
     const html = renderToStaticMarkup(<ProductCard product={product} purchaseNoteId="nota" />);
 
     expect(html).toMatch(
-      /<button type="button" aria-disabled="true" aria-describedby="nota"[^>]*>Ver detalles y comprar<\/button>/,
+      /<button type="button" aria-disabled="true" aria-describedby="nota"[^>]*>Próximamente<\/button>/,
     );
+    expect(html).toMatch(/<button[^>]*class="[^"]*bg-neutral-200[^"]*"/);
+    expect(html).not.toContain("Ver detalles y comprar");
+    expect(html).not.toContain("bg-buy-700");
     expect(html).not.toContain("/productos/");
   });
 

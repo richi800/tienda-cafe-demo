@@ -25,7 +25,8 @@ export type ButtonProps = {
   /**
    * Marca la acción como no disponible todavía. Se renderiza un `<button>` con
    * `aria-disabled="true"` que sigue siendo enfocable, para que lectores de pantalla
-   * anuncien el motivo indicado en `describedBy`. Se ignora `href`.
+   * anuncien el motivo indicado en `describedBy`. Se ignora `href` y la variante: el botón se
+   * ve atenuado (`UNAVAILABLE_CLASSES`), sin hover ni estado activo.
    */
   unavailable?: boolean;
   /** `id` del texto que explica la acción o el motivo de que no esté disponible. */
@@ -45,6 +46,12 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
 };
 
 /**
+ * Aspecto del estado no disponible, igual para todas las variantes. El texto `ink-700` sobre
+ * `neutral-200` (7.06:1) se lee bien aunque el texto sea la única indicación del estado.
+ */
+const UNAVAILABLE_CLASSES = "cursor-not-allowed bg-neutral-200 text-ink-700";
+
+/**
  * Muestra un botón con el estilo de la variante indicada.
  *
  * @param props - Propiedades del botón.
@@ -59,9 +66,8 @@ export function Button({
   describedBy,
   className = "",
 }: ButtonProps) {
-  const classes = `${BASE_CLASSES} ${VARIANT_CLASSES[variant]} ${
-    unavailable ? "cursor-not-allowed" : ""
-  } ${className}`.trim();
+  const stateClasses = unavailable ? UNAVAILABLE_CLASSES : VARIANT_CLASSES[variant];
+  const classes = `${BASE_CLASSES} ${stateClasses} ${className}`.trim();
 
   if (href !== undefined && !unavailable) {
     return (

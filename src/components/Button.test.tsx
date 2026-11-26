@@ -53,4 +53,15 @@ describe("Button", () => {
     expect(html).not.toContain(' disabled=""');
     expect(html).not.toContain("/productos/x");
   });
+
+  it("se ve atenuado y sin hover ni estado activo cuando no está disponible", () => {
+    const html = renderToStaticMarkup(<Button unavailable>Próximamente</Button>);
+    const classes = html.match(/class="([^"]+)"/)?.[1] ?? "";
+
+    expect(classes).toContain("bg-neutral-200");
+    expect(classes).toContain("text-ink-700");
+    expect(classes).toContain("cursor-not-allowed");
+    expect(classes).not.toContain("bg-buy-700");
+    expect(classes).not.toMatch(/(hover|active):/);
+  });
 });

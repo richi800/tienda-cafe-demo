@@ -88,7 +88,8 @@ de componentes e indicadores de foco, 3:1.
 | `white`            | `buy-800`     | 9.09:1    | AA y AAA (hover del botón de compra)      |
 | `white`            | `ink-900`     | 18.42:1   | AA y AAA (texto y anillo de foco)         |
 | `neutral-100`      | `ink-900`     | 16.89:1   | AA y AAA (texto del pie de página)        |
-| `neutral-200`      | `white`       | 1.26:1    | No apto: solo elementos decorativos       |
+| `ink-700`          | `neutral-200` | 7.06:1    | AA y AAA (texto del botón no disponible)  |
+| `neutral-200`      | `white`       | 1.26:1    | No apto: solo elementos decorativos; el botón no disponible se reconoce por su texto, no por el borde |
 | `white`            | `clay-200`    | 1.42:1    | No apto: en el hero el texto es oscuro    |
 | `promo-600`        | `ink-900`     | 3.13:1    | No apto para texto                        |
 | `buy-700`          | `ink-900`     | 2.83:1    | No apto: ni texto ni foco                 |
@@ -218,7 +219,7 @@ El espacio de imagen se reserva siempre con la proporción para evitar saltos de
 | Botón `primary`       | `bg-buy-700 text-white`, píldora | `bg-buy-800`                       | Foco global                            |
 | Botón `secondary`     | Borde `ink-900`, sin fondo, píldora | `bg-neutral-100` / `bg-neutral-200` | Foco global                       |
 | Botón `dark`          | `bg-ink-900 text-white`, píldora | `bg-ink-700`                       | Acción del hero                        |
-| Botón no disponible   | Igual que su variante, `cursor-not-allowed` | —                        | `aria-disabled="true"`, enfocable y descrito por una nota visible |
+| Botón no disponible   | `bg-neutral-200 text-ink-700` (7.06:1), píldora, `cursor-not-allowed`; en tarjetas dice "Próximamente" | Sin cambios: no tiene hover ni estado activo | `aria-disabled="true"`, enfocable y descrito por una nota visible |
 | Precio normal         | `text-buy-700`                  | —                                   | —                                      |
 | Precio de oferta      | `text-sale-700` y precio anterior `ink-500` tachado (`<del>`) | — | Texto oculto "Precio de oferta" y "Precio anterior" |
 | Cinta de descuento    | Banda diagonal `bg-promo-600 text-white`, por ejemplo "-18%" | —     | Lectores de pantalla oyen "18% de descuento" |
@@ -290,7 +291,9 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
   (píldora con borde `ink-900`, sin fondo).
 - **Estados:** reposo, hover y activo según la tabla de estados; foco con el contorno global.
   **No disponible:** `<button aria-disabled="true">` que sigue siendo enfocable y se describe
-  con `aria-describedby`; no navega aunque reciba `href`. Aún no hay estado de carga.
+  con `aria-describedby`; no navega aunque reciba `href`. Ignora la variante y se ve atenuado
+  (`neutral-200` con texto `ink-700`, 7.06:1), sin hover ni estado activo y con cursor
+  `not-allowed`. Aún no hay estado de carga.
 - **Celular y escritorio:** alto mínimo de 44 px y relleno lateral de 24 px. Quien lo usa decide
   el ancho (`w-full` en tarjetas y en el hero en celular).
 - **Accesibilidad:** con `href` renderiza un enlace de `next/link` (navega); sin `href` o no
@@ -465,7 +468,7 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
   esquina superior izquierda con el porcentaje de `getDiscountPercentage`; insignia "Agotado"
   arriba a la derecha; círculos de `colorOptions`; nombre en negritas (`h3`); notas de sabor en
   píldoras si las hay; frase corta; precio; botón `primary` "Ver detalles y comprar" a ancho
-  completo.
+  completo (o "Próximamente" atenuado mientras la compra no esté disponible).
 - **Precio:** sin descuento, `buy-700` en negritas. Con descuento, precio anterior tachado
   `ink-500`, precio de oferta `sale-700` en negritas y la nota "*Reflejado al final de tu
   compra".
@@ -474,10 +477,12 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 - **Botón de compra sin ficha:** decisión: mientras no existan las fichas, el botón es
   `<button aria-disabled="true">` descrito por la nota visible del banner ("Vista previa: la
   ficha de cada producto y la compra se habilitarán próximamente."). Así no se publica un enlace
-  roto, el botón conserva el verde de compra del diseño y sigue siendo enfocable, de modo que los
-  lectores de pantalla anuncian que no está disponible y el motivo. Cuando exista la ficha basta
-  con dejar de pasar `purchaseNoteId` y el botón se convierte en enlace a
-  `/productos/<handle>`.
+  roto y el botón sigue siendo enfocable, de modo que los lectores de pantalla anuncian que no
+  está disponible y el motivo. Se ve deshabilitado (fondo `neutral-200`, texto `ink-700`, sin
+  hover ni estado activo, cursor `not-allowed`) y dice "Próximamente" en lugar de "Ver detalles y
+  comprar", para no prometer una acción que no ocurre al pulsarlo. Cuando exista la ficha basta
+  con dejar de pasar `purchaseNoteId` y el botón vuelve a ser el verde "Ver detalles y comprar",
+  enlazado a `/productos/<handle>`.
 - **Estados:** disponible, en oferta, agotado y compra no disponible (combinables).
 - **Celular:** imagen 4:3. **Desde `md`:** imagen 4:5. Tarjeta blanca con borde `neutral-200` y
   radio `lg`; el bloque de precio y botón queda al pie aunque las descripciones difieran.
