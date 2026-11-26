@@ -9,18 +9,34 @@
 import { useEffect, useState } from "react";
 
 /**
- * Devuelve el `id` de la sección que ocupa la franja central de la pantalla.
+ * Elige la sección activa entre las que están dentro de la banda de lectura.
  *
- * Usa `IntersectionObserver` con un margen que deja solo una banda horizontal cerca del
- * tercio superior, de modo que como máximo una sección cuenta como activa. Si el navegador
- * no ofrece `IntersectionObserver`, se mantiene el valor inicial.
+ * @param ids - Identificadores de las secciones, en el orden de la página.
+ * @param intersecting - Identificadores que hoy cruzan la banda.
+ * @returns El primero de `ids` que esté en la banda, o `null` si ninguno lo está (por
+ * ejemplo, cuando la banda está sobre una sección que no es de catálogo o sobre el pie).
+ */
+export function pickActiveSection(
+  ids: readonly string[],
+  intersecting: ReadonlySet<string>,
+): string | null {
+  return ids.find((id) => intersecting.has(id)) ?? null;
+}
+
+/**
+ * Devuelve el `id` de la sección que ocupa la banda de lectura de la pantalla.
  *
- * @param ids - Identificadores de las secciones, sin `#`.
- * @param initial - Sección activa antes de que el observador informe; por defecto ninguna.
+ * Usa `IntersectionObserver` con un margen que deja solo una franja horizontal cerca del
+ * tercio superior. Lleva la cuenta de qué secciones están en la franja, de modo que cuando
+ * todas la abandonan (porque la persona llegó a otra parte de la página) el resultado vuelve
+ * a `null` en lugar de quedarse con la última. Si el navegador no ofrece
+ * `IntersectionObserver`, se mantiene `null`.
+ *
+ * @param ids - Identificadores de las secciones, sin `#`, en el orden de la página.
  * @returns El `id` activo, o `null`.
  */
-export function useActiveSection(ids: readonly string[], initial: string | null = null) {
-  const [active, setActive] = useState<string | null>(initial);
+export function useActiveSection(ids: readonly string[]): string | null {
+  const [active, setActive] = useState<string | null>(null);
   const key = ids.join(",");
 
   useEffect(() => {
@@ -28,17 +44,24 @@ export function useActiveSection(ids: readonly string[], initial: string | null 
       return;
     }
 
+    const orderedIds = key.split(",");
+    const intersecting = new Set<string>();
+
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.find((entry) => entry.isIntersecting);
-        if (visible) {
-          setActive(visible.target.id);
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            intersecting.add(entry.target.id);
+          } else {
+            intersecting.delete(entry.target.id);
+          }
         }
+        setActive(pickActiveSection(orderedIds, intersecting));
       },
       { rootMargin: "-30% 0px -65% 0px" },
     );
 
-    for (const id of key.split(",")) {
+    for (const id of orderedIds) {
       const element = document.getElementById(id);
       if (element) {
         observer.observe(element);

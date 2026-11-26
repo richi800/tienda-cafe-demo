@@ -425,7 +425,10 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
   entrada se anima solo con `motion-safe:`.
 - **Contenido:** desplegable de categoría hecho con `<details>` (muestra la sección actual) y
   chips píldora con una miniatura reservada de 32 px; el chip de la sección visible se rellena de
-  `ink-900`.
+  `ink-900`. Cuando la zona de lectura está en una sección que no es de catálogo (La diferencia,
+  Suscripción, preguntas frecuentes, Términos o el pie), ningún chip queda marcado ni lleva
+  `aria-current` y el desplegable muestra la opción neutra "Categoría". `useActiveSection` lleva
+  la cuenta de qué secciones observadas cruzan la banda y vuelve a `null` cuando ninguna lo hace.
 - **Celular:** desplegable a la izquierda y chips con desplazamiento horizontal.
 - **Accesibilidad:** `<nav aria-label="Secciones del catálogo">`. El desplegable abre con Enter o
   Espacio, se cierra con Escape (el foco vuelve al resumen) o al elegir una sección. Decisión: se

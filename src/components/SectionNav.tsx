@@ -107,8 +107,15 @@ function CategoryDropdown({
   return (
     <details ref={detailsRef} onKeyDown={handleKeyDown} className="group relative shrink-0">
       <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-pill border border-ink-900 px-4 text-sm font-semibold text-ink-900">
-        <span className="sr-only">Categoría: </span>
-        {currentLabel ?? "Categoría"}
+        {/* Sin sección de catálogo a la vista se muestra la opción neutra "Categoría". */}
+        {currentLabel === undefined ? (
+          "Categoría"
+        ) : (
+          <>
+            <span className="sr-only">Categoría: </span>
+            {currentLabel}
+          </>
+        )}
         <ChevronDownIcon className="size-4 group-open:rotate-180 motion-safe:transition-transform" />
       </summary>
       <ul className="absolute top-full left-0 mt-2 w-56 rounded-md border border-neutral-200 bg-white py-2 shadow-overlay">

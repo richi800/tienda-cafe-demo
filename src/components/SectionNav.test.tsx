@@ -27,6 +27,11 @@ beforeEach(() => {
   const hero = document.createElement("section");
   hero.id = "inicio";
   document.body.append(hero);
+  for (const section of CATALOG_SECTIONS) {
+    const element = document.createElement("section");
+    element.id = section.id;
+    document.body.append(element);
+  }
 });
 
 afterEach(() => {
@@ -51,6 +56,21 @@ function scrollPastHero() {
           boundingClientRect: { top: -400 } as DOMRectReadOnly,
         } as IntersectionObserverEntry,
       ],
+      {} as IntersectionObserver,
+    );
+  });
+}
+
+/** Simula que una sección de catálogo entra o sale de la banda de lectura. */
+function crossSection(id: string, isIntersecting: boolean) {
+  const observer = observers.find((item) => item.targets.some((target) => target.id === id));
+  const target = observer?.targets.find((item) => item.id === id);
+  if (!observer || !target) {
+    throw new Error(`No se observó la sección ${id}`);
+  }
+  act(() => {
+    observer.callback(
+      [{ target, isIntersecting } as unknown as IntersectionObserverEntry],
       {} as IntersectionObserver,
     );
   });
@@ -95,5 +115,21 @@ describe("SectionNav", () => {
 
     expect(details.open).toBe(false);
     expect(document.activeElement).toBe(summary);
+  });
+
+  it("marca el chip de la categoría visible y lo desmarca al salir del catálogo", () => {
+    render(<SectionNav sections={CATALOG_SECTIONS} triggerId="inicio" />);
+    scrollPastHero();
+    const summary = document.querySelector("summary");
+
+    crossSection("accesorios", true);
+    const chip = screen.getAllByRole("link", { name: "Accesorios" })[1];
+    expect(chip?.getAttribute("aria-current")).toBe("true");
+    expect(summary?.textContent).toBe("Categoría: Accesorios");
+
+    // La banda llega a Nosotros, Suscripción, la FAQ o el pie, que no son categorías.
+    crossSection("accesorios", false);
+    expect(document.querySelector('[aria-current]')).toBeNull();
+    expect(summary?.textContent).toBe("Categoría");
   });
 });
