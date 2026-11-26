@@ -64,6 +64,10 @@ Los avisos de la franja superior siguen el mismo patrón: el tipo `Announcement`
 constantes de las promociones (umbral de envío gratis y descuento de suscripción) que reutiliza
 la sección de términos de la portada.
 
+Las preguntas frecuentes siguen el mismo patrón: tipo `FaqItem` en `src/domain/faq.ts` y datos en
+`src/data/faqs.ts`. Las secciones a las que saltan el hero y el sub-header se definen una sola vez
+en `src/components/store-sections.ts`, igual que el menú principal en `main-navigation.ts`.
+
 ### Logo de la marca
 
 El layout raíz llama a `resolveBrandLogo` (`src/lib/brand/logo.ts`), que comprueba con
@@ -84,14 +88,18 @@ siguiente build. La función de existencia se inyecta para probarla sin tocar el
 - **TypeScript estricto** con `noUncheckedIndexedAccess` para detectar accesos inseguros en tiempo
   de compilación.
 - **Vitest** por su velocidad y compatibilidad nativa con TypeScript y ESM; resuelve el alias `@/`
-  directamente desde `tsconfig.json`. Los componentes se prueban en el entorno `node` con
-  `renderToStaticMarkup` de `react-dom/server`, sin jsdom ni Testing Library. Basta con revisar
-  el HTML generado porque casi todo es Server Component.
-- **Componentes de cliente mínimos.** Solo `AnnouncementBar` (aviso actual) y `MobileMenu`
-  (abierto o cerrado) llevan `"use client"`; el `Header` sigue siendo Server Component y
-  renderiza `MobileMenu` como hoja interactiva. Sus pruebas revisan el estado inicial y la
-  lógica pura extraída (`getWrappedIndex`); probar la interacción (clics, Escape) requeriría
-  añadir jsdom y Testing Library, lo que se decidirá cuando el carrito tenga estado.
+  directamente desde `tsconfig.json`. El entorno por defecto es `node`: los componentes sin
+  estado se prueban con `renderToStaticMarkup` de `react-dom/server` revisando el HTML.
+- **jsdom y Testing Library solo donde hay interacción.** Los archivos que prueban clics, teclado
+  o foco (`MobileMenu.interaction.test.tsx`, `Faq`, `SectionNav`, `HelpWidget`) declaran
+  `// @vitest-environment jsdom` al inicio y usan `@testing-library/react` y `user-event`. Así el
+  resto de la suite sigue en `node`, que es más rápido. `IntersectionObserver` se simula en la
+  prueba cuando hace falta.
+- **Componentes de cliente mínimos.** Llevan `"use client"` solo las hojas interactivas:
+  `AnnouncementBar`, `MobileMenu`, `HeroTabs` y `SectionNav` (sección visible con
+  `useActiveSection`), `Faq` (Mostrar más) y `HelpWidget` (diálogo). `Header`, `Hero`,
+  `CategorySection`, `ProductCard` y `Footer` siguen siendo Server Components. La portada
+  sigue prerenderizándose como contenido estático.
 - **Sistema de diseño con tokens de Tailwind CSS v4.** Colores, radios, espacios semánticos y
   tipografías se definen en `@theme` de `src/app/globals.css`, con los colores por defecto
   desactivados. La referencia completa está en [`diseno.md`](diseno.md).

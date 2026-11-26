@@ -76,11 +76,12 @@
 
 @layer base {
   /*
-   * El sub-header fijo mide 64 px: el relleno evita que tape el elemento enfocado o el
-   * destino de un ancla (WCAG 2.4.11).
+   * El sub-header fijo mide 64 px y el botón de ayuda ocupa la esquina inferior: el relleno
+   * evita que tapen el elemento enfocado o el destino de un ancla (WCAG 2.4.11).
    */
   html {
     scroll-padding-top: 5rem;
+    scroll-padding-bottom: 5rem;
   }
 
   @media (prefers-reduced-motion: no-preference) {

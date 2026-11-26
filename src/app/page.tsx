@@ -1,11 +1,15 @@
 import { CategorySection } from "@/components/CategorySection";
-import { Hero } from "@/components/Hero";
+import { Faq } from "@/components/Faq";
+import { Hero, HERO_ID } from "@/components/Hero";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Section } from "@/components/Section";
+import { SectionNav } from "@/components/SectionNav";
+import { CATALOG_SECTIONS } from "@/components/store-sections";
 import {
   FREE_SHIPPING_THRESHOLD_MXN,
   SUBSCRIPTION_DISCOUNT_PERCENT,
 } from "@/data/announcements";
+import { faqs } from "@/data/faqs";
 import { sampleProducts } from "@/data/sample-products";
 import { getDiscountPercentage, type Product, type ProductCategory } from "@/domain/product";
 
@@ -24,29 +28,6 @@ type CatalogSection = {
  */
 const PURCHASE_NOTE =
   "Vista previa: la ficha de cada producto y la compra se habilitarán próximamente.";
-
-/** Pregunta frecuente de la sección de ayuda. */
-type HelpTopic = {
-  question: string;
-  answer: string;
-};
-
-const HELP_TOPICS: readonly HelpTopic[] = [
-  {
-    question: "¿Cuánto tarda mi pedido?",
-    answer: "Enviamos a todo México; tu pedido llega en 2 a 4 días hábiles.",
-  },
-  {
-    question: "¿Cómo se tuesta el café?",
-    answer:
-      "Tostamos en pequeños lotes cada semana con grano de fincas de Chiapas, Veracruz y Oaxaca.",
-  },
-  {
-    question: "¿Puedo comprar de verdad?",
-    answer:
-      "No. Café Ladera es una marca ficticia y esta tienda es una demostración: no se realizan cobros.",
-  },
-];
 
 /** Punto de la propuesta de valor de la sección "La diferencia". */
 type Differentiator = {
@@ -87,9 +68,10 @@ function productsIn(category: ProductCategory) {
 }
 
 /**
- * Portada de la tienda: presentación, promociones, una sección por categoría,
- * suscripción, ayuda y condiciones de las promociones. Cada sección es el destino de
- * un enlace del encabezado.
+ * Portada de la tienda: hero, sub-header fijo, promociones y una sección por categoría,
+ * la diferencia, suscripción, preguntas frecuentes con contacto y condiciones de las
+ * promociones. Cada sección es el destino de un enlace del encabezado, del hero, del
+ * sub-header o del pie.
  *
  * @returns El contenido de la página de inicio.
  */
@@ -129,6 +111,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <SectionNav sections={CATALOG_SECTIONS} triggerId={HERO_ID} />
 
       {catalog.map((section) => (
         <CategorySection
@@ -172,17 +155,21 @@ export default function HomePage() {
         </p>
       </Section>
 
-      <Section id="ayuda" title="¿Necesitas ayuda?" tone="muted">
-        <dl className="grid gap-8 md:grid-cols-3 md:gap-12">
-          {HELP_TOPICS.map((topic) => (
-            <div key={topic.question} className="border-t-2 border-ink-900 pt-4">
-              <dt className="text-xl font-semibold tracking-tight text-ink-900">
-                {topic.question}
-              </dt>
-              <dd className="mt-2 text-ink-700">{topic.answer}</dd>
-            </div>
-          ))}
-        </dl>
+      <Section
+        id="ayuda"
+        title="¿Necesitas ayuda?"
+        description="Respuestas rápidas sobre café, cafeteras, envíos y esta tienda de demostración."
+        tone="muted"
+      >
+        <Faq items={faqs} />
+
+        <div id="contacto" className="mt-12 max-w-2xl border-t-2 border-ink-900 pt-4">
+          <h3 className="text-xl font-semibold tracking-tight text-ink-900">Contacto</h3>
+          <p className="mt-2 text-ink-700">
+            En una tienda real aquí encontrarías el correo y el teléfono de atención. Como esta es
+            una demostración, no hay un canal de contacto activo.
+          </p>
+        </div>
       </Section>
 
       <Section id="terminos" title="Términos y condiciones">

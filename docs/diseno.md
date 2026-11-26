@@ -36,6 +36,9 @@ Solo hay tema claro.
 | `neutral-200` | `#E7E5E4` | Bordes decorativos (separadores) y espacio reservado de imágenes |
 | `neutral-500` | `#8A8A8A` | Bordes de controles de formulario (3:1); nunca texto             |
 | `sand-100`    | `#F3EBDF` | Franja de avisos (`AnnouncementBar`)                             |
+| `clay-200`    | `#EAD5C3` | Bloque de color del hero                                         |
+| `espresso-900` | `#1F1713` | Inicio del degradado de los banners de categoría                |
+| `espresso-700` | `#4A382D` | Final del degradado de los banners de categoría                 |
 | `ink-900`     | `#141414` | Texto principal, anillo de foco, fondo del pie y del aviso de demostración |
 | `ink-700`     | `#4A4A4A` | Texto secundario y enlaces de navegación en reposo               |
 | `ink-500`     | `#6B6B6B` | Metadatos y precio anterior tachado                              |
@@ -56,6 +59,15 @@ de componentes e indicadores de foco, 3:1.
 | `ink-900`          | `white`       | 18.42:1   | AA y AAA (texto y anillo de foco)         |
 | `ink-900`          | `neutral-100` | 16.89:1   | AA y AAA (texto y anillo de foco)         |
 | `ink-900`          | `sand-100`    | 15.58:1   | AA y AAA (texto y anillo de foco)         |
+| `ink-900`          | `clay-200`    | 12.99:1   | AA y AAA (titular, botón negro y foco)    |
+| `ink-700`          | `clay-200`    | 6.25:1    | AA (categoría y subtítulo del hero)       |
+| `white`            | `espresso-900` | 17.64:1  | AA y AAA (título del banner)              |
+| `white`            | `espresso-700` | 11.08:1  | AA y AAA                                  |
+| `white`            | trama `#58483E` | 8.71:1  | AA y AAA (punto más claro de la textura)  |
+| `neutral-100`      | `espresso-700` | 10.16:1  | AA y AAA (descripción y nota del banner)  |
+| `neutral-100`      | trama `#58483E` | 7.98:1  | AA y AAA                                  |
+| `neutral-500`      | `ink-900`     | 5.34:1    | Bordes en el pie y separadores "/"        |
+| `white`            | `ink-700`     | 8.86:1    | AA y AAA (hover del botón negro)          |
 | `ink-700`          | `white`       | 8.86:1    | AA y AAA                                  |
 | `ink-700`          | `neutral-100` | 8.12:1    | AA y AAA                                  |
 | `ink-700`          | `sand-100`    | 7.49:1    | AA y AAA                                  |
@@ -77,6 +89,7 @@ de componentes e indicadores de foco, 3:1.
 | `white`            | `ink-900`     | 18.42:1   | AA y AAA (texto y anillo de foco)         |
 | `neutral-100`      | `ink-900`     | 16.89:1   | AA y AAA (texto del pie de página)        |
 | `neutral-200`      | `white`       | 1.26:1    | No apto: solo elementos decorativos       |
+| `white`            | `clay-200`    | 1.42:1    | No apto: en el hero el texto es oscuro    |
 | `promo-600`        | `ink-900`     | 3.13:1    | No apto para texto                        |
 | `buy-700`          | `ink-900`     | 2.83:1    | No apto: ni texto ni foco                 |
 
@@ -167,8 +180,23 @@ Es la única elevación. La separación entre superficies se logra con fondos al
 | -------------------------- | ----- | ------------------------------------------------ |
 | `--aspect-product`         | 4 / 5 | Imagen de producto en rejillas de varias columnas |
 | `--aspect-product-compact` | 4 / 3 | Imagen de producto en celular (una columna)       |
+| `--aspect-hero`            | 1 / 1 | Imagen de ambiente del hero desde `md`            |
+| `--aspect-hero-compact`    | 4 / 3 | Imagen de ambiente del hero en celular            |
 
 El espacio de imagen se reserva siempre con la proporción para evitar saltos de diseño.
+
+## Texturas
+
+- `banner-texture` (utilidad en `globals.css`): degradado a 135 grados de `espresso-900` a
+  `espresso-700` con una trama de puntos blancos al 8 % cada 14 px. Solo CSS, sin imágenes.
+  El contraste se midió contra el punto más claro de la trama (`#58483E`).
+
+## Desplazamiento
+
+- `html` tiene `scroll-padding-top: 5rem` y `scroll-padding-bottom: 5rem` para que el sub-header
+  fijo y el botón de ayuda no tapen el destino de un ancla ni el elemento enfocado (WCAG 2.4.11).
+- El desplazamiento suave (`scroll-behavior: smooth`) solo se activa con
+  `prefers-reduced-motion: no-preference`. Las transiciones de movimiento usan `motion-safe:`.
 
 ## Foco
 
@@ -189,9 +217,12 @@ El espacio de imagen se reserva siempre con la proporción para evitar saltos de
 | --------------------- | ------------------------------- | ----------------------------------- | -------------------------------------- |
 | Botón `primary`       | `bg-buy-700 text-white`, píldora | `bg-buy-800`                       | Foco global                            |
 | Botón `secondary`     | Borde `ink-900`, sin fondo, píldora | `bg-neutral-100` / `bg-neutral-200` | Foco global                       |
+| Botón `dark`          | `bg-ink-900 text-white`, píldora | `bg-ink-700`                       | Acción del hero                        |
+| Botón no disponible   | Igual que su variante, `cursor-not-allowed` | —                        | `aria-disabled="true"`, enfocable y descrito por una nota visible |
 | Precio normal         | `text-buy-700`                  | —                                   | —                                      |
 | Precio de oferta      | `text-sale-700` y precio anterior `ink-500` tachado (`<del>`) | — | Texto oculto "Precio de oferta" y "Precio anterior" |
-| Insignia de descuento | `bg-promo-600 text-white`, por ejemplo "-18%" | —                     | Lectores de pantalla oyen "18% de descuento" |
+| Cinta de descuento    | Banda diagonal `bg-promo-600 text-white`, por ejemplo "-18%" | —     | Lectores de pantalla oyen "18% de descuento" |
+| Pestaña o chip activo | Subrayado `ink-900` (pestaña) o píldora `ink-900` con texto `white` (chip) | — | `aria-current="true"` solo si la sección está a la vista |
 | Producto agotado      | Insignia `ink-900` / `white` con el texto "Agotado" | —               | El estado se comunica con texto, no solo con color |
 
 Estados de datos por vista (carga, vacío, error y éxito): se definirán con cada módulo
@@ -202,7 +233,8 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 
 - Áreas táctiles: `min-h-11` (44 px) en botones, enlaces de navegación, botones de icono
   (`size-11`), enlaces del pie y enlace para saltar al contenido.
-- Una acción `primary` por pantalla.
+- Una acción `primary` por pantalla. Excepción: en listados de producto cada tarjeta lleva su
+  botón de compra verde, porque cada uno es la acción principal de su tarjeta.
 - Rojo, azul y verde solo con su significado (promoción, oferta, compra). No se usan como
   decoración.
 - Textos de interfaz en español, breves y orientados a la acción.
@@ -217,18 +249,24 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 | Componente    | Archivo                          | Descripción                                          |
 | ------------- | -------------------------------- | ---------------------------------------------------- |
 | `Container`   | `src/components/Container.tsx`   | Ancho máximo y márgenes laterales                    |
-| `Button`      | `src/components/Button.tsx`      | Píldora `primary` (compra) o `secondary`; enlace si recibe `href` |
+| `Button`      | `src/components/Button.tsx`      | Píldora `primary` (compra), `secondary` o `dark`; enlace si recibe `href`; estado no disponible |
 | `AnnouncementBar` | `src/components/AnnouncementBar.tsx` | Franja de avisos con flechas, "Compra ahora" y términos |
 | `Header`      | `src/components/Header.tsx`      | Marca, menú por categorías e iconos (favoritos, búsqueda, cuenta, carrito) |
 | `MobileMenu`  | `src/components/MobileMenu.tsx`  | Menú colapsable por debajo de `xl`                   |
 | `IconButton`  | `src/components/IconButton.tsx`  | Botón o enlace circular de 44 px con icono y contador opcional |
-| Iconos        | `src/components/icons.tsx`       | SVG propios en línea: corazón, lupa, persona, bolsa, menú, cerrar y flechas |
+| Iconos        | `src/components/icons.tsx`       | SVG propios en línea: interfaz (corazón, lupa, persona, bolsa, menú, cerrar, flechas), secciones (grano, cafetera, taza, hoja, etiqueta), ayuda y redes genéricas |
 | `Breadcrumb`  | `src/components/Breadcrumb.tsx`  | Ruta de navegación para páginas interiores           |
-| `Hero`        | `src/components/Hero.tsx`        | Presentación de la portada con el `h1`               |
+| `Hero`        | `src/components/Hero.tsx`        | Hero partido con el `h1` y la barra de pestañas      |
+| `HeroTabs`    | `src/components/HeroTabs.tsx`    | Barra "Filtro" con pestañas a las secciones          |
+| `SectionNav`  | `src/components/SectionNav.tsx`  | Sub-header fijo con desplegable y chips de categoría |
+| `SectionIcon` | `src/components/SectionIcon.tsx` | Icono de cada sección (`store-sections.ts`)          |
+| `CategorySection` | `src/components/CategorySection.tsx` | Banner oscuro con título y tarjetas montadas encima |
 | `Section`     | `src/components/Section.tsx`     | Sección con `h2`, descripción y fondo `default`/`muted` |
-| `ProductCard` | `src/components/ProductCard.tsx` | Tarjeta con imagen, notas, precio, descuento y disponibilidad |
+| `ProductCard` | `src/components/ProductCard.tsx` | Tarjeta blanca con cinta de descuento, colores, precio y botón de compra |
 | `ProductGrid` | `src/components/ProductGrid.tsx` | Rejilla de `ProductCard` con estado vacío             |
-| `Footer`      | `src/components/Footer.tsx`      | Aviso de demostración y enlaces del proyecto         |
+| `Faq`         | `src/components/Faq.tsx`         | Acordeón `details`/`summary` con "Mostrar más"      |
+| `Footer`      | `src/components/Footer.tsx`      | Pagos de demostración, redes, país, enlaces, volver arriba y aviso |
+| `HelpWidget`  | `src/components/HelpWidget.tsx`  | Botón flotante "¿Te ayudamos?" con diálogo de accesos |
 | `DemoNotice`  | `src/components/DemoNotice.tsx`  | Franja superior de tienda de demostración            |
 
 ### Container
@@ -244,16 +282,19 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 ### Button
 
 - **Propósito:** acción o enlace con aspecto de botón.
-- **Props:** `children` (texto que describe la acción); `variant` (`primary` por defecto o
-  `secondary`); `href` opcional.
-- **Variantes:** `primary` (píldora `buy-700`, texto `white`), solo una por pantalla;
-  `secondary` (píldora con borde `ink-900`, texto `ink-900`, sin fondo).
+- **Props:** `children`; `variant` (`primary` por defecto, `secondary` o `dark`); `href`
+  opcional; `unavailable` y `describedBy` para acciones que aún no existen; `className` para
+  el ancho.
+- **Variantes:** `primary` (píldora `buy-700`, texto `white`) para comprar; `dark` (píldora
+  `ink-900`, texto `white`) para la acción de un bloque editorial como el hero; `secondary`
+  (píldora con borde `ink-900`, sin fondo).
 - **Estados:** reposo, hover y activo según la tabla de estados; foco con el contorno global.
-  Aún no tiene estado deshabilitado ni de carga: se añadirán con el carrito.
+  **No disponible:** `<button aria-disabled="true">` que sigue siendo enfocable y se describe
+  con `aria-describedby`; no navega aunque reciba `href`. Aún no hay estado de carga.
 - **Celular y escritorio:** alto mínimo de 44 px y relleno lateral de 24 px. Quien lo usa decide
-  el ancho; en la portada ocupa todo el ancho en celular y se ajusta al texto desde `sm`.
-- **Accesibilidad:** con `href` renderiza un enlace de `next/link` (navega); sin `href`, un
-  `<button type="button">` (actúa), para que lectores de pantalla anuncien el rol correcto.
+  el ancho (`w-full` en tarjetas y en el hero en celular).
+- **Accesibilidad:** con `href` renderiza un enlace de `next/link` (navega); sin `href` o no
+  disponible, un `<button type="button">` (actúa), para que se anuncie el rol correcto.
 
 ### AnnouncementBar
 
@@ -342,14 +383,68 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 
 ### Hero
 
-- **Propósito:** presentar la tienda y llevar a la compra con la acción principal.
-- **Props:** ninguna; el texto es fijo de la portada.
-- **Contenido:** antetítulo `ink-700` en mayúsculas, `h1`, texto destacado y dos botones:
-  "Ver café" (`primary`, lleva a `#cafe`) y "Ver cafeteras" (`secondary`, lleva a `#cafeteras`).
-- **Celular:** botones apilados a ancho completo. **Escritorio:** botones en fila y texto
-  limitado a `max-w-3xl` para que las líneas no sean demasiado largas.
-- **Accesibilidad:** contiene el único `h1` de la portada y la sección se nombra con él
-  (`aria-labelledby`). Fondo `neutral-100`.
+- **Propósito:** presentar la novedad de la tienda y repartir a las secciones.
+- **Props:** ninguna; el texto es fijo. Exporta `HERO_ID` (`inicio`), que observa el sub-header.
+- **Contenido:** bloque `clay-200` con categoría pequeña en mayúsculas (`ink-700`), titular
+  en negritas (`h1`), subtítulo de producto nuevo y botón `dark` "Conoce la Ladera Pro"
+  (a `#cafeteras`); a la derecha, el espacio de la imagen de ambiente en `neutral-200`.
+- **Celular:** texto arriba e imagen abajo con proporción 4:3 (`--aspect-hero-compact`); botón a
+  ancho completo. **Desde `md`:** dos columnas iguales a todo el ancho de la ventana; la imagen
+  es cuadrada (`--aspect-hero`) y el bloque de color se estira a su altura.
+- **Barra de pestañas:** `HeroTabs` dentro de `Container`, subida 32 px (`-mt-8`) para montarse
+  sobre el borde inferior del hero.
+- **Accesibilidad:** único `h1` de la portada; la sección se nombra con él. La imagen es
+  decorativa (`aria-hidden`) mientras no haya foto.
+
+### HeroTabs
+
+- **Propósito:** saltar desde el hero a Café, Cafeteras, Accesorios y La diferencia.
+- **Props:** `sections` (`SectionLink[]` de `store-sections.ts`).
+- **Contenido:** "Filtro" en negritas con separador vertical `neutral-200` y una pestaña por
+  sección con icono de 20 px. Barra blanca con borde `neutral-200`, radio `lg` y
+  `--shadow-overlay`.
+- **Estados:** la pestaña de la sección visible lleva subrayado `ink-900` de 2 px. Antes de que
+  haya una sección a la vista se subraya la primera solo de forma visual.
+- **Celular:** "Filtro" queda fijo y las pestañas se desplazan en horizontal. **Escritorio:** todas
+  caben en una fila.
+- **Accesibilidad:** decisión: `<nav aria-label="Filtrar por categoría">` con enlaces a anclas y
+  no `role="tablist"`, porque desplazan la página en lugar de cambiar paneles. La sección visible
+  se marca con `aria-current="true"`; el subrayado inicial de la primera no lo lleva, para no
+  anunciar una ubicación falsa. El contorno de foco se dibuja hacia dentro porque la lista recorta
+  lo que sobresale. Pestañas de 56 px de alto.
+
+### SectionNav
+
+- **Propósito:** sub-header que permite cambiar de sección sin volver arriba.
+- **Props:** `sections` (Promociones, Café, Cafeteras y Accesorios) y `triggerId`.
+- **Comportamiento:** fijo arriba; aparece cuando el hero sale por el borde superior
+  (`IntersectionObserver`). Mientras está oculto queda fuera de la pantalla y con `inert`. La
+  entrada se anima solo con `motion-safe:`.
+- **Contenido:** desplegable de categoría hecho con `<details>` (muestra la sección actual) y
+  chips píldora con una miniatura reservada de 32 px; el chip de la sección visible se rellena de
+  `ink-900`.
+- **Celular:** desplegable a la izquierda y chips con desplazamiento horizontal.
+- **Accesibilidad:** `<nav aria-label="Secciones del catálogo">`. El desplegable abre con Enter o
+  Espacio, se cierra con Escape (el foco vuelve al resumen) o al elegir una sección. Decisión: se
+  usa `<details>` con enlaces y no un `<select>` que navegue al cambiar, porque con flechas del
+  teclado algunos navegadores disparan el cambio en cada opción. `scroll-padding-top` evita que
+  la barra tape el destino o el foco.
+
+### SectionIcon
+
+- Traduce el nombre de icono de `store-sections.ts` (`bean`, `machine`, `cup`, `leaf`, `tag`)
+  a su SVG decorativo. Lo usan `HeroTabs` y `SectionNav`.
+
+### CategorySection
+
+- **Propósito:** sección de catálogo con presencia de boutique.
+- **Props:** `id`, `title`, `description`, `note` opcional (recibe el id `<id>-nota`) y
+  `children`.
+- **Contenido:** banner `banner-texture` con título `h2` en mayúsculas blancas, descripción y
+  nota en `neutral-100`; debajo, el contenido sube 96 px (112 px desde `md`) para que las
+  tarjetas blancas se monten sobre la franja oscura.
+- **Accesibilidad:** `<section>` nombrada por su `h2`. Las mayúsculas son de CSS, así que los
+  lectores de pantalla leen el texto normal.
 
 ### Section
 
@@ -364,41 +459,84 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 
 ### ProductCard
 
-- **Propósito:** mostrar un producto en listados y destacados.
-- **Props:** `product` (`Product` del dominio).
-- **Contenido:** espacio de imagen `neutral-200` con insignias superpuestas (descuento y
-  agotado), nombre (`h3`), notas de sabor en píldoras (solo si el producto tiene), descripción
-  y precio.
-- **Precio:** sin descuento, en `buy-700`. Con descuento real (`getDiscountPercentage` mayor que
-  0), precio vigente en `sale-700` seguido del precio anterior tachado en `ink-500`.
-- **Estados:** disponible, en oferta y agotado (combinables). Aún no es interactiva: el enlace a
-  la ficha y el botón de compra llegarán con el catálogo.
-- **Celular:** imagen 4:3 (`--aspect-product-compact`). **Desde `md`:** imagen 4:5
-  (`--aspect-product`). El precio queda alineado al pie de la tarjeta (`mt-auto`) aunque las
-  descripciones difieran. Tarjeta sin borde ni fondo: el blanco de la página hace de marco.
-- **Accesibilidad:** `<article>`; el espacio de imagen es decorativo (`aria-hidden`). Las notas
-  son una lista con `aria-label="Notas de sabor"`. La insignia "-18%" se lee como "18% de
-  descuento"; el precio anterior usa `<del>` y textos ocultos "Precio de oferta:" y "Precio
-  anterior:" para no depender del color ni del tachado.
+- **Propósito:** mostrar un producto en listados.
+- **Props:** `product` (`Product` del dominio) y `purchaseNoteId` opcional.
+- **Contenido (centrado):** imagen reservada `neutral-100`; cinta diagonal `promo-600` en la
+  esquina superior izquierda con el porcentaje de `getDiscountPercentage`; insignia "Agotado"
+  arriba a la derecha; círculos de `colorOptions`; nombre en negritas (`h3`); notas de sabor en
+  píldoras si las hay; frase corta; precio; botón `primary` "Ver detalles y comprar" a ancho
+  completo.
+- **Precio:** sin descuento, `buy-700` en negritas. Con descuento, precio anterior tachado
+  `ink-500`, precio de oferta `sale-700` en negritas y la nota "*Reflejado al final de tu
+  compra".
+- **Colores:** círculos de 20 px con borde `neutral-500` (3:1) para que se distingan los tonos
+  claros. El color viene del producto, no de la paleta: es la única excepción a los tokens.
+- **Botón de compra sin ficha:** decisión: mientras no existan las fichas, el botón es
+  `<button aria-disabled="true">` descrito por la nota visible del banner ("Vista previa: la
+  ficha de cada producto y la compra se habilitarán próximamente."). Así no se publica un enlace
+  roto, el botón conserva el verde de compra del diseño y sigue siendo enfocable, de modo que los
+  lectores de pantalla anuncian que no está disponible y el motivo. Cuando exista la ficha basta
+  con dejar de pasar `purchaseNoteId` y el botón se convierte en enlace a
+  `/productos/<handle>`.
+- **Estados:** disponible, en oferta, agotado y compra no disponible (combinables).
+- **Celular:** imagen 4:3. **Desde `md`:** imagen 4:5. Tarjeta blanca con borde `neutral-200` y
+  radio `lg`; el bloque de precio y botón queda al pie aunque las descripciones difieran.
+- **Accesibilidad:** `<article>`; imagen decorativa. La cinta "-18%" se lee "18% de descuento";
+  los precios llevan textos ocultos "Precio anterior:" y "Precio de oferta:"; los colores son una
+  lista `aria-label="Colores disponibles"` con el nombre de cada color en texto oculto (y en
+  `title` para quien usa ratón). El asterisco de la nota se oculta.
 
 ### ProductGrid
 
 - **Propósito:** listar productos con la misma rejilla en toda la tienda.
-- **Props:** `products`; `emptyMessage` opcional.
-- **Estados:** con productos (lista) y vacío (párrafo con el mensaje, sin lista vacía).
-- **Celular:** una columna. **Desde `sm`:** dos columnas. **Desde `lg`:** tres columnas.
-  Separación de 24 px entre columnas y 48 px entre filas.
+- **Props:** `products`; `emptyMessage` y `purchaseNoteId` opcionales.
+- **Estados:** con productos (lista) y vacío (tarjeta blanca con el mensaje, sin lista vacía).
+- **Celular:** una columna. **Desde `sm`:** dos. **Desde `lg`:** tres. Separación de 24 px.
 - **Accesibilidad:** `<ul>` con un `<li>` por tarjeta, para que se anuncie el número de productos.
+
+### Faq
+
+- **Propósito:** resolver dudas sobre café, cafeteras, envíos y la demostración.
+- **Props:** `items` (`FaqItem[]` del dominio) e `initialCount` (4 por defecto).
+- **Comportamiento:** cada pregunta es `<details>`/`<summary>` (abre sin JavaScript); solo las
+  primeras cuatro se ven y "Mostrar más (n)" revela el resto y lleva el foco a la primera nueva;
+  "Mostrar menos" las vuelve a ocultar. La flecha gira solo con `motion-safe:`.
+- **Accesibilidad:** el botón usa `aria-expanded` y `aria-controls`. Cada pregunta tiene el id
+  `faq-<id>` para enlazarla (el pie enlaza `faq-envios` y `faq-facturacion`, que están entre
+  las cuatro visibles). Resúmenes de al menos 56 px.
 
 ### Footer
 
-- **Propósito:** aviso de proyecto de demostración y enlaces al código y la documentación.
+- **Propósito:** cierre de la página con información, confianza y aviso de demostración.
 - **Props:** ninguna.
-- **Celular:** marca, texto y enlaces apilados. **Desde `md`:** texto a la izquierda y enlaces
-  alineados a la derecha.
-- **Accesibilidad:** `<footer>` con `nav aria-label="Proyecto"`. Fondo `ink-900` con texto
-  `neutral-100` (16.89:1) y enlaces `white` subrayados; el foco usa `white` (18.42:1). Enlaces
-  de 44 px de alto. La marca es un párrafo, no un encabezado, para no alterar la jerarquía.
+- **Contenido:** marca, aviso y enlaces del proyecto (código y documentación); "Métodos de pago
+  (demostración)" con etiquetas de texto genéricas (sin logos ni promesas de seguridad); redes
+  sociales con iconos propios genéricos que no son enlaces porque aún no hay perfiles; selector
+  "País e idioma" con la única opción México (Español); enlaces de información en mayúsculas
+  separados por "/" (todos a anclas de la portada); botón "Desplazarse hasta arriba" (`#top`,
+  que HTML define como inicio del documento, sin JavaScript); aviso de derechos con año fijo
+  para que la página siga siendo estática.
+- **Celular:** bloques apilados y relleno inferior de 96 px para que el botón flotante no tape el
+  final. **Desde `md`:** dos columnas; **desde `lg`:** tres.
+- **Accesibilidad:** fondo `ink-900` con texto `neutral-100` (16.89:1), enlaces `white` y foco
+  `white` (18.42:1). Bordes `neutral-500` (5.34:1). Los separadores "/" son `aria-hidden` y van
+  detrás de cada enlace para no encabezar una línea. Navegaciones "Proyecto" e "Información"
+  nombradas; títulos `h2` pequeños.
+
+### HelpWidget
+
+- **Propósito:** ayuda siempre a mano sin simular un chat.
+- **Props:** `links` (texto y ancla).
+- **Comportamiento:** botón flotante abajo a la derecha; abre un diálogo no modal con accesos a
+  la FAQ, a envíos y al contacto de demostración. Al abrir, el foco pasa al botón de cerrar;
+  Escape o "Cerrar ayuda" lo cierran y devuelven el foco al botón flotante.
+- **Celular:** solo el icono en un círculo de 48 px (el texto queda para lectores de pantalla),
+  para no tapar precios ni botones; el diálogo ocupa el ancho disponible. **Desde `md`:**
+  píldora con icono y "¿Te ayudamos?"; diálogo de 320 px.
+- **Accesibilidad:** `aria-haspopup="dialog"`, `aria-expanded` y `aria-controls`; el panel es
+  `role="dialog"` nombrado por su título. No atrapa el foco porque no es modal. El borde
+  `white` mantiene visible el botón sobre el pie oscuro. El contenedor fijo deja pasar los clics
+  salvo en sus hijos.
 
 ### DemoNotice
 
@@ -414,3 +552,10 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 
 De arriba abajo, en todas las páginas: enlace "Saltar al contenido" (solo visible con foco),
 `DemoNotice`, `AnnouncementBar` y `Header`. El orden de tabulación sigue el mismo orden.
+
+## Orden de la portada
+
+Hero con `HeroTabs`, `SectionNav` (fijo, aparece tras el hero), cuatro `CategorySection`
+(Promociones, Café, Cafeteras y Accesorios), La diferencia, Suscripción, ¿Necesitas ayuda? (FAQ
+y contacto) y Términos y condiciones. `HelpWidget` está en el layout y aparece en todas las
+páginas.

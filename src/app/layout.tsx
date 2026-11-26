@@ -5,6 +5,7 @@ import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { DemoNotice } from "@/components/DemoNotice";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { HelpWidget } from "@/components/HelpWidget";
 import { announcements } from "@/data/announcements";
 import { resolveBrandLogo } from "@/lib/brand/logo";
 
@@ -15,6 +16,13 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+/** Accesos del panel de ayuda; todos son secciones de la portada. */
+const HELP_LINKS = [
+  { label: "Preguntas frecuentes", href: "/#ayuda" },
+  { label: "Envíos y devoluciones", href: "/#faq-envios" },
+  { label: "Contacto de demostración", href: "/#contacto" },
+];
+
 export const metadata: Metadata = {
   title: "Café Ladera | Tienda de demostración",
   description:
@@ -23,7 +31,8 @@ export const metadata: Metadata = {
 
 /**
  * Estructura común a todas las páginas: idioma, tipografías, enlace para saltar al
- * contenido, aviso de demostración, franja de avisos, encabezado y pie de página.
+ * contenido, aviso de demostración, franja de avisos, encabezado, pie de página y botón
+ * flotante de ayuda.
  *
  * @param props - Propiedades del layout raíz.
  * @param props.children - Contenido de la página activa.
@@ -55,6 +64,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <Footer />
+        <HelpWidget links={HELP_LINKS} />
       </body>
     </html>
   );
