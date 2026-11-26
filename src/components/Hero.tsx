@@ -6,38 +6,55 @@
 
 import { Button } from "./Button";
 import { Container } from "./Container";
+import { HeroTabs } from "./HeroTabs";
+import { HERO_TAB_SECTIONS } from "./store-sections";
+
+/** `id` del hero; el sub-header lo observa para saber cuándo aparecer. */
+export const HERO_ID = "inicio";
 
 /**
- * Muestra el título de la página, la propuesta de valor y la acción principal
- * ("Ver café"), con un enlace secundario a las cafeteras.
+ * Muestra el hero partido: a la izquierda un bloque de color con categoría, titular,
+ * novedad y la acción del bloque; a la derecha, el espacio reservado para la imagen de
+ * ambiente. Debajo, montada sobre el borde inferior, la barra de pestañas por categoría.
+ *
+ * En celular el bloque de texto va arriba y la imagen abajo; desde `md` quedan en dos
+ * columnas de igual ancho.
  *
  * @returns La sección de bienvenida con el único `h1` de la portada.
  */
 export function Hero() {
   return (
-    <section aria-labelledby="hero-titulo" className="bg-neutral-100 py-section">
-      <Container>
-        <div className="max-w-3xl">
+    <section id={HERO_ID} aria-labelledby="hero-titulo" className="bg-white">
+      <div className="grid md:grid-cols-2">
+        <div className="flex flex-col justify-center bg-clay-200 px-gutter pt-12 pb-16 md:px-12 md:py-16 xl:px-16">
           <p className="text-sm font-semibold tracking-wide text-ink-700 uppercase">
-            Café de especialidad mexicano
+            Cafeteras de espresso
           </p>
           <h1
             id="hero-titulo"
-            className="mt-3 font-display text-4xl font-semibold tracking-tight text-balance text-ink-900 md:text-6xl md:leading-tight"
+            className="mt-3 font-display text-4xl font-bold tracking-tight text-balance text-ink-900 lg:text-5xl xl:text-6xl"
           >
-            Recién tostado, directo de la ladera a tu taza
+            Tu barra de café, en casa
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-ink-700 md:mt-6 md:text-xl">
-            Granos de fincas de Chiapas, Veracruz y Oaxaca, tostados en pequeños lotes cada
-            semana y enviados a todo México.
+          <p className="mt-4 max-w-md text-lg text-ink-700">
+            Nueva Ladera Pro: espresso de 15 bares y vaporizador para leche, en tres acabados.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button href="#cafe">Ver café</Button>
-            <Button href="#cafeteras" variant="secondary">
-              Ver cafeteras
+          <div className="mt-8">
+            <Button href="/#cafeteras" variant="dark" className="w-full sm:w-auto">
+              Conoce la Ladera Pro
             </Button>
           </div>
         </div>
+
+        {/* Espacio de la imagen de ambiente: la proporción fija evita saltos cuando llegue la foto. */}
+        <div
+          aria-hidden="true"
+          className="aspect-hero-compact w-full bg-neutral-200 md:aspect-hero"
+        />
+      </div>
+
+      <Container className="relative z-10 -mt-8">
+        <HeroTabs sections={HERO_TAB_SECTIONS} />
       </Container>
     </section>
   );

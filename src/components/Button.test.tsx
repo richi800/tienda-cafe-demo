@@ -32,4 +32,25 @@ describe("Button", () => {
     expect(html).toContain("border-ink-900");
     expect(html).not.toContain("bg-buy-700");
   });
+
+  it("usa fondo negro en la variante dark", () => {
+    const html = renderToStaticMarkup(<Button variant="dark">Descubrir</Button>);
+
+    expect(html).toContain("bg-ink-900");
+    expect(html).toContain("text-white");
+  });
+
+  it("marca como no disponible sin dejar de ser enfocable ni navegar", () => {
+    const html = renderToStaticMarkup(
+      <Button href="/productos/x" unavailable describedBy="nota">
+        Ver detalles
+      </Button>,
+    );
+
+    expect(html).toMatch(/^<button /);
+    expect(html).toContain('aria-disabled="true"');
+    expect(html).toContain('aria-describedby="nota"');
+    expect(html).not.toContain(' disabled=""');
+    expect(html).not.toContain("/productos/x");
+  });
 });

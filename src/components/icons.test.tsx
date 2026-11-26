@@ -2,7 +2,18 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import {
+  ArrowUpIcon,
   BagIcon,
+  BeanIcon,
+  CameraIcon,
+  ChevronDownIcon,
+  CupIcon,
+  HelpIcon,
+  LeafIcon,
+  MachineIcon,
+  MessageIcon,
+  PlayIcon,
+  TagIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   CloseIcon,
@@ -13,7 +24,18 @@ import {
 } from "./icons";
 
 const ICONS = [
+  ArrowUpIcon,
   BagIcon,
+  BeanIcon,
+  CameraIcon,
+  ChevronDownIcon,
+  CupIcon,
+  HelpIcon,
+  LeafIcon,
+  MachineIcon,
+  MessageIcon,
+  PlayIcon,
+  TagIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   CloseIcon,

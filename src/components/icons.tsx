@@ -156,3 +156,166 @@ export function ChevronRightIcon(props: IconProps) {
     </IconBase>
   );
 }
+
+/**
+ * Grano de café, para la categoría Café.
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function BeanIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <ellipse cx="12" cy="12" rx="6" ry="8.5" transform="rotate(30 12 12)" />
+      <path d="M9 5.5c3 2.5 1 5.5 2.5 7S15 15.5 15 18.5" />
+    </IconBase>
+  );
+}
+
+/**
+ * Cafetera de espresso, para la categoría Cafeteras.
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function MachineIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M6 3h12v18H6z" />
+      <path d="M6 8h12M10 11h4v2h-4zM9.5 17h5" />
+    </IconBase>
+  );
+}
+
+/**
+ * Taza, para la categoría Accesorios.
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function CupIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V9Z" />
+      <path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M4 21h14" />
+    </IconBase>
+  );
+}
+
+/**
+ * Hoja, para la sección "La diferencia".
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function LeafIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M5 19C5 10 10 5 19 5c0 9-5 14-14 14Z" />
+      <path d="M5 19 13 11" />
+    </IconBase>
+  );
+}
+
+/**
+ * Flecha hacia abajo, para desplegar listas.
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function ChevronDownIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="m5 9 7 7 7-7" />
+    </IconBase>
+  );
+}
+
+/**
+ * Flecha hacia arriba, para volver al inicio de la página.
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function ArrowUpIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 19V5M6 11l6-6 6 6" />
+    </IconBase>
+  );
+}
+
+/**
+ * Cámara, para la red social de fotos.
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function CameraIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="3" y="7" width="18" height="13" rx="3" />
+      <circle cx="12" cy="13.5" r="3.5" />
+      <path d="M9 7l1.5-3h3L15 7" />
+    </IconBase>
+  );
+}
+
+/**
+ * Botón de reproducción, para la red social de videos.
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function PlayIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="3" y="5" width="18" height="14" rx="4" />
+      <path d="m10 9 5 3-5 3V9Z" />
+    </IconBase>
+  );
+}
+
+/**
+ * Globo de diálogo, para la red social de mensajes.
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function MessageIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 5h16v11H9l-5 4V5Z" />
+    </IconBase>
+  );
+}
+
+/**
+ * Signo de interrogación en un círculo, para la ayuda.
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function HelpIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01" />
+    </IconBase>
+  );
+}
+
+/**
+ * Etiqueta de precio, para las promociones.
+ *
+ * @param props - Propiedades del icono.
+ * @returns El icono.
+ */
+export function TagIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M3 12V4h8l10 10-8 8L3 12Z" />
+      <circle cx="7.5" cy="8.5" r="1.5" />
+    </IconBase>
+  );
+}

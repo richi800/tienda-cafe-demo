@@ -31,6 +31,27 @@ const HELP_TOPICS: readonly HelpTopic[] = [
   },
 ];
 
+/** Punto de la propuesta de valor de la sección "La diferencia". */
+type Differentiator = {
+  title: string;
+  text: string;
+};
+
+const DIFFERENTIATORS: readonly Differentiator[] = [
+  {
+    title: "Origen",
+    text: "Compramos a fincas de Chiapas, Veracruz y Oaxaca, y en cada bolsa indicamos de dónde viene el grano.",
+  },
+  {
+    title: "Tueste",
+    text: "Tostamos en pequeños lotes cada semana para que el café llegue con todo su aroma.",
+  },
+  {
+    title: "Equipo",
+    text: "Elegimos cafeteras y molinos que probamos con nuestro propio café antes de ofrecerlos.",
+  },
+];
+
 const PROMOTION_TERMS: readonly string[] = [
   `Envío gratis en pedidos desde $${FREE_SHIPPING_THRESHOLD_MXN} MXN dentro de México.`,
   "Los descuentos aplican sobre el precio anterior indicado en cada producto y hasta agotar existencias.",
@@ -96,6 +117,21 @@ export default function HomePage() {
         tone="muted"
       >
         <ProductGrid products={productsIn("accessories")} />
+      </Section>
+
+      <Section
+        id="diferencia"
+        title="La diferencia"
+        description="Café Ladera es una marca ficticia, pero su propuesta sigue lo que distingue a un buen tostador."
+      >
+        <ul className="grid gap-8 md:grid-cols-3 md:gap-12">
+          {DIFFERENTIATORS.map((item) => (
+            <li key={item.title} className="border-t-2 border-ink-900 pt-4">
+              <h3 className="text-xl font-semibold tracking-tight text-ink-900">{item.title}</h3>
+              <p className="mt-2 text-ink-700">{item.text}</p>
+            </li>
+          ))}
+        </ul>
       </Section>
 
       <Section
