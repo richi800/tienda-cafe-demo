@@ -218,7 +218,12 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 | ------------- | -------------------------------- | ---------------------------------------------------- |
 | `Container`   | `src/components/Container.tsx`   | Ancho máximo y márgenes laterales                    |
 | `Button`      | `src/components/Button.tsx`      | Píldora `primary` (compra) o `secondary`; enlace si recibe `href` |
-| `Header`      | `src/components/Header.tsx`      | Marca, navegación principal y botón de carrito       |
+| `AnnouncementBar` | `src/components/AnnouncementBar.tsx` | Franja de avisos con flechas, "Compra ahora" y términos |
+| `Header`      | `src/components/Header.tsx`      | Marca, menú por categorías e iconos (favoritos, búsqueda, cuenta, carrito) |
+| `MobileMenu`  | `src/components/MobileMenu.tsx`  | Menú colapsable por debajo de `xl`                   |
+| `IconButton`  | `src/components/IconButton.tsx`  | Botón o enlace circular de 44 px con icono y contador opcional |
+| Iconos        | `src/components/icons.tsx`       | SVG propios en línea: corazón, lupa, persona, bolsa, menú, cerrar y flechas |
+| `Breadcrumb`  | `src/components/Breadcrumb.tsx`  | Ruta de navegación para páginas interiores           |
 | `Hero`        | `src/components/Hero.tsx`        | Presentación de la portada con el `h1`               |
 | `Section`     | `src/components/Section.tsx`     | Sección con `h2`, descripción y fondo `default`/`muted` |
 | `ProductCard` | `src/components/ProductCard.tsx` | Tarjeta con imagen, notas, precio, descuento y disponibilidad |
@@ -250,11 +255,90 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 - **Accesibilidad:** con `href` renderiza un enlace de `next/link` (navega); sin `href`, un
   `<button type="button">` (actúa), para que lectores de pantalla anuncien el rol correcto.
 
+### AnnouncementBar
+
+- **Propósito:** comunicar promociones vigentes (envío gratis, descuentos, suscripción) sin
+  competir con el contenido.
+- **Props:** `announcements` (`Announcement[]` del dominio: `id`, `message`, `href`) y
+  `termsHref`.
+- **Contenido:** flecha anterior, aviso actual, flecha siguiente, botón con borde "Compra ahora"
+  (lleva al destino del aviso actual) y enlace "*Términos y condiciones" (a `/#terminos`).
+- **Comportamiento:** no rota sola; solo cambia con las flechas y da la vuelta en los extremos
+  (`getWrappedIndex`). Decisión: así no hace falta botón de pausa (WCAG 2.2.2), no hay
+  movimiento que adaptar a `prefers-reduced-motion` y el texto no cambia mientras se lee.
+- **Estados:** varios avisos (con flechas), un aviso (sin flechas ni "Aviso 1 de 1") y sin
+  avisos (no se renderiza).
+- **Celular:** dos filas de 44 px (aviso con flechas; acciones). **Desde `md`:** una sola fila
+  centrada. La píldora "Compra ahora" se ve baja (`py-1`), pero su enlace mide 44 px de alto,
+  para que la franja se perciba delgada sin perder área táctil.
+- **Accesibilidad:** `<section aria-roledescription="carrusel" aria-label="Avisos de la
+  tienda">`. El aviso es una región `aria-live="polite"` con el prefijo oculto "Aviso 1 de 3:".
+  Las flechas son botones de 44 px con `aria-label` y `aria-controls` hacia el aviso. El
+  asterisco de los términos se oculta a lectores de pantalla. Fondo `sand-100`: texto `ink-900`
+  a 15.58:1 y foco `ink-900` igual.
+
 ### Header
 
-- **Propósito:** marca, navegación principal y acceso al carrito.
+- **Propósito:** marca, navegación por categorías y accesos rápidos.
 - **Props:** `logoSrc` (ruta del logo o `null`); `cartCount` opcional (0 por defecto).
-- Se rediseña en la fase 2 (franja de avisos, menú por categorías e iconos).
+- **Contenido:** marca a la izquierda (logo con `next/image` o "Café Ladera" en texto con
+  `--font-display`); menú Promociones (en `promo-600`), Café, Cafeteras, Accesorios,
+  Suscripción y ¿Necesitas ayuda?, definido una sola vez en `main-navigation.ts`; a la derecha,
+  botones de icono de favoritos, búsqueda, cuenta y carrito con contador.
+- **Enlaces:** apuntan a secciones de la portada (`/#promociones`, `/#cafe`, ...) hasta que
+  existan las páginas de catálogo; una prueba impide publicar otro tipo de destino.
+- **Celular y tableta (menos de 1280 px):** una fila de 64 px con botón de menú, marca e
+  iconos. En 375 px caben los cuatro iconos (el logo se limita a 112 px de ancho). **Desde `xl`
+  (1280 px):** fila de 80 px con marca, menú en línea centrado e iconos. Decisión: el menú en
+  línea se muestra desde `xl` y no desde `lg` porque los seis enlaces (unos 650 px) no caben
+  junto a la marca y los iconos en 1024 px sin partirse en dos líneas.
+- **Estados:** hover de enlaces (subrayado y color más oscuro; Promociones pasa a `promo-700`) y
+  de iconos (`bg-neutral-100`). Sin indicador de página actual mientras todos los enlaces sean
+  anclas de la misma página.
+- **Accesibilidad:** el orden del DOM es menú (en celular), marca, navegación e iconos. Ambas
+  navegaciones usan `nav aria-label="Principal"`; solo una es visible en cada tamaño, la otra
+  tiene `display: none` y queda fuera del árbol de accesibilidad. El carrito se nombra
+  "Carrito, 0 productos" y el contador visible es `aria-hidden`.
+
+### MobileMenu
+
+- **Propósito:** dar acceso a la navegación principal por debajo de `xl`.
+- **Props:** `items` (`NavItem[]`) y `panelId`.
+- **Comportamiento:** botón de 44 px con icono de menú o de cerrar; abre un panel blanco a lo
+  ancho bajo el encabezado, con `--shadow-overlay`, enlaces de 48 px y separadores
+  `neutral-200`. Se cierra con el mismo botón, con Escape (el foco vuelve al botón) o al elegir
+  un enlace.
+- **Accesibilidad:** patrón de divulgación: `aria-expanded`, `aria-controls` y `aria-label`
+  "Abrir menú" o "Cerrar menú". El panel cerrado usa el atributo `hidden`. Va justo después del
+  botón en el DOM, por lo que el siguiente Tab entra en los enlaces. No atrapa el foco porque no
+  es modal.
+
+### IconButton
+
+- **Propósito:** acción o enlace representado solo por un icono.
+- **Props:** `label` (nombre accesible, obligatorio), `children` (icono), `href` y `badge`
+  opcionales.
+- **Variantes:** botón (`<button type="button">`) o enlace (`next/link`), con o sin contador.
+- **Estados:** hover `bg-neutral-100`, activo `bg-neutral-200`, foco global.
+- **Tamaño:** 44 x 44 px (`size-11`), forma píldora. El contador es una píldora `ink-900` con
+  texto `white` de 12 px (`text-xs`), única excepción a la escala de texto porque es un dato
+  visual repetido en el nombre accesible.
+
+### Iconos
+
+- SVG propios de 24 x 24 con trazo de 1.5 px, `currentColor`, `aria-hidden="true"` y
+  `focusable="false"`. El control que los contiene aporta el nombre. Tamaño por defecto
+  `size-6`; las flechas de la franja usan `size-5` y los separadores de la ruta `size-4`.
+
+### Breadcrumb
+
+- **Propósito:** ubicar a la persona en páginas interiores (catálogo, ficha). No se muestra en
+  la portada.
+- **Props:** `items` (`{ label, href? }[]`), de la portada a la página actual.
+- **Contenido:** niveles anteriores como enlaces `ink-700` (hover `ink-900` subrayado);
+  separadores con la flecha derecha en `ink-500`; el último nivel en `ink-900`, sin enlace.
+- **Accesibilidad:** `<nav aria-label="Ruta de navegación">` con `<ol>`; el último nivel lleva
+  `aria-current="page"`. Los separadores son decorativos. Cada nivel mide 44 px de alto.
 
 ### Hero
 
@@ -325,3 +409,8 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 - **Accesibilidad:** texto `white` sobre `ink-900` (18.42:1) y `role="status"`. No contiene
   elementos interactivos; el enlace para saltar al contenido aparece por encima de él al recibir
   foco (ver la sección Foco).
+
+## Orden de la cabecera de página
+
+De arriba abajo, en todas las páginas: enlace "Saltar al contenido" (solo visible con foco),
+`DemoNotice`, `AnnouncementBar` y `Header`. El orden de tabulación sigue el mismo orden.

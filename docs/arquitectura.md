@@ -85,8 +85,13 @@ siguiente build. La función de existencia se inyecta para probarla sin tocar el
   de compilación.
 - **Vitest** por su velocidad y compatibilidad nativa con TypeScript y ESM; resuelve el alias `@/`
   directamente desde `tsconfig.json`. Los componentes se prueban en el entorno `node` con
-  `renderToStaticMarkup` de `react-dom/server`, sin jsdom ni Testing Library: los componentes
-  actuales no tienen estado de cliente y basta con revisar el HTML generado.
+  `renderToStaticMarkup` de `react-dom/server`, sin jsdom ni Testing Library. Basta con revisar
+  el HTML generado porque casi todo es Server Component.
+- **Componentes de cliente mínimos.** Solo `AnnouncementBar` (aviso actual) y `MobileMenu`
+  (abierto o cerrado) llevan `"use client"`; el `Header` sigue siendo Server Component y
+  renderiza `MobileMenu` como hoja interactiva. Sus pruebas revisan el estado inicial y la
+  lógica pura extraída (`getWrappedIndex`); probar la interacción (clics, Escape) requeriría
+  añadir jsdom y Testing Library, lo que se decidirá cuando el carrito tenga estado.
 - **Sistema de diseño con tokens de Tailwind CSS v4.** Colores, radios, espacios semánticos y
   tipografías se definen en `@theme` de `src/app/globals.css`, con los colores por defecto
   desactivados. La referencia completa está en [`diseno.md`](diseno.md).

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 
+import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { DemoNotice } from "@/components/DemoNotice";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { announcements } from "@/data/announcements";
 import { resolveBrandLogo } from "@/lib/brand/logo";
 
 import "./globals.css";
@@ -21,7 +23,7 @@ export const metadata: Metadata = {
 
 /**
  * Estructura común a todas las páginas: idioma, tipografías, enlace para saltar al
- * contenido, aviso de demostración, encabezado y pie de página.
+ * contenido, aviso de demostración, franja de avisos, encabezado y pie de página.
  *
  * @param props - Propiedades del layout raíz.
  * @param props.children - Contenido de la página activa.
@@ -47,6 +49,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Saltar al contenido
         </a>
         <DemoNotice />
+        <AnnouncementBar announcements={announcements} termsHref="/#terminos" />
         <Header logoSrc={logoSrc} />
         <main id="contenido" tabIndex={-1} className="flex-1 focus:outline-none">
           {children}
