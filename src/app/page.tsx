@@ -1,3 +1,4 @@
+import { CategorySection } from "@/components/CategorySection";
 import { Hero } from "@/components/Hero";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Section } from "@/components/Section";
@@ -6,7 +7,23 @@ import {
   SUBSCRIPTION_DISCOUNT_PERCENT,
 } from "@/data/announcements";
 import { sampleProducts } from "@/data/sample-products";
-import { getDiscountPercentage, type ProductCategory } from "@/domain/product";
+import { getDiscountPercentage, type Product, type ProductCategory } from "@/domain/product";
+
+/** Sección de catálogo de la portada. */
+type CatalogSection = {
+  id: string;
+  title: string;
+  description: string;
+  products: readonly Product[];
+  emptyMessage?: string;
+};
+
+/**
+ * Explica por qué el botón de compra de las tarjetas aún no está disponible. Cada banner la
+ * muestra con el id `<seccion>-nota` y los botones la referencian con aria-describedby.
+ */
+const PURCHASE_NOTE =
+  "Vista previa: la ficha de cada producto y la compra se habilitarán próximamente.";
 
 /** Pregunta frecuente de la sección de ayuda. */
 type HelpTopic = {
@@ -81,43 +98,53 @@ export default function HomePage() {
     (product) => getDiscountPercentage(product.price, product.compareAtPrice) > 0,
   );
 
+  const catalog: readonly CatalogSection[] = [
+    {
+      id: "promociones",
+      title: "Promociones",
+      description: "Precios especiales por tiempo limitado en café, cafeteras y accesorios.",
+      products: promotions,
+      emptyMessage: "Por ahora no hay promociones activas.",
+    },
+    {
+      id: "cafe",
+      title: "Café",
+      description: "Grano entero en bolsas de 340 g, listo para tu método favorito.",
+      products: productsIn("coffee"),
+    },
+    {
+      id: "cafeteras",
+      title: "Cafeteras",
+      description: "Equipos para preparar espresso y café filtrado en casa.",
+      products: productsIn("machines"),
+    },
+    {
+      id: "accesorios",
+      title: "Accesorios",
+      description: "Molinos, espumadores y tazas para completar tu barra de café.",
+      products: productsIn("accessories"),
+    },
+  ];
+
   return (
     <>
       <Hero />
 
-      <Section
-        id="promociones"
-        title="Promociones"
-        description="Precios especiales por tiempo limitado en café, cafeteras y accesorios."
-      >
-        <ProductGrid products={promotions} emptyMessage="Por ahora no hay promociones activas." />
-      </Section>
-
-      <Section
-        id="cafe"
-        title="Café"
-        description="Grano entero en bolsas de 340 g, listo para tu método favorito."
-        tone="muted"
-      >
-        <ProductGrid products={productsIn("coffee")} />
-      </Section>
-
-      <Section
-        id="cafeteras"
-        title="Cafeteras"
-        description="Equipos para preparar espresso y café filtrado en casa."
-      >
-        <ProductGrid products={productsIn("machines")} />
-      </Section>
-
-      <Section
-        id="accesorios"
-        title="Accesorios"
-        description="Molinos, espumadores y tazas para completar tu barra de café."
-        tone="muted"
-      >
-        <ProductGrid products={productsIn("accessories")} />
-      </Section>
+      {catalog.map((section) => (
+        <CategorySection
+          key={section.id}
+          id={section.id}
+          title={section.title}
+          description={section.description}
+          note={PURCHASE_NOTE}
+        >
+          <ProductGrid
+            products={section.products}
+            emptyMessage={section.emptyMessage}
+            purchaseNoteId={`${section.id}-nota`}
+          />
+        </CategorySection>
+      ))}
 
       <Section
         id="diferencia"
