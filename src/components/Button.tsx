@@ -24,12 +24,12 @@ export type ButtonProps = {
 };
 
 const BASE_CLASSES =
-  "inline-flex min-h-11 items-center justify-center rounded-md px-6 py-2 text-base font-semibold transition-colors";
+  "inline-flex min-h-11 items-center justify-center rounded-pill px-6 py-2 text-base font-semibold transition-colors";
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: "bg-cherry-700 text-cream-50 hover:bg-cherry-800 active:bg-cherry-800",
+  primary: "bg-buy-700 text-white hover:bg-buy-800 active:bg-buy-800",
   secondary:
-    "border border-coffee-700 text-coffee-900 hover:bg-cream-100 active:bg-cream-200",
+    "border border-ink-900 text-ink-900 hover:bg-neutral-100 active:bg-neutral-200",
 };
 
 /**

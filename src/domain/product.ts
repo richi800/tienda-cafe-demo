@@ -1,10 +1,22 @@
 /**
- * Modelo de producto del catálogo, independiente de la fuente de datos.
+ * Modelo de producto del catálogo, independiente de la fuente de datos, y reglas
+ * puras asociadas como el cálculo del descuento.
  *
  * @packageDocumentation
  */
 
-import type { Money } from "./money";
+import { parseAmount, type Money } from "./money";
+
+/** Familias de producto del catálogo. */
+export type ProductCategory = "coffee" | "machines" | "accessories";
+
+/** Color disponible de un producto, por ejemplo el acabado de una cafetera. */
+export type ColorOption = {
+  /** Nombre visible del color, por ejemplo `"Grafito"`. */
+  name: string;
+  /** Color en hexadecimal (`#RRGGBB`) para pintar la muestra. */
+  hex: string;
+};
 
 /**
  * Producto que la tienda puede mostrar en el catálogo.
@@ -21,13 +33,54 @@ export type Product = {
   title: string;
   /** Descripción breve en texto plano. */
   description: string;
+  /** Familia del producto; en Shopify provendrá del tipo de producto o de una colección. */
+  category: ProductCategory;
   /**
    * Notas de sabor del café, en el orden en que se muestran (por ejemplo `["Chocolate", "Nuez"]`).
-   * En Shopify provendrán de un metafield del producto.
+   * Vacío en cafeteras y accesorios. En Shopify provendrán de un metafield del producto.
    */
   flavorNotes: readonly string[];
   /** Precio de venta. */
   price: Money;
+  /**
+   * Precio antes del descuento. Solo existe si el producto está en promoción; equivale a
+   * `compareAtPrice` de la Storefront API.
+   */
+  compareAtPrice?: Money;
+  /** Colores disponibles, si el producto se vende en varios acabados. */
+  colorOptions?: readonly ColorOption[];
   /** Indica si hay existencias disponibles para comprar. */
   availableForSale: boolean;
 };
+
+/**
+ * Calcula el porcentaje de descuento entre el precio anterior y el actual.
+ *
+ * Se redondea hacia abajo para no anunciar un descuento mayor que el real.
+ *
+ * @param price - Precio de venta actual.
+ * @param compareAtPrice - Precio antes del descuento; si falta, no hay descuento.
+ * @returns El porcentaje entero de descuento (por ejemplo `18`), o `0` si no hay
+ * precio anterior o si este no es mayor que el actual.
+ * @throws {RangeError} Si algún monto no es numérico o si las monedas no coinciden.
+ */
+export function getDiscountPercentage(price: Money, compareAtPrice?: Money): number {
+  if (compareAtPrice === undefined) {
+    return 0;
+  }
+
+  if (price.currencyCode !== compareAtPrice.currencyCode) {
+    throw new RangeError(
+      `No se puede comparar ${price.currencyCode} con ${compareAtPrice.currencyCode}`,
+    );
+  }
+
+  const current = parseAmount(price.amount);
+  const previous = parseAmount(compareAtPrice.amount);
+
+  if (previous <= current || previous <= 0) {
+    return 0;
+  }
+
+  return Math.floor(((previous - current) / previous) * 100);
+}

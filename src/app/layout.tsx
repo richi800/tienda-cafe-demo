@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Geist } from "next/font/google";
+import { Geist } from "next/font/google";
 
 import { DemoNotice } from "@/components/DemoNotice";
 import { Footer } from "@/components/Footer";
@@ -11,12 +11,6 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-});
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  weight: ["600"],
 });
 
 export const metadata: Metadata = {
@@ -39,16 +33,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   const logoSrc = resolveBrandLogo();
 
   return (
-    <html lang="es" className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}>
+    <html lang="es" className={`${geistSans.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         {/*
-          Al recibir foco, el enlace aparece como franja completa sobre fondo cream-50 y el
-          contorno se dibuja hacia dentro: así el foco cherry-700 nunca queda sobre el fondo
-          oscuro del aviso de demostración, donde no alcanzaría el contraste de 3:1.
+          Al recibir foco, el enlace aparece como franja completa sobre fondo blanco y el
+          contorno se dibuja hacia dentro: así el foco ink-900 nunca queda sobre el fondo
+          oscuro del aviso de demostración, donde sería invisible.
         */}
         <a
           href="#contenido"
-          className="sr-only bg-cream-50 font-semibold text-coffee-900 underline underline-offset-4 focus:not-sr-only focus:flex focus:min-h-11 focus:items-center focus:px-gutter focus-visible:-outline-offset-4"
+          className="sr-only bg-white font-semibold text-ink-900 underline underline-offset-4 focus:not-sr-only focus:flex focus:min-h-11 focus:items-center focus:px-gutter focus-visible:-outline-offset-4"
         >
           Saltar al contenido
         </a>

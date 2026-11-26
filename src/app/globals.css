@@ -13,19 +13,32 @@
   --radius-*: initial;
   --shadow-*: initial;
 
-  --color-coffee-900: #2b1a12;
-  --color-coffee-700: #5a3a28;
-  --color-coffee-500: #8a5a3b;
-  --color-cream-50: #fbf7f0;
-  --color-cream-100: #f3eadb;
-  --color-cream-200: #e6d7bf;
-  --color-cherry-700: #9e2f1c;
-  --color-cherry-800: #7f2516;
+  /* Superficies y neutros. */
+  --color-white: #ffffff;
+  --color-neutral-100: #f5f5f4;
+  --color-neutral-200: #e7e5e4;
+  --color-neutral-500: #8a8a8a;
+  --color-sand-100: #f3ebdf;
+
+  /* Texto. */
+  --color-ink-900: #141414;
+  --color-ink-700: #4a4a4a;
+  --color-ink-500: #6b6b6b;
+
+  /* Acentos con significado: promociones, precio de oferta y compra. */
+  --color-promo-600: #c8102e;
+  --color-promo-700: #a00d25;
+  --color-sale-700: #1f4fb5;
+  --color-buy-700: #1e6b3c;
+  --color-buy-800: #16532e;
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 1rem;
-  --radius-full: 9999px;
+  --radius-pill: 9999px;
+
+  /* Única elevación: paneles que se superponen al contenido, como el menú en celular. */
+  --shadow-overlay: 0 12px 24px -12px rgb(20 20 20 / 0.25);
 
   /*
    * Valores para celular. En pantallas medianas se amplían más abajo, redefiniendo la
@@ -35,15 +48,16 @@
   --spacing-gutter: 1rem;
   --spacing-section: 4rem;
 
-  --container-content: 72rem;
+  --container-content: 80rem;
 
   --aspect-product: 4 / 5;
   --aspect-product-compact: 4 / 3;
 }
 
 @theme inline {
+  /* Una sola familia geométrica para texto y títulos; los títulos se distinguen por peso. */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 @media (width >= 48rem) {
@@ -55,15 +69,15 @@
 
 @layer base {
   body {
-    background-color: var(--color-cream-50);
-    color: var(--color-coffee-900);
+    background-color: var(--color-white);
+    color: var(--color-ink-900);
     font-family: var(--font-sans);
     line-height: 1.6;
   }
 
   /* Foco visible y uniforme en todos los elementos interactivos. */
   :focus-visible {
-    outline: 2px solid var(--color-cherry-700);
+    outline: 2px solid var(--color-ink-900);
     outline-offset: 2px;
   }
 }

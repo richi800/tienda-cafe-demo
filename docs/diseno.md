@@ -4,6 +4,17 @@ Referencia visual de Café Ladera. Los tokens viven en `src/app/globals.css` (bl
 Tailwind CSS v4) y este documento explica sus valores y cómo usarlos. Si cambia un token, se
 actualizan ambos archivos en el mismo cambio.
 
+## Dirección visual
+
+Boutique premium de café y cafeteras: mucho blanco, una sola familia sans geométrica (también
+en los títulos), botones tipo píldora y color reservado para lo que tiene significado
+comercial. El rojo solo marca promociones, el azul solo el precio de oferta y el verde el
+precio normal y la acción de compra. Todo lo demás es negro, grises y blanco.
+
+La estructura (franja de avisos, encabezado blanco con menú por categorías e iconos a la
+derecha) sigue las convenciones de las tiendas de este tipo, pero la marca, los productos,
+los textos y los iconos son propios. No se usan logos, nombres, fotos ni textos de otras marcas.
+
 ## Principios
 
 - Pensado primero para celular: se revisa en 375, 768 y 1280 px.
@@ -16,75 +27,96 @@ actualizan ambos archivos en el mismo cambio.
 
 ## Paleta
 
-Solo hay tema claro. Valores y contrastes calculados con la fórmula de luminancia relativa
-de WCAG 2.x (con un script, no a ojo). Texto normal exige 4.5:1; texto grande, bordes de
-componentes e indicadores de foco, 3:1.
+Solo hay tema claro.
 
-| Token        | Valor     | Uso                                                       |
-| ------------ | --------- | --------------------------------------------------------- |
-| `coffee-900` | `#2B1A12` | Texto principal; fondo del pie y del aviso de demostración |
-| `coffee-700` | `#5A3A28` | Texto secundario, bordes de botones secundarios            |
-| `coffee-500` | `#8A5A3B` | Texto terciario y metadatos (solo sobre `cream-50`)        |
-| `cream-50`   | `#FBF7F0` | Fondo de la página; texto sobre fondos oscuros             |
-| `cream-100`  | `#F3EADB` | Fondo de tarjetas y secciones alternas                     |
-| `cream-200`  | `#E6D7BF` | Bordes suaves y espacio reservado de imágenes              |
-| `cherry-700` | `#9E2F1C` | Acento: botón principal, foco, indicador de página actual  |
-| `cherry-800` | `#7F2516` | Hover y estado activo del acento                           |
+| Token         | Valor     | Uso                                                              |
+| ------------- | --------- | ---------------------------------------------------------------- |
+| `white`       | `#FFFFFF` | Fondo de la página, del encabezado y de las tarjetas             |
+| `neutral-100` | `#F5F5F4` | Secciones alternas, hover de botones secundarios e iconos        |
+| `neutral-200` | `#E7E5E4` | Bordes decorativos (separadores) y espacio reservado de imágenes |
+| `neutral-500` | `#8A8A8A` | Bordes de controles de formulario (3:1); nunca texto             |
+| `sand-100`    | `#F3EBDF` | Franja de avisos (`AnnouncementBar`)                             |
+| `ink-900`     | `#141414` | Texto principal, anillo de foco, fondo del pie y del aviso de demostración |
+| `ink-700`     | `#4A4A4A` | Texto secundario y enlaces de navegación en reposo               |
+| `ink-500`     | `#6B6B6B` | Metadatos y precio anterior tachado                              |
+| `promo-600`   | `#C8102E` | Enlace "Promociones" e insignia de descuento                     |
+| `promo-700`   | `#A00D25` | Hover del enlace "Promociones"                                   |
+| `sale-700`    | `#1F4FB5` | Precio de oferta                                                 |
+| `buy-700`     | `#1E6B3C` | Precio normal y botón de compra (`primary`)                      |
+| `buy-800`     | `#16532E` | Hover y estado activo del botón de compra                        |
 
 ### Contrastes
 
-| Texto (o elemento) | Fondo        | Contraste | Resultado                         |
-| ------------------ | ------------ | --------- | --------------------------------- |
-| `coffee-900`       | `cream-50`   | 15.62:1   | AA y AAA                          |
-| `coffee-900`       | `cream-100`  | 13.98:1   | AA y AAA                          |
-| `coffee-900`       | `cream-200`  | 11.78:1   | AA y AAA                          |
-| `coffee-700`       | `cream-50`   | 9.50:1    | AA y AAA                          |
-| `coffee-700`       | `cream-100`  | 8.50:1    | AA y AAA                          |
-| `coffee-700`       | `cream-200`  | 7.17:1    | AA y AAA                          |
-| `coffee-500`       | `cream-50`   | 5.45:1    | AA                                |
-| `coffee-500`       | `cream-100`  | 4.88:1    | AA                                |
-| `coffee-500`       | `cream-200`  | 4.11:1    | No apto para texto normal         |
-| `cream-50`         | `cherry-700` | 6.83:1    | AA                                |
-| `cream-50`         | `cherry-800` | 9.03:1    | AA y AAA                          |
-| `cherry-700`       | `cream-50`   | 6.83:1    | AA (texto y anillo de foco)       |
-| `cherry-700`       | `cream-100`  | 6.12:1    | AA                                |
-| `cream-50`         | `coffee-900` | 15.62:1   | AA y AAA (texto y anillo de foco) |
-| `cream-100`        | `coffee-900` | 13.98:1   | AA y AAA                          |
-| `cherry-700`       | `cream-200`  | 5.16:1    | Apto como anillo de foco          |
-| `cherry-700`       | `coffee-900` | 2.28:1    | No apto: ni texto ni foco         |
+Calculados con la fórmula de luminancia relativa de WCAG 2.x mediante un script que lee los
+valores directamente de `globals.css` (no a ojo). Texto normal exige 4.5:1; texto grande, bordes
+de componentes e indicadores de foco, 3:1.
+
+| Texto (o elemento) | Fondo         | Contraste | Resultado                                 |
+| ------------------ | ------------- | --------- | ----------------------------------------- |
+| `ink-900`          | `white`       | 18.42:1   | AA y AAA (texto y anillo de foco)         |
+| `ink-900`          | `neutral-100` | 16.89:1   | AA y AAA (texto y anillo de foco)         |
+| `ink-900`          | `sand-100`    | 15.58:1   | AA y AAA (texto y anillo de foco)         |
+| `ink-700`          | `white`       | 8.86:1    | AA y AAA                                  |
+| `ink-700`          | `neutral-100` | 8.12:1    | AA y AAA                                  |
+| `ink-700`          | `sand-100`    | 7.49:1    | AA y AAA                                  |
+| `ink-500`          | `white`       | 5.33:1    | AA                                        |
+| `ink-500`          | `neutral-100` | 4.89:1    | AA                                        |
+| `ink-500`          | `sand-100`    | 4.51:1    | AA con margen mínimo: no se usa           |
+| `neutral-500`      | `white`       | 3.45:1    | Solo bordes de controles (3:1), no texto  |
+| `neutral-500`      | `neutral-100` | 3.16:1    | Solo bordes de controles (3:1), no texto  |
+| `promo-600`        | `white`       | 5.88:1    | AA                                        |
+| `promo-600`        | `neutral-100` | 5.39:1    | AA                                        |
+| `promo-700`        | `white`       | 8.14:1    | AA y AAA                                  |
+| `white`            | `promo-600`   | 5.88:1    | AA (insignia de descuento)                |
+| `sale-700`         | `white`       | 7.38:1    | AA y AAA                                  |
+| `sale-700`         | `neutral-100` | 6.77:1    | AA                                        |
+| `buy-700`          | `white`       | 6.51:1    | AA                                        |
+| `buy-700`          | `neutral-100` | 5.97:1    | AA                                        |
+| `white`            | `buy-700`     | 6.51:1    | AA (botón de compra)                      |
+| `white`            | `buy-800`     | 9.09:1    | AA y AAA (hover del botón de compra)      |
+| `white`            | `ink-900`     | 18.42:1   | AA y AAA (texto y anillo de foco)         |
+| `neutral-100`      | `ink-900`     | 16.89:1   | AA y AAA (texto del pie de página)        |
+| `neutral-200`      | `white`       | 1.26:1    | No apto: solo elementos decorativos       |
+| `promo-600`        | `ink-900`     | 3.13:1    | No apto para texto                        |
+| `buy-700`          | `ink-900`     | 2.83:1    | No apto: ni texto ni foco                 |
 
 Notas:
 
-- El plan inicial estimaba 7.3:1 para el acento con texto `cream-50`; el valor real es 6.83:1.
-  Sigue cumpliendo AA para texto normal.
-- `coffee-500` no se usa sobre `cream-200`.
-- Sobre fondos `coffee-900` (pie de página) el foco usa `cream-50`, porque el acento no alcanza
-  el 3:1 exigido a indicadores de foco.
-- El texto del pie de página usa `cream-100` sobre `coffee-900`.
+- El color nunca es la única señal: el precio de oferta va acompañado del precio anterior
+  tachado y de un texto para lectores de pantalla; la insignia dice el porcentaje y "Agotado"
+  se escribe con palabras.
+- Sobre fondos `ink-900` (pie de página y aviso de demostración) el foco usa `white`, porque el
+  anillo `ink-900` global sería invisible.
+- `neutral-200` no delimita controles interactivos; para eso se usa `neutral-500` o `ink-900`.
 
 ## Tipografía
 
-Fuentes autoalojadas con `next/font/google` (se descargan en el build; el navegador no hace
-peticiones a Google).
+Fuente autoalojada con `next/font/google` (se descarga en el build; el navegador no hace
+peticiones a Google). Una sola familia geométrica, Geist, para todo: los títulos se distinguen
+por peso (600) y por `tracking-tight`, no por cambiar de familia. Así se carga un solo archivo
+de fuente variable.
 
-| Token            | Fuente  | Pesos         | Uso                                  |
-| ---------------- | ------- | ------------- | ------------------------------------ |
-| `--font-display` | Fraunces | 600          | Títulos (`h1`, `h2`, `h3`), marca    |
-| `--font-sans`    | Geist   | 400, 500, 600 | Texto, interfaz, precios             |
+| Token            | Fuente | Uso                                        |
+| ---------------- | ------ | ------------------------------------------ |
+| `--font-display` | Geist  | Títulos (`h1`, `h2`, `h3`) y nombre de la marca |
+| `--font-sans`    | Geist  | Texto, interfaz y precios                  |
+
+`--font-display` se conserva como token aparte para poder cambiar la fuente de títulos sin
+tocar los componentes.
 
 Escala (pasos de Tailwind; celular, y desde `md` cuando cambia):
 
-| Elemento          | Clase                     | Tamaño              |
-| ----------------- | ------------------------- | ------------------- |
-| `h1`              | `text-4xl md:text-6xl`    | 2.25rem a 3.75rem   |
-| `h2`              | `text-3xl md:text-4xl`    | 1.875rem a 2.25rem  |
-| `h3`              | `text-xl`                 | 1.25rem             |
-| Texto destacado   | `text-lg` (`md:text-xl`)  | 1.125rem (1.25rem)  |
-| Cuerpo            | `text-base`               | 1rem, interlineado 1.6 en `body` |
-| Pequeño           | `text-sm`                 | 0.875rem            |
+| Elemento          | Clase                                 | Tamaño              |
+| ----------------- | ------------------------------------- | ------------------- |
+| `h1`              | `text-4xl md:text-6xl tracking-tight` | 2.25rem a 3.75rem   |
+| `h2`              | `text-3xl md:text-4xl tracking-tight` | 1.875rem a 2.25rem  |
+| `h3`              | `text-lg` o `text-xl`                 | 1.125rem a 1.25rem  |
+| Texto destacado   | `text-lg` (`md:text-xl`)              | 1.125rem (1.25rem)  |
+| Cuerpo            | `text-base`                           | 1rem, interlineado 1.6 en `body` |
+| Pequeño           | `text-sm`                             | 0.875rem            |
 
-Reglas: un solo `h1` por página, sin saltos de nivel; el texto de 0.875rem nunca usa
-`coffee-500`.
+Reglas: un solo `h1` por página, sin saltos de nivel; el texto de 0.875rem no usa `ink-500`
+salvo el precio anterior tachado, que siempre acompaña al precio vigente.
 
 ## Espacios
 
@@ -92,11 +124,14 @@ Reglas: un solo `h1` por página, sin saltos de nivel; el texto de 0.875rem nunc
   (4 a 96 px).
 - Tokens semánticos:
 
-| Token               | Celular | Desde `md` (48rem) | Utilidades           | Uso                              |
-| ------------------- | ------- | ------------------ | -------------------- | -------------------------------- |
-| `--spacing-gutter`  | 1rem    | 2rem               | `px-gutter`          | Margen lateral del contenedor    |
-| `--spacing-section` | 4rem    | 6rem               | `py-section`         | Separación vertical de secciones |
-| `--container-content` | 72rem | 72rem              | `max-w-content`      | Ancho máximo del contenido       |
+| Token                 | Celular | Desde `md` (48rem) | Utilidades      | Uso                              |
+| --------------------- | ------- | ------------------ | --------------- | -------------------------------- |
+| `--spacing-gutter`    | 1rem    | 2rem               | `px-gutter`     | Margen lateral del contenedor    |
+| `--spacing-section`   | 4rem    | 6rem               | `py-section`    | Separación vertical de secciones |
+| `--container-content` | 80rem   | 80rem              | `max-w-content` | Ancho máximo del contenido       |
+
+El ancho máximo pasó de 72rem a 80rem para dar aire a las rejillas de producto y a la
+navegación por categorías en escritorio.
 
 Decisión: `@theme` no admite valores responsivos, así que los tokens se declaran con el valor de
 celular y se redefinen en `:root` dentro de `@media (width >= 48rem)`. Como las utilidades
@@ -108,18 +143,23 @@ lo usan para quedar alineadas.
 
 ## Radios
 
-| Token           | Valor  | Uso                                     |
-| --------------- | ------ | --------------------------------------- |
-| `--radius-sm`   | 4px    | Insignias, etiquetas de notas, enlaces  |
-| `--radius-md`   | 8px    | Botones                                 |
-| `--radius-lg`   | 16px   | Tarjetas y espacio de imagen            |
-| `--radius-full` | 9999px | Contador del carrito                    |
+| Token           | Valor  | Uso                                                        |
+| --------------- | ------ | ---------------------------------------------------------- |
+| `--radius-sm`   | 4px    | Enlaces de texto (forma del anillo de foco)                |
+| `--radius-md`   | 8px    | Paneles y campos de formulario                             |
+| `--radius-lg`   | 16px   | Espacio de imagen de producto                              |
+| `--radius-pill` | 9999px | Botones, botones de icono, insignias, notas y contador del carrito |
+
+`--radius-pill` sustituye a `--radius-full`: el nombre describe la forma que da a los botones.
 
 ## Sombras
 
-Desactivadas por ahora (`--shadow-*: initial`). La separación entre superficies se logra con
-fondos alternos (`cream-50` / `cream-100`) y bordes `cream-200`. Si más adelante hace falta
-elevación (por ejemplo, un panel de carrito), se agregará un token específico aquí.
+| Token              | Valor                                  | Uso                                         |
+| ------------------ | -------------------------------------- | ------------------------------------------- |
+| `--shadow-overlay` | `0 12px 24px -12px rgb(20 20 20 / .25)` | Paneles superpuestos (menú en celular)     |
+
+Es la única elevación. La separación entre superficies se logra con fondos alternos
+(`white` / `neutral-100`) y bordes `neutral-200`.
 
 ## Proporciones
 
@@ -132,33 +172,39 @@ El espacio de imagen se reserva siempre con la proporción para evitar saltos de
 
 ## Foco
 
-- Regla global en `@layer base`: `:focus-visible` con contorno de 2 px `cherry-700` y
-  separación de 2 px. Aplica a todo elemento interactivo sin código adicional.
-- Sobre fondos oscuros se cambia el color con `focus-visible:outline-cream-50`.
+- Regla global en `@layer base`: `:focus-visible` con contorno de 2 px `ink-900` y separación
+  de 2 px. Aplica a todo elemento interactivo sin código adicional y supera 15:1 sobre `white`,
+  `neutral-100` y `sand-100`.
+- Sobre fondos oscuros se cambia el color con `focus-visible:outline-white`.
 - El enlace "Saltar al contenido" es el primer elemento tabulable. Al recibir foco aparece como
-  franja completa de 44 px sobre `cream-50`, por encima del aviso de demostración, y su contorno
-  se dibuja hacia dentro (`focus-visible:-outline-offset-4`). Así el anillo `cherry-700` siempre
-  queda sobre `cream-50` (6.83:1) y nunca sobre el `coffee-900` del aviso (2.28:1).
+  franja completa de 44 px sobre `white`, por encima del aviso de demostración, y su contorno
+  se dibuja hacia dentro (`focus-visible:-outline-offset-4`). Así el anillo `ink-900` siempre
+  queda sobre blanco y nunca sobre el `ink-900` del aviso.
 - No se elimina el contorno en elementos interactivos. La única excepción es `<main>`, que
   recibe foco programático desde el enlace "Saltar al contenido" y no es interactivo.
 
 ## Estados
 
-| Componente            | Reposo                         | Hover / activo                     | Otros                                  |
-| --------------------- | ------------------------------ | ---------------------------------- | -------------------------------------- |
-| Botón `primary`       | `bg-cherry-700 text-cream-50`  | `bg-cherry-800`                    | Foco global                            |
-| Botón `secondary`     | Borde `coffee-700`, sin fondo  | `bg-cream-100` / `bg-cream-200`    | Foco global                            |
-| Enlace de navegación  | `text-coffee-700`              | `text-coffee-900` y subrayado      | Página actual: subrayado `cherry-700` de 2 px y `aria-current="page"` |
-| Producto agotado      | Insignia `coffee-900` / `cream-50` con el texto "Agotado" | — | El estado se comunica con texto, no solo con color |
+| Componente            | Reposo                          | Hover / activo                      | Otros                                  |
+| --------------------- | ------------------------------- | ----------------------------------- | -------------------------------------- |
+| Botón `primary`       | `bg-buy-700 text-white`, píldora | `bg-buy-800`                       | Foco global                            |
+| Botón `secondary`     | Borde `ink-900`, sin fondo, píldora | `bg-neutral-100` / `bg-neutral-200` | Foco global                       |
+| Precio normal         | `text-buy-700`                  | —                                   | —                                      |
+| Precio de oferta      | `text-sale-700` y precio anterior `ink-500` tachado (`<del>`) | — | Texto oculto "Precio de oferta" y "Precio anterior" |
+| Insignia de descuento | `bg-promo-600 text-white`, por ejemplo "-18%" | —                     | Lectores de pantalla oyen "18% de descuento" |
+| Producto agotado      | Insignia `ink-900` / `white` con el texto "Agotado" | —               | El estado se comunica con texto, no solo con color |
 
 Estados de datos por vista (carga, vacío, error y éxito): se definirán con cada módulo
-(catálogo, ficha, carrito). La portada usa datos estáticos y no tiene estados de carga.
+(catálogo, ficha, carrito). La portada usa datos estáticos; su único estado alterno es el
+vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 
 ## Reglas de uso
 
-- Áreas táctiles: `min-h-11` (44 px) en botones, enlaces de navegación, carrito, enlaces del
-  pie y enlace para saltar al contenido.
+- Áreas táctiles: `min-h-11` (44 px) en botones, enlaces de navegación, botones de icono
+  (`size-11`), enlaces del pie y enlace para saltar al contenido.
 - Una acción `primary` por pantalla.
+- Rojo, azul y verde solo con su significado (promoción, oferta, compra). No se usan como
+  decoración.
 - Textos de interfaz en español, breves y orientados a la acción.
 - Imágenes: tamaño reservado (proporción o `width`/`height`), `loading="lazy"` fuera de la
   primera pantalla y sin el optimizador de Vercel (`images.unoptimized` en `next.config.ts`).
@@ -171,11 +217,12 @@ Estados de datos por vista (carga, vacío, error y éxito): se definirán con ca
 | Componente    | Archivo                          | Descripción                                          |
 | ------------- | -------------------------------- | ---------------------------------------------------- |
 | `Container`   | `src/components/Container.tsx`   | Ancho máximo y márgenes laterales                    |
-| `Button`      | `src/components/Button.tsx`      | Variantes `primary` y `secondary`; enlace si recibe `href` |
+| `Button`      | `src/components/Button.tsx`      | Píldora `primary` (compra) o `secondary`; enlace si recibe `href` |
 | `Header`      | `src/components/Header.tsx`      | Marca, navegación principal y botón de carrito       |
 | `Hero`        | `src/components/Hero.tsx`        | Presentación de la portada con el `h1`               |
 | `Section`     | `src/components/Section.tsx`     | Sección con `h2`, descripción y fondo `default`/`muted` |
-| `ProductCard` | `src/components/ProductCard.tsx` | Tarjeta de producto con notas, precio y disponibilidad |
+| `ProductCard` | `src/components/ProductCard.tsx` | Tarjeta con imagen, notas, precio, descuento y disponibilidad |
+| `ProductGrid` | `src/components/ProductGrid.tsx` | Rejilla de `ProductCard` con estado vacío             |
 | `Footer`      | `src/components/Footer.tsx`      | Aviso de demostración y enlaces del proyecto         |
 | `DemoNotice`  | `src/components/DemoNotice.tsx`  | Franja superior de tienda de demostración            |
 
@@ -185,7 +232,7 @@ Estados de datos por vista (carga, vacío, error y éxito): se definirán con ca
 - **Props:** `children`; `className` opcional para añadir disposición (rejilla, flex).
 - **Variantes y estados:** ninguno.
 - **Celular y escritorio:** ancho completo con margen `--spacing-gutter` (16 px en celular,
-  32 px desde `md`); el ancho máximo es `--container-content` (72rem).
+  32 px desde `md`); el ancho máximo es `--container-content` (80rem).
 - **Accesibilidad:** es un `div` sin semántica; la estructura la aportan `header`, `section`,
   `footer` y `nav` que lo envuelven.
 
@@ -194,8 +241,8 @@ Estados de datos por vista (carga, vacío, error y éxito): se definirán con ca
 - **Propósito:** acción o enlace con aspecto de botón.
 - **Props:** `children` (texto que describe la acción); `variant` (`primary` por defecto o
   `secondary`); `href` opcional.
-- **Variantes:** `primary` (fondo `cherry-700`, texto `cream-50`), solo una por pantalla;
-  `secondary` (borde `coffee-700`, texto `coffee-900`, sin fondo).
+- **Variantes:** `primary` (píldora `buy-700`, texto `white`), solo una por pantalla;
+  `secondary` (píldora con borde `ink-900`, texto `ink-900`, sin fondo).
 - **Estados:** reposo, hover y activo según la tabla de estados; foco con el contorno global.
   Aún no tiene estado deshabilitado ni de carga: se añadirán con el carrito.
 - **Celular y escritorio:** alto mínimo de 44 px y relleno lateral de 24 px. Quien lo usa decide
@@ -207,33 +254,24 @@ Estados de datos por vista (carga, vacío, error y éxito): se definirán con ca
 
 - **Propósito:** marca, navegación principal y acceso al carrito.
 - **Props:** `logoSrc` (ruta del logo o `null`); `cartCount` opcional (0 por defecto).
-- **Variantes:** con logo (`next/image` de 40 px de alto, `alt="Café Ladera"`) o con el nombre
-  en texto con `--font-display` si no existe `public/brand/logo.svg`.
-- **Estados:** enlace de la página actual con subrayado `cherry-700` y `aria-current="page"`;
-  hover de enlaces y del carrito según la tabla de estados.
-- **Celular:** fila 1 con la marca y el carrito; fila 2 con la navegación, alineada con el borde
-  del contenido. **Desde `md`:** una sola fila (marca, navegación centrada, carrito).
-- **Accesibilidad:** sin JavaScript de cliente. El orden de tabulación es marca, navegación y
-  carrito en todos los tamaños. `nav` con `aria-label="Principal"`. El carrito muestra
-  "Carrito" y un contador oculto a lectores de pantalla; su nombre accesible es, por ejemplo,
-  "Carrito, 0 productos". Todos los enlaces y el carrito miden al menos 44 px de alto.
+- Se rediseña en la fase 2 (franja de avisos, menú por categorías e iconos).
 
 ### Hero
 
 - **Propósito:** presentar la tienda y llevar a la compra con la acción principal.
 - **Props:** ninguna; el texto es fijo de la portada.
-- **Contenido:** antetítulo `cherry-700` en mayúsculas, `h1`, texto destacado y dos botones:
-  "Ver productos" (`primary`, lleva a `#productos`) y "Conocer el origen" (`secondary`).
+- **Contenido:** antetítulo `ink-700` en mayúsculas, `h1`, texto destacado y dos botones:
+  "Ver café" (`primary`, lleva a `#cafe`) y "Ver cafeteras" (`secondary`, lleva a `#cafeteras`).
 - **Celular:** botones apilados a ancho completo. **Escritorio:** botones en fila y texto
   limitado a `max-w-3xl` para que las líneas no sean demasiado largas.
 - **Accesibilidad:** contiene el único `h1` de la portada y la sección se nombra con él
-  (`aria-labelledby`). Fondo `cream-100`; foco `cherry-700` a 6.12:1.
+  (`aria-labelledby`). Fondo `neutral-100`.
 
 ### Section
 
 - **Propósito:** bloque de página con título y contenido, separado por `--spacing-section`.
 - **Props:** `id` (ancla de navegación), `title` (`h2`), `description` opcional, `tone`
-  (`default` con `cream-50` o `muted` con `cream-100`) y `children`.
+  (`default` con `white` o `muted` con `neutral-100`) y `children`.
 - **Variantes:** `default` y `muted`, que se alternan para separar secciones sin sombras.
 - **Celular y escritorio:** relleno vertical de 64 px en celular y 96 px desde `md`; título
   `text-3xl` que sube a `text-4xl` desde `md`.
@@ -244,16 +282,29 @@ Estados de datos por vista (carga, vacío, error y éxito): se definirán con ca
 
 - **Propósito:** mostrar un producto en listados y destacados.
 - **Props:** `product` (`Product` del dominio).
-- **Contenido:** espacio de imagen, nombre (`h3`), notas de sabor, descripción, precio con
-  `formatPrice` e insignia "Agotado" si `availableForSale` es falso.
-- **Estados:** disponible y agotado. Aún no es interactiva: el enlace a la ficha y el botón de
-  compra llegarán con el catálogo.
-- **Celular:** una columna; imagen 4:3 (`--aspect-product-compact`) para que cada tarjeta no
-  ocupe toda la pantalla. **Desde `md`:** tres columnas e imagen 4:5 (`--aspect-product`). El
-  precio queda alineado al pie de la tarjeta (`mt-auto`) aunque las descripciones difieran.
+- **Contenido:** espacio de imagen `neutral-200` con insignias superpuestas (descuento y
+  agotado), nombre (`h3`), notas de sabor en píldoras (solo si el producto tiene), descripción
+  y precio.
+- **Precio:** sin descuento, en `buy-700`. Con descuento real (`getDiscountPercentage` mayor que
+  0), precio vigente en `sale-700` seguido del precio anterior tachado en `ink-500`.
+- **Estados:** disponible, en oferta y agotado (combinables). Aún no es interactiva: el enlace a
+  la ficha y el botón de compra llegarán con el catálogo.
+- **Celular:** imagen 4:3 (`--aspect-product-compact`). **Desde `md`:** imagen 4:5
+  (`--aspect-product`). El precio queda alineado al pie de la tarjeta (`mt-auto`) aunque las
+  descripciones difieran. Tarjeta sin borde ni fondo: el blanco de la página hace de marco.
 - **Accesibilidad:** `<article>`; el espacio de imagen es decorativo (`aria-hidden`). Las notas
-  son una lista con `aria-label="Notas de sabor"`. El agotado se comunica con texto, no solo con
-  color.
+  son una lista con `aria-label="Notas de sabor"`. La insignia "-18%" se lee como "18% de
+  descuento"; el precio anterior usa `<del>` y textos ocultos "Precio de oferta:" y "Precio
+  anterior:" para no depender del color ni del tachado.
+
+### ProductGrid
+
+- **Propósito:** listar productos con la misma rejilla en toda la tienda.
+- **Props:** `products`; `emptyMessage` opcional.
+- **Estados:** con productos (lista) y vacío (párrafo con el mensaje, sin lista vacía).
+- **Celular:** una columna. **Desde `sm`:** dos columnas. **Desde `lg`:** tres columnas.
+  Separación de 24 px entre columnas y 48 px entre filas.
+- **Accesibilidad:** `<ul>` con un `<li>` por tarjeta, para que se anuncie el número de productos.
 
 ### Footer
 
@@ -261,17 +312,16 @@ Estados de datos por vista (carga, vacío, error y éxito): se definirán con ca
 - **Props:** ninguna.
 - **Celular:** marca, texto y enlaces apilados. **Desde `md`:** texto a la izquierda y enlaces
   alineados a la derecha.
-- **Accesibilidad:** `<footer>` con `nav aria-label="Proyecto"`. Fondo `coffee-900` con texto
-  `cream-100` (13.98:1) y enlaces `cream-50` subrayados; el foco usa `cream-50` (15.62:1) porque
-  `cherry-700` no alcanza 3:1. Enlaces de 44 px de alto. La marca es un párrafo, no un
-  encabezado, para no alterar la jerarquía de la página.
+- **Accesibilidad:** `<footer>` con `nav aria-label="Proyecto"`. Fondo `ink-900` con texto
+  `neutral-100` (16.89:1) y enlaces `white` subrayados; el foco usa `white` (18.42:1). Enlaces
+  de 44 px de alto. La marca es un párrafo, no un encabezado, para no alterar la jerarquía.
 
 ### DemoNotice
 
 - **Propósito:** recordar en todas las páginas que no se realizan ventas reales.
 - **Props:** ninguna.
-- **Celular y escritorio:** franja `coffee-900` de texto centrado `text-sm`; en 375 px ocupa dos
+- **Celular y escritorio:** franja `ink-900` de texto centrado `text-sm`; en 375 px ocupa dos
   líneas.
-- **Accesibilidad:** texto `cream-50` sobre `coffee-900` (15.62:1) y `role="status"`. No contiene
+- **Accesibilidad:** texto `white` sobre `ink-900` (18.42:1) y `role="status"`. No contiene
   elementos interactivos; el enlace para saltar al contenido aparece por encima de él al recibir
   foco (ver la sección Foco).

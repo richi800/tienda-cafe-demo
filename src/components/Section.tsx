@@ -26,8 +26,8 @@ export type SectionProps = {
 };
 
 const TONE_CLASSES: Record<SectionTone, string> = {
-  default: "bg-cream-50",
-  muted: "bg-cream-100",
+  default: "bg-white",
+  muted: "bg-neutral-100",
 };
 
 /**
@@ -50,11 +50,11 @@ export function Section({ id, title, description, tone = "default", children }: 
         <div className="mb-8 max-w-2xl md:mb-12">
           <h2
             id={titleId}
-            className="font-display text-3xl font-semibold text-coffee-900 md:text-4xl"
+            className="font-display text-3xl font-semibold tracking-tight text-ink-900 md:text-4xl"
           >
             {title}
           </h2>
-          {description && <p className="mt-3 text-lg text-coffee-700">{description}</p>}
+          {description && <p className="mt-3 text-lg text-ink-700">{description}</p>}
         </div>
         {children}
       </Container>

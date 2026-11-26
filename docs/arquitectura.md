@@ -44,6 +44,26 @@ misma forma, de modo que la interfaz se puede construir sin depender de la API.
 `Product` incluye `flavorNotes` (notas de sabor como lista de textos). En Shopify provendrán de un
 metafield del producto; el adaptador de `src/lib/shopify` deberá convertirlo a esta forma.
 
+Además, `Product` tiene:
+
+- `category` (`"coffee" | "machines" | "accessories"`): familia del producto. En Shopify se
+  derivará del tipo de producto o de la colección.
+- `compareAtPrice` opcional: precio antes del descuento; equivale a `compareAtPrice` de la
+  variante en la Storefront API.
+- `colorOptions` opcional: colores disponibles (`name` y `hex`). En Shopify vendrán de la opción
+  "Color" de las variantes y de un metafield con el valor hexadecimal.
+
+`getDiscountPercentage` (`src/domain/product.ts`) calcula el porcentaje de descuento como regla
+pura: redondea hacia abajo para no anunciar más descuento del real, devuelve 0 si no hay precio
+anterior mayor que el actual y lanza `RangeError` si los montos no son numéricos o las monedas no
+coinciden. Valida los montos con `parseAmount` de `src/domain/money.ts`, la misma función que usa
+`formatPrice`.
+
+Los avisos de la franja superior siguen el mismo patrón: el tipo `Announcement` vive en
+`src/domain/announcement.ts` y los datos de ejemplo en `src/data/announcements.ts`, junto con las
+constantes de las promociones (umbral de envío gratis y descuento de suscripción) que reutiliza
+la sección de términos de la portada.
+
 ### Logo de la marca
 
 El layout raíz llama a `resolveBrandLogo` (`src/lib/brand/logo.ts`), que comprueba con
