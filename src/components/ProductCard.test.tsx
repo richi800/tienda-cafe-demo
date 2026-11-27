@@ -75,22 +75,23 @@ describe("ProductCard", () => {
     expect(html).toContain("background-color:#3A3A3A");
   });
 
-  it("enlaza a la ficha cuando no hay nota de no disponible", () => {
+  it("enlaza a la ficha con el botón verde Ver detalles y comprar", () => {
     const html = renderToStaticMarkup(<ProductCard product={product} />);
 
-    expect(html).toMatch(/<a[^>]*href="\/productos\/cafe-de-prueba"[^>]*>Ver detalles y comprar<\/a>/);
+    const link = html.match(/<a [^>]*>Ver detalles y comprar<\/a>/)?.[0] ?? "";
+
+    expect(link).toContain('href="/productos/cafe-de-prueba"');
+    expect(link).toContain("bg-buy-700");
+    expect(html).not.toContain("Próximamente");
+    expect(html).not.toContain("aria-disabled");
   });
 
-  it("muestra Próximamente, atenuado y descrito por la nota, si la compra no está disponible", () => {
-    const html = renderToStaticMarkup(<ProductCard product={product} purchaseNoteId="nota" />);
-
-    expect(html).toMatch(
-      /<button type="button" aria-disabled="true" aria-describedby="nota"[^>]*>Próximamente<\/button>/,
+  it("también enlaza a la ficha si el producto está agotado", () => {
+    const html = renderToStaticMarkup(
+      <ProductCard product={{ ...product, availableForSale: false }} />,
     );
-    expect(html).toMatch(/<button[^>]*class="[^"]*bg-neutral-200[^"]*"/);
-    expect(html).not.toContain("Ver detalles y comprar");
-    expect(html).not.toContain("bg-buy-700");
-    expect(html).not.toContain("/productos/");
+
+    expect(html).toContain('href="/productos/cafe-de-prueba"');
   });
 
   it("muestra la insignia de agotado solo si no hay existencias", () => {

@@ -4,6 +4,8 @@
  * @packageDocumentation
  */
 
+import type { ProductCategory } from "@/domain/product";
+
 /** Icono asociado a una sección; cada componente lo traduce a su SVG. */
 export type SectionIconName = "bean" | "machine" | "cup" | "leaf" | "tag";
 
@@ -32,3 +34,13 @@ export const CATALOG_SECTIONS: readonly SectionLink[] = [
   { id: "cafeteras", label: "Cafeteras", icon: "machine" },
   { id: "accesorios", label: "Accesorios", icon: "cup" },
 ];
+
+/**
+ * Sección de la portada que corresponde a cada familia de producto. La ruta de navegación
+ * de la ficha la usa para enlazar la categoría con su ancla (por ejemplo `/#cafe`).
+ */
+export const CATEGORY_SECTIONS: Readonly<Record<ProductCategory, SectionLink>> = {
+  coffee: { id: "cafe", label: "Café", icon: "bean" },
+  machines: { id: "cafeteras", label: "Cafeteras", icon: "machine" },
+  accessories: { id: "accesorios", label: "Accesorios", icon: "cup" },
+};

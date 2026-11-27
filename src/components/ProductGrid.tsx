@@ -14,8 +14,6 @@ export type ProductGridProps = {
   products: readonly Product[];
   /** Texto que se muestra si la lista está vacía. */
   emptyMessage?: string;
-  /** `id` de la nota que explica por qué la compra aún no está disponible (ver `ProductCard`). */
-  purchaseNoteId?: string;
 };
 
 /**
@@ -28,7 +26,6 @@ export type ProductGridProps = {
 export function ProductGrid({
   products,
   emptyMessage = "Por ahora no hay productos en esta sección.",
-  purchaseNoteId,
 }: ProductGridProps) {
   if (products.length === 0) {
     return (
@@ -42,7 +39,7 @@ export function ProductGrid({
     <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {products.map((product) => (
         <li key={product.id}>
-          <ProductCard product={product} purchaseNoteId={purchaseNoteId} />
+          <ProductCard product={product} />
         </li>
       ))}
     </ul>

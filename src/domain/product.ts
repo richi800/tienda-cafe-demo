@@ -1,6 +1,7 @@
 /**
  * Modelo de producto del catálogo, independiente de la fuente de datos, y reglas
- * puras asociadas como el cálculo del descuento.
+ * puras asociadas: cálculo del descuento, búsqueda por `handle` y selección de
+ * productos relacionados.
  *
  * @packageDocumentation
  */
@@ -83,4 +84,45 @@ export function getDiscountPercentage(price: Money, compareAtPrice?: Money): num
   }
 
   return Math.floor(((previous - current) / previous) * 100);
+}
+
+/**
+ * Busca un producto por su `handle`.
+ *
+ * @param products - Catálogo en el que buscar.
+ * @param handle - Segmento de URL del producto, tal como llega en la ruta.
+ * @returns El producto con ese `handle`, o `undefined` si no existe.
+ */
+export function findProductByHandle(
+  products: readonly Product[],
+  handle: string,
+): Product | undefined {
+  return products.find((product) => product.handle === handle);
+}
+
+/** Máximo de productos relacionados que se sugieren por omisión. */
+export const DEFAULT_RELATED_LIMIT = 3;
+
+/**
+ * Elige productos de la misma categoría que el indicado, sin incluirlo, en el orden del
+ * catálogo.
+ *
+ * @param products - Catálogo del que elegir.
+ * @param product - Producto de referencia; nunca aparece en el resultado.
+ * @param limit - Máximo de productos a devolver. Por omisión {@link DEFAULT_RELATED_LIMIT}.
+ * @returns Hasta `limit` productos de la misma categoría; vacío si no hay otros.
+ * @throws {RangeError} Si `limit` no es un entero mayor o igual a cero.
+ */
+export function selectRelatedProducts(
+  products: readonly Product[],
+  product: Product,
+  limit: number = DEFAULT_RELATED_LIMIT,
+): Product[] {
+  if (!Number.isInteger(limit) || limit < 0) {
+    throw new RangeError(`El límite de relacionados debe ser un entero no negativo: ${limit}`);
+  }
+
+  return products
+    .filter((candidate) => candidate.category === product.category && candidate.id !== product.id)
+    .slice(0, limit);
 }

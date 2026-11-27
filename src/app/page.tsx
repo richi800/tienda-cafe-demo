@@ -10,7 +10,7 @@ import {
   SUBSCRIPTION_DISCOUNT_PERCENT,
 } from "@/data/announcements";
 import { faqs } from "@/data/faqs";
-import { sampleProducts } from "@/data/sample-products";
+import { getProducts } from "@/data/products";
 import { getDiscountPercentage, type Product, type ProductCategory } from "@/domain/product";
 
 /** Sección de catálogo de la portada. */
@@ -21,13 +21,6 @@ type CatalogSection = {
   products: readonly Product[];
   emptyMessage?: string;
 };
-
-/**
- * Explica por qué el botón de compra de las tarjetas aún no está disponible. Cada banner la
- * muestra con el id `<seccion>-nota` y los botones la referencian con aria-describedby.
- */
-const PURCHASE_NOTE =
-  "Vista previa: la ficha de cada producto y la compra se habilitarán próximamente.";
 
 /** Punto de la propuesta de valor de la sección "La diferencia". */
 type Differentiator = {
@@ -60,11 +53,12 @@ const PROMOTION_TERMS: readonly string[] = [
 /**
  * Productos de una categoría, en el orden del catálogo.
  *
+ * @param products - Catálogo completo.
  * @param category - Categoría a filtrar.
  * @returns Los productos de esa categoría.
  */
-function productsIn(category: ProductCategory) {
-  return sampleProducts.filter((product) => product.category === category);
+function productsIn(products: readonly Product[], category: ProductCategory) {
+  return products.filter((product) => product.category === category);
 }
 
 /**
@@ -75,8 +69,9 @@ function productsIn(category: ProductCategory) {
  *
  * @returns El contenido de la página de inicio.
  */
-export default function HomePage() {
-  const promotions = sampleProducts.filter(
+export default async function HomePage() {
+  const products = await getProducts();
+  const promotions = products.filter(
     (product) => getDiscountPercentage(product.price, product.compareAtPrice) > 0,
   );
 
@@ -92,19 +87,19 @@ export default function HomePage() {
       id: "cafe",
       title: "Café",
       description: "Grano entero en bolsas de 340 g, listo para tu método favorito.",
-      products: productsIn("coffee"),
+      products: productsIn(products, "coffee"),
     },
     {
       id: "cafeteras",
       title: "Cafeteras",
       description: "Equipos para preparar espresso y café filtrado en casa.",
-      products: productsIn("machines"),
+      products: productsIn(products, "machines"),
     },
     {
       id: "accesorios",
       title: "Accesorios",
       description: "Molinos, espumadores y tazas para completar tu barra de café.",
-      products: productsIn("accessories"),
+      products: productsIn(products, "accessories"),
     },
   ];
 
@@ -119,13 +114,8 @@ export default function HomePage() {
           id={section.id}
           title={section.title}
           description={section.description}
-          note={PURCHASE_NOTE}
         >
-          <ProductGrid
-            products={section.products}
-            emptyMessage={section.emptyMessage}
-            purchaseNoteId={`${section.id}-nota`}
-          />
+          <ProductGrid products={section.products} emptyMessage={section.emptyMessage} />
         </CategorySection>
       ))}
 
