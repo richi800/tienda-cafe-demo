@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 
-import { SectionIcon } from "./SectionIcon";
+import { SectionThumbnail } from "./SectionThumbnail";
 import type { SectionLink } from "./store-sections";
 import { useActiveSection } from "./use-active-section";
 
@@ -17,8 +17,8 @@ export type HeroTabsProps = {
 };
 
 /**
- * Muestra la etiqueta "Filtro" con un separador vertical y una pestaña con icono por
- * sección.
+ * Muestra la etiqueta "Filtro" con un separador vertical y una pestaña por sección, con su
+ * miniatura redonda (foto de la categoría o, si no tiene, su icono).
  *
  * Son enlaces a anclas, no un `tablist`: no cambian paneles, desplazan la página. La pestaña
  * de la sección visible lleva subrayado negro y `aria-current="true"`; antes de que haya una
@@ -49,7 +49,7 @@ export function HeroTabs({ sections }: HeroTabsProps) {
               data-highlighted={highlighted === section.id ? "" : undefined}
               className="-outline-offset-2 flex min-h-14 items-center gap-2 border-b-2 border-transparent px-4 font-medium whitespace-nowrap text-ink-700 transition-colors hover:text-ink-900 data-highlighted:border-ink-900 data-highlighted:text-ink-900 md:px-6"
             >
-              <SectionIcon name={section.icon} className="size-5" />
+              <SectionThumbnail section={section} />
               {section.label}
             </a>
           </li>

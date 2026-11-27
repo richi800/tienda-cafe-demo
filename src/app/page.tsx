@@ -1,7 +1,12 @@
 import Image from "next/image";
 
 import { CategorySection } from "@/components/CategorySection";
-import { ORIGIN_IMAGE } from "@/components/editorial-images";
+import {
+  CUPS_IMAGE,
+  DRIP_MACHINE_IMAGE,
+  ESPRESSO_MACHINE_IMAGE,
+  ORIGIN_IMAGE,
+} from "@/components/editorial-images";
 import { Faq } from "@/components/Faq";
 import { Hero, HERO_ID } from "@/components/Hero";
 import { ProductGrid } from "@/components/ProductGrid";
@@ -14,7 +19,12 @@ import {
 } from "@/data/announcements";
 import { faqs } from "@/data/faqs";
 import { getProducts } from "@/data/products";
-import { getDiscountPercentage, type Product, type ProductCategory } from "@/domain/product";
+import {
+  getDiscountPercentage,
+  type Product,
+  type ProductCategory,
+  type ProductImage,
+} from "@/domain/product";
 
 /** Sección de catálogo de la portada. */
 type CatalogSection = {
@@ -23,6 +33,8 @@ type CatalogSection = {
   description: string;
   products: readonly Product[];
   emptyMessage?: string;
+  /** Fotos editoriales del banner, si la categoría las tiene. */
+  images?: readonly ProductImage[];
 };
 
 /** Punto de la propuesta de valor de la sección "La diferencia". */
@@ -97,12 +109,14 @@ export default async function HomePage() {
       title: "Cafeteras",
       description: "Equipos para preparar espresso y café filtrado en casa.",
       products: productsIn(products, "machines"),
+      images: [ESPRESSO_MACHINE_IMAGE, DRIP_MACHINE_IMAGE],
     },
     {
       id: "accesorios",
       title: "Accesorios",
       description: "Molinos, espumadores y tazas para completar tu barra de café.",
       products: productsIn(products, "accessories"),
+      images: [CUPS_IMAGE],
     },
   ];
 
@@ -117,6 +131,7 @@ export default async function HomePage() {
           id={section.id}
           title={section.title}
           description={section.description}
+          images={section.images}
         >
           <ProductGrid products={section.products} emptyMessage={section.emptyMessage} />
         </CategorySection>

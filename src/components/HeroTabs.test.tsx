@@ -15,6 +15,13 @@ describe("HeroTabs", () => {
     }
   });
 
+  it("no precarga las miniaturas para no competir con la foto del hero", () => {
+    const html = renderToStaticMarkup(<HeroTabs sections={HERO_TAB_SECTIONS} />);
+
+    expect(html).not.toContain('rel="preload"');
+    expect(html.match(/<img [^>]*alt=""[^>]*loading="lazy"/g)).toHaveLength(3);
+  });
+
   it("muestra la etiqueta Filtro antes de las pestañas", () => {
     const html = renderToStaticMarkup(<HeroTabs sections={HERO_TAB_SECTIONS} />);
 

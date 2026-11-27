@@ -11,6 +11,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Container } from "./Container";
 import { ChevronDownIcon } from "./icons";
 import { SectionIcon } from "./SectionIcon";
+import { SectionThumbnail } from "./SectionThumbnail";
 import type { SectionLink } from "./store-sections";
 import { useActiveSection } from "./use-active-section";
 
@@ -24,7 +25,7 @@ export type SectionNavProps = {
 
 /**
  * Muestra una barra blanca fija arriba con un desplegable de categoría y chips con un
- * pequeño espacio de imagen que saltan a cada sección.
+ * miniatura redonda (foto de la categoría o su icono) que saltan a cada sección.
  *
  * Mientras el hero está a la vista, la barra queda fuera de la pantalla y con `inert`, así
  * que no recibe foco ni aparece para lectores de pantalla. La transición de entrada solo se
@@ -55,13 +56,7 @@ export function SectionNav({ sections, triggerId }: SectionNavProps) {
                 aria-current={active === section.id ? "true" : undefined}
                 className="inline-flex min-h-11 items-center gap-2 rounded-pill border border-neutral-200 py-1 pr-4 pl-1 text-sm font-medium whitespace-nowrap text-ink-900 transition-colors hover:border-ink-900 aria-[current=true]:border-ink-900 aria-[current=true]:bg-ink-900 aria-[current=true]:text-white"
               >
-                {/* Espacio reservado para la miniatura de la categoría. */}
-                <span
-                  aria-hidden="true"
-                  className="inline-flex size-8 items-center justify-center rounded-pill bg-neutral-100 text-ink-900"
-                >
-                  <SectionIcon name={section.icon} className="size-4" />
-                </span>
+                <SectionThumbnail section={section} />
                 {section.label}
               </a>
             </li>

@@ -28,6 +28,39 @@ describe("CategorySection", () => {
     expect(html).toMatch(/<h2[^>]*class="[^"]*text-white[^"]*uppercase/);
   });
 
+  it("muestra las fotos editoriales en recuadros blancos con su alt y carga diferida", () => {
+    const html = renderToStaticMarkup(
+      <CategorySection
+        id="cafeteras"
+        title="Cafeteras"
+        description="Equipos."
+        images={[
+          { src: "/imagenes/a.webp", alt: "Cafetera de espresso", width: 1200, height: 1200 },
+          { src: "/imagenes/b.webp", alt: "Cafetera de goteo", width: 1200, height: 1200 },
+        ]}
+      >
+        <p>Contenido</p>
+      </CategorySection>,
+    );
+
+    expect(html.match(/<li class="[^"]*rounded-lg bg-white/g)).toHaveLength(2);
+    expect(html).toContain('alt="Cafetera de espresso"');
+    expect(html).toContain('alt="Cafetera de goteo"');
+    expect(html.match(/loading="lazy"/g)).toHaveLength(2);
+    expect(html).toContain("object-contain");
+  });
+
+  it("no agrega lista de fotos si la categoría no tiene", () => {
+    const html = renderToStaticMarkup(
+      <CategorySection id="cafe" title="Café" description="Grano entero.">
+        <p>Contenido</p>
+      </CategorySection>,
+    );
+
+    expect(html).not.toContain("<img");
+    expect(html).not.toContain("<ul");
+  });
+
   it("da a la nota un id derivado de la sección", () => {
     const html = renderToStaticMarkup(
       <CategorySection id="cafe" title="Café" description="Grano entero." note="Vista previa.">

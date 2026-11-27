@@ -1,6 +1,7 @@
 /**
- * Fotos editoriales de la portada. Son contenido fijo, como los textos del hero, y no
- * representan a ningún producto del catálogo. Las medidas son las reales de cada archivo.
+ * Fotos editoriales de la portada. Son recursos gráficos fijos, como los textos del hero, y no
+ * datos de productos: la información y las fotos de cada producto vendrán de Shopify. Las
+ * medidas son las reales de cada archivo.
  *
  * @packageDocumentation
  */
@@ -23,5 +24,44 @@ export const ORIGIN_IMAGE: ProductImage = {
   height: 900,
 };
 
+/** Bolsa de café en grano; miniatura de la categoría Café. */
+export const COFFEE_SECTION_IMAGE: ProductImage = {
+  src: "/imagenes/productos/cafe-bolsa-ladera.webp",
+  alt: "Bolsa blanca resellable de café con grano tostado visible",
+  width: 1200,
+  height: 1200,
+};
+
+/** Cafetera de espresso, para el banner y la miniatura de Cafeteras. */
+export const ESPRESSO_MACHINE_IMAGE: ProductImage = {
+  src: "/imagenes/secciones/cafeteras-espresso.webp",
+  alt: "Cafetera de espresso gris grafito con frente de acero, manómetro, portafiltro de mango negro y una taza blanca con espresso",
+  width: 1200,
+  height: 1200,
+};
+
+/** Cafetera de goteo, para el banner de Cafeteras. */
+export const DRIP_MACHINE_IMAGE: ProductImage = {
+  src: "/imagenes/secciones/cafeteras-goteo.webp",
+  alt: "Cafetera de goteo negra con depósito de agua translúcido y jarra térmica de acero inoxidable",
+  width: 1200,
+  height: 1200,
+};
+
+/** Tazas de espresso, para el banner y la miniatura de Accesorios. */
+export const CUPS_IMAGE: ProductImage = {
+  src: "/imagenes/secciones/accesorios-tazas.webp",
+  alt: "Dos tazas blancas de espresso con plato, una de ellas con café y crema",
+  width: 1200,
+  height: 1200,
+};
+
 /** Todas las fotos editoriales, para revisarlas juntas en las pruebas. */
-export const EDITORIAL_IMAGES: readonly ProductImage[] = [HERO_IMAGE, ORIGIN_IMAGE];
+export const EDITORIAL_IMAGES: readonly ProductImage[] = [
+  HERO_IMAGE,
+  ORIGIN_IMAGE,
+  COFFEE_SECTION_IMAGE,
+  ESPRESSO_MACHINE_IMAGE,
+  DRIP_MACHINE_IMAGE,
+  CUPS_IMAGE,
+];
