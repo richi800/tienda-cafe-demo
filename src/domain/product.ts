@@ -20,6 +20,21 @@ export type ColorOption = {
 };
 
 /**
+ * Fotografía de un producto. Equivale a `Image` de la Storefront API (`url`, `altText`,
+ * `width`, `height`); las medidas son las reales del archivo y sirven para reservar su espacio.
+ */
+export type ProductImage = {
+  /** Ruta o URL de la imagen. */
+  src: string;
+  /** Texto alternativo en español que describe lo que se ve. */
+  alt: string;
+  /** Ancho real en píxeles. */
+  width: number;
+  /** Alto real en píxeles. */
+  height: number;
+};
+
+/**
  * Producto que la tienda puede mostrar en el catálogo.
  *
  * Es el contrato que usa la interfaz: tanto los datos de ejemplo como los que
@@ -50,6 +65,8 @@ export type Product = {
   compareAtPrice?: Money;
   /** Colores disponibles, si el producto se vende en varios acabados. */
   colorOptions?: readonly ColorOption[];
+  /** Foto principal; si falta, la interfaz reserva su espacio con un fondo neutro. */
+  image?: ProductImage;
   /** Indica si hay existencias disponibles para comprar. */
   availableForSale: boolean;
 };

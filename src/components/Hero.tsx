@@ -4,6 +4,8 @@
  * @packageDocumentation
  */
 
+import Image from "next/image";
+
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { HeroTabs } from "./HeroTabs";
@@ -13,9 +15,19 @@ import { HERO_TAB_SECTIONS } from "./store-sections";
 export const HERO_ID = "inicio";
 
 /**
+ * Foto de ambiente del hero, con sus medidas reales. Es una imagen editorial de la portada: no
+ * representa a ningún producto del catálogo.
+ */
+export const HERO_IMAGE = {
+  src: "/imagenes/portada/set-caja-lata.webp",
+  alt: "Caja de café en grano, lata negra de café molido y cuchara medidora verde sobre fondo gris claro",
+  width: 896,
+  height: 896,
+} as const;
+
+/**
  * Muestra el hero partido: a la izquierda un bloque de color con categoría, titular,
- * novedad y la acción del bloque; a la derecha, el espacio reservado para la imagen de
- * ambiente. Debajo, montada sobre el borde inferior, la barra de pestañas por categoría.
+ * novedad y la acción del bloque; a la derecha, la foto de ambiente ({@link HERO_IMAGE}). Debajo, montada sobre el borde inferior, la barra de pestañas por categoría.
  *
  * En celular el bloque de texto va arriba y la imagen abajo; desde `md` quedan en dos
  * columnas de igual ancho.
@@ -46,11 +58,22 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Espacio de la imagen de ambiente: la proporción fija evita saltos cuando llegue la foto. */}
-        <div
-          aria-hidden="true"
-          className="aspect-hero-compact w-full bg-neutral-200 md:aspect-hero"
-        />
+        {/*
+          La proporción fija reserva el espacio (sin saltos de diseño). En celular (4:3) la foto
+          cuadrada se recorta arriba y abajo por igual con object-center, para no cortar el texto
+          de la caja; desde md (1:1) se ve completa.
+        */}
+        <div className="relative aspect-hero-compact w-full bg-neutral-200 md:aspect-hero">
+          <Image
+            src={HERO_IMAGE.src}
+            alt={HERO_IMAGE.alt}
+            width={HERO_IMAGE.width}
+            height={HERO_IMAGE.height}
+            loading="eager"
+            fetchPriority="high"
+            className="absolute inset-0 size-full object-cover object-center"
+          />
+        </div>
       </div>
 
       <Container className="relative z-10 -mt-8">

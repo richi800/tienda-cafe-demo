@@ -7,7 +7,18 @@
  * @packageDocumentation
  */
 
-import type { Product } from "@/domain/product";
+import type { Product, ProductImage } from "@/domain/product";
+
+/**
+ * Foto de estudio de la bolsa de café en grano. Por ahora la comparten todos los productos de
+ * la categoría café; cafeteras y accesorios aún no tienen foto. Medidas reales del archivo.
+ */
+export const COFFEE_BAG_IMAGE: ProductImage = {
+  src: "/imagenes/productos/cafe-bolsa-microlote.webp",
+  alt: "Bolsa blanca resellable de café con grano tostado visible, sobre fondo blanco",
+  width: 1200,
+  height: 1200,
+};
 
 /** Catálogo de ejemplo. Los precios están en pesos mexicanos. */
 export const sampleProducts: readonly Product[] = [
@@ -17,6 +28,7 @@ export const sampleProducts: readonly Product[] = [
     title: "Café de altura Chiapas",
     description: "Grano entero de tueste medio con notas de chocolate y nuez. Bolsa de 340 g.",
     category: "coffee",
+    image: COFFEE_BAG_IMAGE,
     flavorNotes: ["Chocolate", "Nuez"],
     price: { amount: "220.00", currencyCode: "MXN" },
     compareAtPrice: { amount: "260.00", currencyCode: "MXN" },
@@ -28,6 +40,7 @@ export const sampleProducts: readonly Product[] = [
     title: "Espresso Veracruz",
     description: "Mezcla de tueste oscuro pensada para espresso, con cuerpo intenso. Bolsa de 340 g.",
     category: "coffee",
+    image: COFFEE_BAG_IMAGE,
     flavorNotes: ["Cacao", "Caramelo oscuro"],
     price: { amount: "195.00", currencyCode: "MXN" },
     availableForSale: true,
@@ -38,6 +51,7 @@ export const sampleProducts: readonly Product[] = [
     title: "Descafeinado Oaxaca",
     description: "Descafeinado por proceso de agua, suave y dulce. Bolsa de 340 g.",
     category: "coffee",
+    image: COFFEE_BAG_IMAGE,
     flavorNotes: ["Panela", "Frutos rojos suaves"],
     price: { amount: "210.00", currencyCode: "MXN" },
     availableForSale: false,

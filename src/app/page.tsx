@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { CategorySection } from "@/components/CategorySection";
 import { Faq } from "@/components/Faq";
 import { Hero, HERO_ID } from "@/components/Hero";
@@ -42,6 +44,17 @@ const DIFFERENTIATORS: readonly Differentiator[] = [
     text: "Elegimos cafeteras y molinos que probamos con nuestro propio café antes de ofrecerlos.",
   },
 ];
+
+/**
+ * Foto de ambiente de "La diferencia", con sus medidas reales. Se carga en diferido porque
+ * queda lejos de la primera pantalla.
+ */
+const KITCHEN_IMAGE = {
+  src: "/imagenes/estilo/bolsa-en-cocina.webp",
+  alt: "Bolsa de café en grano sobre la barra de una cocina, junto a una tetera eléctrica de cuello de ganso",
+  width: 896,
+  height: 672,
+} as const;
 
 const PROMOTION_TERMS: readonly string[] = [
   `Envío gratis en pedidos desde $${FREE_SHIPPING_THRESHOLD_MXN} MXN dentro de México.`,
@@ -124,14 +137,25 @@ export default async function HomePage() {
         title="La diferencia"
         description="Café Ladera es una marca ficticia, pero su propuesta sigue lo que distingue a un buen tostador."
       >
-        <ul className="grid gap-8 md:grid-cols-3 md:gap-12">
-          {DIFFERENTIATORS.map((item) => (
-            <li key={item.title} className="border-t-2 border-ink-900 pt-4">
-              <h3 className="text-xl font-semibold tracking-tight text-ink-900">{item.title}</h3>
-              <p className="mt-2 text-ink-700">{item.text}</p>
-            </li>
-          ))}
-        </ul>
+        <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
+          {/* width y height reservan el espacio con la proporción real (4:3) antes de cargar. */}
+          <Image
+            src={KITCHEN_IMAGE.src}
+            alt={KITCHEN_IMAGE.alt}
+            width={KITCHEN_IMAGE.width}
+            height={KITCHEN_IMAGE.height}
+            loading="lazy"
+            className="h-auto w-full rounded-lg bg-neutral-100"
+          />
+          <ul className="grid gap-8">
+            {DIFFERENTIATORS.map((item) => (
+              <li key={item.title} className="border-t-2 border-ink-900 pt-4">
+                <h3 className="text-xl font-semibold tracking-tight text-ink-900">{item.title}</h3>
+                <p className="mt-2 text-ink-700">{item.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </Section>
 
       <Section

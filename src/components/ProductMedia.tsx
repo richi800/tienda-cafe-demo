@@ -1,8 +1,10 @@
 /**
- * Espacio de la imagen de un producto, con la cinta de descuento y la insignia de agotado.
+ * Imagen de un producto, con la cinta de descuento y la insignia de agotado.
  *
  * @packageDocumentation
  */
+
+import Image from "next/image";
 
 import { getDiscountPercentage, type Product } from "@/domain/product";
 
@@ -19,16 +21,20 @@ export type ProductMediaProps = {
 
 const VARIANT_CLASSES: Record<
   ProductMediaVariant,
-  { frame: string; image: string; ribbon: string; badge: string }
+  { frame: string; framedPhoto: string; image: string; ribbon: string; badge: string }
 > = {
   card: {
     frame: "",
+    // La tarjeta ya tiene borde propio.
+    framedPhoto: "",
     image: "aspect-product-compact md:aspect-product",
     ribbon: "top-5 -left-10 w-40 py-1 text-sm",
     badge: "top-3 right-3 px-3 py-1 text-sm",
   },
   detail: {
     frame: "rounded-lg",
+    // Con foto el fondo es blanco, como la página: el borde delimita la imagen.
+    framedPhoto: "border border-neutral-200",
     // En la ficha la imagen ocupa todo el ancho hasta lg; con 4:5 empujaría el precio y el
     // botón muy abajo en tableta, así que la proporción vertical se reserva para dos columnas.
     image: "aspect-product-compact lg:aspect-product",
@@ -38,21 +44,44 @@ const VARIANT_CLASSES: Record<
 };
 
 /**
- * Reserva el espacio de la imagen con las proporciones `--aspect-product-compact` y
- * `--aspect-product`, para que no haya saltos de diseño cuando lleguen las fotografías.
- * Encima muestra la cinta diagonal de descuento y la insignia "Agotado" cuando aplican.
+ * Muestra la foto del producto dentro de un espacio con proporción fija
+ * (`--aspect-product-compact` y `--aspect-product`), de modo que no hay saltos de diseño. La
+ * foto se ajusta con `object-contain` sobre fondo blanco para que el producto nunca se corte,
+ * sea cual sea la proporción. Si el producto no tiene foto, el espacio queda reservado con un
+ * fondo neutro. Encima van la cinta diagonal de descuento y la insignia "Agotado".
+ *
+ * En la ficha la foto es el elemento principal de la primera pantalla, así que se carga de
+ * inmediato y con prioridad alta; en tarjetas se carga en diferido.
  *
  * @param props - Propiedades de la imagen.
- * @returns Un `div` con el espacio reservado y las marcas del producto.
+ * @returns Un `div` con la imagen y las marcas del producto.
  */
 export function ProductMedia({ product, variant = "card" }: ProductMediaProps) {
   const classes = VARIANT_CLASSES[variant];
   const discount = getDiscountPercentage(product.price, product.compareAtPrice);
+  const { image } = product;
+  const isDetail = variant === "detail";
 
   return (
-    <div className={`relative overflow-hidden ${classes.frame}`.trim()}>
-      {/* Decorativo mientras no haya fotografía; con foto llevará el nombre como texto alternativo. */}
-      <div aria-hidden="true" className={`w-full bg-neutral-100 ${classes.image}`} />
+    <div
+      className={`relative overflow-hidden ${classes.frame} ${image ? classes.framedPhoto : ""}`.trim()}
+    >
+      {image ? (
+        <div className={`relative w-full bg-white ${classes.image}`}>
+          <Image
+            src={image.src}
+            alt={image.alt}
+            width={image.width}
+            height={image.height}
+            loading={isDetail ? "eager" : "lazy"}
+            fetchPriority={isDetail ? "high" : undefined}
+            className="absolute inset-0 size-full object-contain"
+          />
+        </div>
+      ) : (
+        // Decorativo mientras no haya fotografía.
+        <div aria-hidden="true" className={`w-full bg-neutral-100 ${classes.image}`} />
+      )}
       {discount > 0 && (
         // La cinta cruza la esquina superior izquierda; el contenedor recorta sus extremos.
         <p

@@ -41,3 +41,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# originales de las fotos: no se publican (todo lo que hay en public/ se sirve tal cual)
+public/imagenes/recibidas/
