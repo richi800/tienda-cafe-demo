@@ -205,9 +205,16 @@ cual (sin el optimizador de Vercel), por lo que los archivos ya vienen en WebP (
 | `productos/cafe-lata-tueste-oscuro.webp`  | 1200 x 1200 | Tarjeta y ficha de Espresso Veracruz | `object-contain` sobre `white` en 4:3 y 4:5 |
 | `productos/cafe-bolsa-ladera.webp`        | 1200 x 1200 | Tarjeta y ficha de Descafeinado Oaxaca | `object-contain` sobre `white` en 4:3 y 4:5 |
 | `estilo/cafetal-4x3.webp`                 | 1200 x 900 | Sección "La diferencia" de la portada | Proporción natural (`h-auto w-full`), radio `lg` |
+| `secciones/cafeteras-espresso.webp`       | 1200 x 1200 | Banner de Cafeteras y miniatura de Cafeteras | Recuadro blanco con `object-contain` (banner); círculo con `object-cover` al 125 % (miniatura) |
+| `secciones/cafeteras-goteo.webp`          | 1200 x 1200 | Banner de Cafeteras                  | Recuadro blanco con `object-contain`       |
+| `secciones/accesorios-tazas.webp`         | 1200 x 1200 | Banner y miniatura de Accesorios     | Igual que la cafetera de espresso          |
+| `productos/cafe-bolsa-ladera.webp`        | 1200 x 1200 | Miniatura de Café (además de su producto) | Círculo con `object-cover` al 125 %   |
 
-Las fotos de la portada se declaran en `src/components/editorial-images.ts` (`HERO_IMAGE` y
-`ORIGIN_IMAGE`); las de los cafés, una por producto, en los datos (`Product.image`). Los datos de cada
+Las fotos de la portada se declaran en `src/components/editorial-images.ts` (`HERO_IMAGE`,
+`ORIGIN_IMAGE`, `COFFEE_SECTION_IMAGE`, `ESPRESSO_MACHINE_IMAGE`, `DRIP_MACHINE_IMAGE` y
+`CUPS_IMAGE`). Las de `secciones/` son recursos gráficos de la página, no fotos de productos: no
+se asignan a las cafeteras ni a los accesorios de ejemplo, cuyas fotos vendrán de Shopify;
+ las de los cafés, una por producto, en los datos (`Product.image`). Los datos de cada
 café (presentación, peso y notas de sabor) coinciden con lo que muestra su empaque.
 
 Reglas:
@@ -329,7 +336,8 @@ Estados de datos por vista (carga, vacío, error y éxito):
 | `HeroTabs`    | `src/components/HeroTabs.tsx`    | Barra "Filtro" con pestañas a las secciones          |
 | `SectionNav`  | `src/components/SectionNav.tsx`  | Sub-header fijo con desplegable y chips de categoría |
 | `SectionIcon` | `src/components/SectionIcon.tsx` | Icono de cada sección (`store-sections.ts`)          |
-| `CategorySection` | `src/components/CategorySection.tsx` | Banner oscuro con título y tarjetas montadas encima |
+| `SectionThumbnail` | `src/components/SectionThumbnail.tsx` | Miniatura redonda de 32 px con la foto de la categoría o su icono |
+| `CategorySection` | `src/components/CategorySection.tsx` | Banner oscuro con título, fotos editoriales opcionales y tarjetas montadas encima |
 | `Section`     | `src/components/Section.tsx`     | Sección con `h2`, descripción y fondo `default`/`muted` |
 | `ProductCard` | `src/components/ProductCard.tsx` | Tarjeta blanca con cinta de descuento, colores, precio y botón de compra |
 | `ProductGrid` | `src/components/ProductGrid.tsx` | Rejilla de `ProductCard` con estado vacío             |
@@ -475,7 +483,7 @@ Estados de datos por vista (carga, vacío, error y éxito):
 - **Propósito:** saltar desde el hero a Café, Cafeteras, Accesorios y La diferencia.
 - **Props:** `sections` (`SectionLink[]` de `store-sections.ts`).
 - **Contenido:** "Filtro" en negritas con separador vertical `neutral-200` y una pestaña por
-  sección con icono de 20 px. Barra blanca con borde `neutral-200`, radio `lg` y
+  sección con su miniatura redonda (`SectionThumbnail`). Barra blanca con borde `neutral-200`, radio `lg` y
   `--shadow-overlay`.
 - **Estados:** la pestaña de la sección visible lleva subrayado `ink-900` de 2 px. Antes de que
   haya una sección a la vista se subraya la primera solo de forma visual.
@@ -495,7 +503,7 @@ Estados de datos por vista (carga, vacío, error y éxito):
   (`IntersectionObserver`). Mientras está oculto queda fuera de la pantalla y con `inert`. La
   entrada se anima solo con `motion-safe:`.
 - **Contenido:** desplegable de categoría hecho con `<details>` (muestra la sección actual) y
-  chips píldora con una miniatura reservada de 32 px; el chip de la sección visible se rellena de
+  chips píldora con la miniatura redonda de 32 px (`SectionThumbnail`); el chip de la sección visible se rellena de
   `ink-900`. Cuando la zona de lectura está en una sección que no es de catálogo (La diferencia,
   Suscripción, preguntas frecuentes, Términos o el pie), ningún chip queda marcado ni lleva
   `aria-current` y el desplegable muestra la opción neutra "Categoría". `useActiveSection` lleva
@@ -506,6 +514,22 @@ Estados de datos por vista (carga, vacío, error y éxito):
   usa `<details>` con enlaces y no un `<select>` que navegue al cambiar, porque con flechas del
   teclado algunos navegadores disparan el cambio en cada opción. `scroll-padding-top` evita que
   la barra tape el destino o el foco.
+
+### SectionThumbnail
+
+- **Propósito:** identificar cada categoría con una imagen en las pestañas del hero y en los chips
+  del sub-header.
+- **Props:** `section` (`SectionLink`, con `image` opcional).
+- **Contenido:** círculo de 32 px. Con foto (Café, Cafeteras y Accesorios): fondo `white`, borde
+  `neutral-200` y la foto con `object-cover` ampliada al 125 %, porque las fotos tienen mucho
+  margen blanco y a 32 px el producto no se reconocería. Sin foto (Promociones y La diferencia):
+  fondo `neutral-100` con el icono de 16 px, para que todas las pestañas queden alineadas.
+- **Carga:** siempre diferida, también en las pestañas del hero aunque estén en la primera
+  pantalla. Decisión: con `loading="eager"` React agrega un `<link rel="preload">` por miniatura
+  que compite con la foto del hero; en diferido el navegador las pide en cuanto calcula que están
+  a la vista. Una prueba de `HeroTabs` impide que vuelvan a precargarse.
+- **Accesibilidad:** decorativa: `alt=""` y `aria-hidden`, porque el texto del enlace ya nombra
+  la sección. El área táctil la da el enlace (56 px en pestañas, 44 px en chips).
 
 ### SectionIcon
 
@@ -521,6 +545,14 @@ Estados de datos por vista (carga, vacío, error y éxito):
 - **Contenido:** banner `banner-texture` con título `h2` en mayúsculas blancas, descripción y
   nota en `neutral-100`; debajo, el contenido sube 96 px (112 px desde `md`) para que las
   tarjetas blancas se monten sobre la franja oscura.
+- **Fotos editoriales (`images`, opcional):** Cafeteras muestra la cafetera de espresso y la de
+  goteo; Accesorios, las tazas. Decisión: como las fotos tienen fondo blanco, van en recuadros
+  blancos con radio `lg` y `object-contain`, como piezas en vitrina sobre la franja oscura. Se
+  descartó el círculo porque recortaría la cafetera de espresso, que es alta, y porque el círculo
+  ya identifica a las miniaturas de navegación. **Celular:** recuadros de 64 px bajo el texto,
+  para que el banner crezca solo unos 88 px y las tarjetas sigan montándose sobre él. **Desde
+  `md`:** a la derecha del texto, de 128 px (176 px desde `lg`). Carga diferida (están lejos de la
+  primera pantalla) y `alt` descriptivo, porque ilustran la categoría.
 - **Accesibilidad:** `<section>` nombrada por su `h2`. Las mayúsculas son de CSS, así que los
   lectores de pantalla leen el texto normal.
 
@@ -692,6 +724,13 @@ Estados de datos por vista (carga, vacío, error y éxito):
 
 De arriba abajo, en todas las páginas: enlace "Saltar al contenido" (solo visible con foco),
 `DemoNotice`, `AnnouncementBar` y `Header`. El orden de tabulación sigue el mismo orden.
+
+## Franja "Prepara tu café en casa"
+
+Decisión: no se agregó. Mostraría las mismas dos cafeteras que el banner de Cafeteras, que está
+justo debajo, y alargaría una portada que ya tiene ocho secciones. Si más adelante hay una foto
+de ambiente distinta (por ejemplo, una barra de café en una cocina), puede ir como franja
+editorial entre Accesorios y La diferencia, con un enlace a `#cafeteras`.
 
 ## Orden de la ficha de producto
 

@@ -81,9 +81,13 @@ misma forma, de modo que la interfaz se puede construir sin depender de la API.
   destacada del producto y su URL del CDN de Shopify, que habrá que permitir en
   `images.remotePatterns`. Los componentes no conocen rutas de archivos: `ProductMedia` usa lo
   que trae el producto.
-- **Editoriales:** la foto del hero y la de "La diferencia" (`HERO_IMAGE` y `ORIGIN_IMAGE` en
-  `src/components/editorial-images.ts`) son parte del contenido fijo de la portada, como sus
-  textos, y viven en `public/imagenes/portada/` y `public/imagenes/estilo/`.
+- **Editoriales:** las fotos del hero, de "La diferencia", de los banners de Cafeteras y
+  Accesorios y de las miniaturas de categoría se declaran en `src/components/editorial-images.ts`
+  y viven en `public/imagenes/portada/`, `estilo/` y `secciones/`. Son recursos gráficos fijos de
+  la página, como sus textos; las miniaturas se asocian a cada sección en `store-sections.ts`
+  (`SectionLink.image`). No sustituyen a las fotos de producto: la información y las imágenes de
+  cada producto vendrán de Shopify, y las cafeteras y accesorios de ejemplo conservan su espacio
+  reservado.
 - `public/imagenes/recibidas/` guarda los originales y está en `.gitignore`: todo lo que hay
   en `public/` se sirve tal cual, así que no se publica nada que no se use.
 - `readWebpSize` (`src/lib/images/webp-size.ts`) lee las medidas de la cabecera de un WebP sin
