@@ -30,15 +30,17 @@ export const PRODUCTS_CACHE_TAG = "products";
 /**
  * Obtiene todo el catálogo, en el orden en que se muestra.
  *
- * Se guarda en caché (perfil `hours`): así las páginas se pueden prerenderizar y no se
- * consulta Shopify en cada visita. Si la API falla, el respaldo también queda en caché
- * durante ese periodo; para una demostración se prefiere eso a una página rota.
+ * Se guarda en caché con el perfil `catalog` (`next.config.ts`: se revalida cada minuto y el
+ * navegador reutiliza lo que ya tiene hasta 30 s). Así las páginas se prerenderizan y Shopify
+ * no se consulta en cada visita, pero un cambio hecho en el admin aparece en cerca de un minuto,
+ * que es lo que necesita una demostración en vivo. Si la API falla, el respaldo de ejemplo
+ * también queda en caché ese minuto.
  *
  * @returns Los productos de la tienda.
  */
 export async function getProducts(): Promise<readonly Product[]> {
   "use cache";
-  cacheLife("hours");
+  cacheLife("catalog");
   cacheTag(PRODUCTS_CACHE_TAG);
 
   return loadCatalog();

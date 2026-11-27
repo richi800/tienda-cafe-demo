@@ -96,8 +96,20 @@ se evaluará al conectar Shopify, porque obligaría a consultar el catálogo en 
   - **Foto:** `featuredImage` pedida al CDN con `maxWidth` 1200 y formato WebP, porque Shopify
     la guarda a 2048 px y la tienda no usa optimizador. Las medidas se escalan a ese ancho. Si
     falta `altText`, se usa "Foto de <nombre>".
-- `src/data/products.ts` (`getProducts`) es una función `"use cache"` con `cacheLife("hours")`
+- `src/data/products.ts` (`getProducts`) es una función `"use cache"` con `cacheLife("catalog")`
   y la etiqueta `products`: las páginas se prerenderizan y Shopify no se consulta en cada visita.
+  - **Perfil `catalog`** (definido en `next.config.ts`): `stale` 30 s, `revalidate` 60 s y
+    `expire` 1 h. Decisión: la tienda es la vitrina del negocio y el dueño edita productos en el
+    admin de Shopify frente a prospectos, así que un cambio debe verse en cerca de un minuto.
+    Con `hours` (el valor anterior) un cambio de moneda tardó hasta una hora en aparecer.
+    30 s es el `stale` mínimo que admite `ensureStatic = "navigation"` en la ficha, y el
+    `expire` de 1 h está por encima de los 5 min que exige. Con la poca visita de una demo, una
+    consulta por minuto como máximo no se acerca a los límites de la Storefront API.
+  - **Propuesta para después (no implementada):** una ruta `src/app/api/shopify/webhook/route.ts`
+    que reciba los webhooks `products/create`, `products/update` y `products/delete` de
+    Shopify, verifique la firma HMAC (`X-Shopify-Hmac-Sha256`) con un secreto solo de servidor
+    y llame a `revalidateTag("products")`. Así los cambios serían inmediatos y el perfil podría
+    volver a horas. Requiere una URL pública (Vercel) y registrar el webhook en el admin.
   Elige la fuente en `loadCatalog`: Shopify si están las tres variables de entorno y responde;
   si faltan o la API falla, `sample-products.ts` (con un aviso en el log del servidor). El
   respaldo también queda en caché ese periodo; para una demostración se prefiere eso a una
