@@ -1,16 +1,13 @@
 import Image from "next/image";
 
+import { CatalogNoticePanel } from "@/components/CatalogNoticePanel";
 import { CategorySection } from "@/components/CategorySection";
-import {
-  CUPS_IMAGE,
-  DRIP_MACHINE_IMAGE,
-  ESPRESSO_MACHINE_IMAGE,
-  ORIGIN_IMAGE,
-} from "@/components/editorial-images";
+import { ORIGIN_IMAGE } from "@/components/editorial-images";
 import { Faq } from "@/components/Faq";
 import { Hero, HERO_ID } from "@/components/Hero";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Section } from "@/components/Section";
+import { buildHomeCatalog } from "@/components/home-catalog";
 import { SectionNav } from "@/components/SectionNav";
 import { CATALOG_SECTIONS } from "@/components/store-sections";
 import {
@@ -19,23 +16,6 @@ import {
 } from "@/data/announcements";
 import { faqs } from "@/data/faqs";
 import { getProducts } from "@/data/products";
-import {
-  getDiscountPercentage,
-  type Product,
-  type ProductCategory,
-  type ProductImage,
-} from "@/domain/product";
-
-/** Sección de catálogo de la portada. */
-type CatalogSection = {
-  id: string;
-  title: string;
-  description: string;
-  products: readonly Product[];
-  emptyMessage?: string;
-  /** Fotos editoriales del banner, si la categoría las tiene. */
-  images?: readonly ProductImage[];
-};
 
 /** Punto de la propuesta de valor de la sección "La diferencia". */
 type Differentiator = {
@@ -66,59 +46,17 @@ const PROMOTION_TERMS: readonly string[] = [
 ];
 
 /**
- * Productos de una categoría, en el orden del catálogo.
- *
- * @param products - Catálogo completo.
- * @param category - Categoría a filtrar.
- * @returns Los productos de esa categoría.
- */
-function productsIn(products: readonly Product[], category: ProductCategory) {
-  return products.filter((product) => product.category === category);
-}
-
-/**
  * Portada de la tienda: hero, sub-header fijo, promociones y una sección por categoría,
  * la diferencia, suscripción, preguntas frecuentes con contacto y condiciones de las
  * promociones. Cada sección es el destino de un enlace del encabezado, del hero, del
- * sub-header o del pie.
+ * sub-header o del pie. Qué muestra cada sección de catálogo (tarjetas o un aviso si está
+ * vacía) lo decide `buildHomeCatalog`.
  *
  * @returns El contenido de la página de inicio.
  */
 export default async function HomePage() {
   const products = await getProducts();
-  const promotions = products.filter(
-    (product) => getDiscountPercentage(product.price, product.compareAtPrice) > 0,
-  );
-
-  const catalog: readonly CatalogSection[] = [
-    {
-      id: "promociones",
-      title: "Promociones",
-      description: "Precios especiales por tiempo limitado en café, cafeteras y accesorios.",
-      products: promotions,
-      emptyMessage: "Por ahora no hay promociones activas.",
-    },
-    {
-      id: "cafe",
-      title: "Café",
-      description: "Café en grano y molido de Chiapas, Veracruz y Oaxaca, listo para tu método favorito.",
-      products: productsIn(products, "coffee"),
-    },
-    {
-      id: "cafeteras",
-      title: "Cafeteras",
-      description: "Equipos para preparar espresso y café filtrado en casa.",
-      products: productsIn(products, "machines"),
-      images: [ESPRESSO_MACHINE_IMAGE, DRIP_MACHINE_IMAGE],
-    },
-    {
-      id: "accesorios",
-      title: "Accesorios",
-      description: "Molinos, espumadores y tazas para completar tu barra de café.",
-      products: productsIn(products, "accessories"),
-      images: [CUPS_IMAGE],
-    },
-  ];
+  const catalog = buildHomeCatalog(products);
 
   return (
     <>
@@ -131,9 +69,13 @@ export default async function HomePage() {
           id={section.id}
           title={section.title}
           description={section.description}
-          images={section.images}
+          images={section.bannerImages}
         >
-          <ProductGrid products={section.products} emptyMessage={section.emptyMessage} />
+          {section.content.kind === "products" ? (
+            <ProductGrid products={section.content.products} />
+          ) : (
+            <CatalogNoticePanel notice={section.content.notice} />
+          )}
         </CategorySection>
       ))}
 
