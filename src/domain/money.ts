@@ -41,11 +41,14 @@ export function formatPrice(money: Money, locale: string = DEFAULT_LOCALE): stri
 /**
  * Convierte el monto textual a número.
  *
+ * Se exporta para que otras reglas del dominio (por ejemplo el cálculo del descuento)
+ * validen los montos igual que {@link formatPrice}.
+ *
  * @param amount - Monto decimal como texto.
  * @returns El monto como número.
  * @throws {RangeError} Si el texto no representa un número finito.
  */
-function parseAmount(amount: string): number {
+export function parseAmount(amount: string): number {
   // Se rechaza el texto vacío explícitamente porque Number("") devuelve 0
   // y ocultaría un dato faltante mostrando un precio gratuito.
   const parsed = amount.trim() === "" ? Number.NaN : Number(amount);

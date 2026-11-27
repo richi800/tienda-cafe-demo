@@ -4,8 +4,12 @@
  * @packageDocumentation
  */
 
-import { formatPrice } from "@/domain/money";
-import type { Product } from "@/domain/product";
+import type { ColorOption, Product } from "@/domain/product";
+
+import { Button } from "./Button";
+import { productHref } from "./product-links";
+import { ProductMedia } from "./ProductMedia";
+import { ProductPrice } from "./ProductPrice";
 
 /** Propiedades de {@link ProductCard}. */
 export type ProductCardProps = {
@@ -14,49 +18,70 @@ export type ProductCardProps = {
 };
 
 /**
- * Muestra nombre, notas de sabor, descripción, precio y disponibilidad de un producto.
- *
- * Mientras no haya fotografías, el espacio de la imagen se reserva con la proporción
- * `--aspect-product` (4:5) para que la tarjeta no cambie de tamaño cuando lleguen. En
- * celular, donde la rejilla tiene una sola columna, se usa `--aspect-product-compact`
- * (4:3) para que cada tarjeta no ocupe casi toda la pantalla.
+ * Muestra un producto en una tarjeta blanca: imagen con cinta de descuento, colores, nombre,
+ * frase corta, precio y el botón "Ver detalles y comprar", que lleva a la ficha.
  *
  * @param props - Propiedades de la tarjeta.
  * @returns Un `<article>` con la información del producto.
  */
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-lg border border-cream-200 bg-cream-100">
-      <div
-        aria-hidden="true"
-        className="aspect-product-compact w-full bg-cream-200 md:aspect-product"
-      />
+    <article className="flex h-full flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white text-center">
+      <ProductMedia product={product} />
 
-      <div className="flex flex-1 flex-col gap-3 p-4 lg:p-6">
-        <h3 className="font-display text-xl font-semibold text-coffee-900">{product.title}</h3>
+      <div className="flex flex-1 flex-col items-center gap-3 p-6">
+        {product.colorOptions && product.colorOptions.length > 0 && (
+          <ColorSwatches colors={product.colorOptions} />
+        )}
 
-        <ul aria-label="Notas de sabor" className="flex flex-wrap gap-2">
-          {product.flavorNotes.map((note) => (
-            <li
-              key={note}
-              className="rounded-sm border border-cream-200 bg-cream-50 px-2 py-1 text-sm text-coffee-700"
-            >
-              {note}
-            </li>
-          ))}
-        </ul>
+        <h3 className="text-lg font-bold tracking-tight text-ink-900">{product.title}</h3>
 
-        <p className="text-sm text-coffee-700">{product.description}</p>
+        {product.flavorNotes.length > 0 && (
+          <ul aria-label="Notas de sabor" className="flex flex-wrap justify-center gap-2">
+            {product.flavorNotes.map((note) => (
+              <li
+                key={note}
+                className="rounded-pill border border-neutral-200 px-3 py-1 text-sm text-ink-700"
+              >
+                {note}
+              </li>
+            ))}
+          </ul>
+        )}
 
-        <div className="mt-auto flex items-center justify-between gap-3 pt-2">
-          <p className="text-lg font-semibold text-coffee-900">{formatPrice(product.price)}</p>
-          {!product.availableForSale && (
-            <p className="rounded-sm bg-coffee-900 px-2 py-1 text-sm font-semibold text-cream-50">
-              Agotado
-            </p>
-          )}
+        <p className="text-sm text-ink-700">{product.description}</p>
+
+        <div className="mt-auto flex w-full flex-col items-center gap-4 pt-2">
+          <ProductPrice product={product} />
+          <Button href={productHref(product.handle)} className="w-full">
+            Ver detalles y comprar
+          </Button>
         </div>
       </div>
     </article>
+  );
+}
+
+/**
+ * Círculos con los colores disponibles.
+ *
+ * @param props - Colores del producto.
+ * @returns Una lista nombrada en la que cada color lleva su nombre en texto oculto.
+ */
+function ColorSwatches({ colors }: { colors: readonly ColorOption[] }) {
+  return (
+    <ul aria-label="Colores disponibles" className="flex gap-2">
+      {colors.map((color) => (
+        <li key={color.name}>
+          {/* El color viene del producto, no de la paleta; el borde neutral-500 (3:1) delimita los tonos claros. */}
+          <span
+            title={color.name}
+            className="block size-5 rounded-pill border border-neutral-500"
+            style={{ backgroundColor: color.hex }}
+          />
+          <span className="sr-only">{color.name}</span>
+        </li>
+      ))}
+    </ul>
   );
 }

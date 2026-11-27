@@ -16,7 +16,7 @@ export function DemoNotice() {
   return (
     <p
       role="status"
-      className="bg-coffee-900 px-4 py-2 text-center text-sm font-medium text-cream-50"
+      className="bg-ink-900 px-4 py-2 text-center text-sm font-medium text-white"
     >
       Tienda de demostración, no se realizan ventas reales.
     </p>

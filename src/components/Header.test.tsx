@@ -2,12 +2,13 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { Header } from "./Header";
+import { MAIN_NAV_ITEMS } from "./main-navigation";
 
 describe("Header", () => {
   it("muestra el nombre de la marca en texto cuando no hay logo", () => {
     const html = renderToStaticMarkup(<Header logoSrc={null} />);
 
-    expect(html).toContain("Café Ladera");
+    expect(html).toMatch(/<a[^>]*href="\/"[^>]*>Café Ladera<\/a>/);
     expect(html).not.toContain("<img");
   });
 
@@ -18,11 +19,40 @@ describe("Header", () => {
     expect(html).toMatch(/<img[^>]*src="\/brand\/logo.svg"/);
   });
 
-  it("marca Inicio como la página actual", () => {
+  it("incluye el menú principal en el orden previsto", () => {
+    expect(MAIN_NAV_ITEMS.map((item) => item.label)).toEqual([
+      "Promociones",
+      "Café",
+      "Cafeteras",
+      "Accesorios",
+      "Suscripción",
+      "¿Necesitas ayuda?",
+    ]);
+
+    const html = renderToStaticMarkup(<Header logoSrc={null} />);
+    for (const item of MAIN_NAV_ITEMS) {
+      expect(html).toContain(`href="${item.href}"`);
+    }
+  });
+
+  it("solo enlaza a secciones de la portada", () => {
+    for (const item of MAIN_NAV_ITEMS) {
+      expect(item.href).toMatch(/^\/#[a-z]+$/);
+    }
+  });
+
+  it("tiene un menú colapsable para celular, cerrado al inicio", () => {
     const html = renderToStaticMarkup(<Header logoSrc={null} />);
 
-    expect(html).toMatch(/<a[^>]*aria-current="page"[^>]*>Inicio<\/a>/);
-    expect(html.match(/aria-current=/g)).toHaveLength(1);
+    expect(html).toMatch(/<button[^>]*aria-expanded="false"[^>]*aria-controls="menu-principal"/);
+  });
+
+  it("nombra cada botón de icono", () => {
+    const html = renderToStaticMarkup(<Header logoSrc={null} />);
+
+    expect(html).toContain('aria-label="Favoritos"');
+    expect(html).toContain('aria-label="Buscar"');
+    expect(html).toContain('aria-label="Mi cuenta"');
   });
 
   it("nombra el carrito con la cantidad de productos", () => {

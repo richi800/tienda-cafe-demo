@@ -8,49 +8,82 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 /** Variantes visuales disponibles. */
-export type ButtonVariant = "primary" | "secondary";
+export type ButtonVariant = "primary" | "secondary" | "dark";
 
 /** Propiedades de {@link Button}. */
 export type ButtonProps = {
   /** Texto o contenido del botón; debe describir la acción. */
   children: ReactNode;
   /**
-   * `primary` para la acción principal de la pantalla (solo una por vista) y
-   * `secondary` para acciones alternativas. Por defecto `primary`.
+   * `primary` (verde de compra) para la acción principal de la pantalla, `dark` (negro) para
+   * la acción principal de un bloque editorial como el hero y `secondary` (con borde) para
+   * acciones alternativas. Por defecto `primary`.
    */
   variant?: ButtonVariant;
   /** Si se indica, el botón se renderiza como enlace de navegación hacia esta ruta. */
   href?: string;
+  /**
+   * Marca la acción como no disponible todavía. Se renderiza un `<button>` con
+   * `aria-disabled="true"` que sigue siendo enfocable, para que lectores de pantalla
+   * anuncien el motivo indicado en `describedBy`. Se ignora `href` y la variante: el botón se
+   * ve atenuado (`UNAVAILABLE_CLASSES`), sin hover ni estado activo.
+   */
+  unavailable?: boolean;
+  /** `id` del texto que explica la acción o el motivo de que no esté disponible. */
+  describedBy?: string;
+  /** Clases adicionales de disposición, por ejemplo `w-full`. */
+  className?: string;
 };
 
 const BASE_CLASSES =
-  "inline-flex min-h-11 items-center justify-center rounded-md px-6 py-2 text-base font-semibold transition-colors";
+  "inline-flex min-h-11 items-center justify-center rounded-pill px-6 py-2 text-base font-semibold transition-colors";
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: "bg-cherry-700 text-cream-50 hover:bg-cherry-800 active:bg-cherry-800",
+  primary: "bg-buy-700 text-white hover:bg-buy-800 active:bg-buy-800",
   secondary:
-    "border border-coffee-700 text-coffee-900 hover:bg-cream-100 active:bg-cream-200",
+    "border border-ink-900 text-ink-900 hover:bg-neutral-100 active:bg-neutral-200",
+  dark: "bg-ink-900 text-white hover:bg-ink-700 active:bg-ink-700",
 };
+
+/**
+ * Aspecto del estado no disponible, igual para todas las variantes. El texto `ink-700` sobre
+ * `neutral-200` (7.06:1) se lee bien aunque el texto sea la única indicación del estado.
+ */
+const UNAVAILABLE_CLASSES = "cursor-not-allowed bg-neutral-200 text-ink-700";
 
 /**
  * Muestra un botón con el estilo de la variante indicada.
  *
  * @param props - Propiedades del botón.
- * @returns Un enlace de `next/link` si recibe `href`; si no, un `<button type="button">`.
+ * @returns Un enlace de `next/link` si recibe `href` y está disponible; si no, un
+ * `<button type="button">`.
  */
-export function Button({ children, variant = "primary", href }: ButtonProps) {
-  const className = `${BASE_CLASSES} ${VARIANT_CLASSES[variant]}`;
+export function Button({
+  children,
+  variant = "primary",
+  href,
+  unavailable = false,
+  describedBy,
+  className = "",
+}: ButtonProps) {
+  const stateClasses = unavailable ? UNAVAILABLE_CLASSES : VARIANT_CLASSES[variant];
+  const classes = `${BASE_CLASSES} ${stateClasses} ${className}`.trim();
 
-  if (href !== undefined) {
+  if (href !== undefined && !unavailable) {
     return (
-      <Link href={href} className={className}>
+      <Link href={href} aria-describedby={describedBy} className={classes}>
         {children}
       </Link>
     );
   }
 
   return (
-    <button type="button" className={className}>
+    <button
+      type="button"
+      aria-disabled={unavailable ? "true" : undefined}
+      aria-describedby={describedBy}
+      className={classes}
+    >
       {children}
     </button>
   );
