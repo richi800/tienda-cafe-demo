@@ -291,8 +291,23 @@ Reglas:
 
 Estados de datos por vista (carga, vacío, error y éxito):
 
-- **Portada:** datos estáticos; su único estado alterno es el vacío de `ProductGrid` (por
-  ejemplo, "Por ahora no hay promociones activas.").
+- **Portada:** se prerenderiza con el catálogo de Shopify o, sin variables de entorno, con los
+  datos de ejemplo, así que no tiene estado de carga. Cada sección de catálogo tiene dos estados
+  que decide `buildHomeCatalog` (`src/components/home-catalog.ts`), una función pura probada:
+  - **Con productos:** tarjetas (`ProductGrid`); Cafeteras y Accesorios muestran además sus fotos
+    editoriales en el banner.
+  - **Sin productos:** `CatalogNoticePanel` en el lugar de las tarjetas. Promociones dice "Sin
+    promociones por ahora" con la acción "Ver café". Cafeteras y Accesorios dicen
+    "Próximamente", con un texto breve, sus fotos editoriales (que salen del banner para no
+    repetirse) y "Ver café". Si tampoco hubiera café, su aviso no lleva acción, porque enlazaría a
+    sí mismo.
+  - **Decisión: ninguna sección se oculta.** Se consideró ocultar Promociones, su pestaña y su
+    chip, pero el menú principal (en el layout, que no conoce el catálogo), el sub-header y el
+    botón "Ver promociones" del 404 enlazan a `/#promociones`; ocultarla obligaría a ocultar
+    esos enlaces según los datos y cualquier olvido dejaría un ancla rota. Un aviso cuidado
+    mantiene la navegación estable y le da a la persona un siguiente paso.
+  - El estado de error de la fuente lo cubre el repositorio: si Shopify falla, la portada usa los
+    datos de ejemplo.
 - **Ficha de producto:** se prerenderiza, así que no tiene estado de carga. Éxito: la ficha
   completa. No encontrado: el 404 de la tienda ("No encontramos este producto"). Sin
   relacionados: la sección "También te puede interesar" no se muestra. La compra está "no
@@ -341,6 +356,7 @@ Estados de datos por vista (carga, vacío, error y éxito):
 | `Section`     | `src/components/Section.tsx`     | Sección con `h2`, descripción y fondo `default`/`muted` |
 | `ProductCard` | `src/components/ProductCard.tsx` | Tarjeta blanca con cinta de descuento, colores, precio y botón de compra |
 | `ProductGrid` | `src/components/ProductGrid.tsx` | Rejilla de `ProductCard` con estado vacío             |
+| `CatalogNoticePanel` | `src/components/CatalogNoticePanel.tsx` | Aviso de sección de catálogo vacía ("Próximamente" o "Sin promociones por ahora") |
 | `Faq`         | `src/components/Faq.tsx`         | Acordeón `details`/`summary` con "Mostrar más"      |
 | `Footer`      | `src/components/Footer.tsx`      | Pagos de demostración, redes, país, enlaces, volver arriba y aviso |
 | `HelpWidget`  | `src/components/HelpWidget.tsx`  | Botón flotante "¿Te ayudamos?" con diálogo de accesos |
@@ -552,7 +568,8 @@ Estados de datos por vista (carga, vacío, error y éxito):
   ya identifica a las miniaturas de navegación. **Celular:** recuadros de 64 px bajo el texto,
   para que el banner crezca solo unos 88 px y las tarjetas sigan montándose sobre él. **Desde
   `md`:** a la derecha del texto, de 128 px (176 px desde `lg`). Carga diferida (están lejos de la
-  primera pantalla) y `alt` descriptivo, porque ilustran la categoría.
+  primera pantalla) y `alt` descriptivo, porque ilustran la categoría. Solo aparecen cuando la
+  sección tiene productos; si está vacía, las fotos pasan a `CatalogNoticePanel`.
 - **Accesibilidad:** `<section>` nombrada por su `h2`. Las mayúsculas son de CSS, así que los
   lectores de pantalla leen el texto normal.
 
@@ -663,6 +680,23 @@ Estados de datos por vista (carga, vacío, error y éxito):
 - **Propósito:** listar productos con la misma rejilla en toda la tienda.
 - **Props:** `products`; `emptyMessage` opcional.
 - **Estados:** con productos (lista) y vacío (tarjeta blanca con el mensaje, sin lista vacía).
+  En la portada el vacío no llega a usarse: `buildHomeCatalog` muestra `CatalogNoticePanel` en su
+  lugar. Se conserva para otros listados (por ejemplo, los relacionados).
+
+### CatalogNoticePanel
+
+- **Propósito:** que una sección de catálogo sin productos se vea intencional y ofrezca un
+  siguiente paso, en lugar de un texto plano.
+- **Props:** `notice` (`CatalogNotice`: `title`, `text`, `images` y `action` opcional).
+- **Contenido:** panel blanco con borde `neutral-200` y radio `lg` que se monta sobre el banner
+  como lo harían las tarjetas; fotos editoriales en recuadros blancos con borde `neutral-200` y
+  `object-contain`; título `h3` (`text-xl`), texto `ink-700` y botón `dark` con la acción.
+- **Qué no es:** no se parece a un producto a la venta. No tiene precio, ni botón de compra verde,
+  ni enlace a una ficha, ni es un `<article>`.
+- **Celular:** fotos de 112 px arriba y texto debajo; botón a ancho completo. **Desde `md`:** fotos
+  a la izquierda (160 px; 192 px desde `lg`) y texto a la derecha.
+- **Accesibilidad:** las fotos llevan su `alt` descriptivo y carga diferida; el título queda
+  bajo el `h2` de la sección.
 - **Celular:** una columna. **Desde `sm`:** dos. **Desde `lg`:** tres. Separación de 24 px.
 - **Accesibilidad:** `<ul>` con un `<li>` por tarjeta, para que se anuncie el número de productos.
 
