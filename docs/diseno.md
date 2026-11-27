@@ -123,11 +123,17 @@ Escala (pasos de Tailwind; celular, y desde `md` cuando cambia):
 | Elemento          | Clase                                 | Tamaño              |
 | ----------------- | ------------------------------------- | ------------------- |
 | `h1`              | `text-4xl md:text-6xl tracking-tight` | 2.25rem a 3.75rem   |
+| `h1` de la ficha  | `text-3xl md:text-4xl tracking-tight` | 1.875rem a 2.25rem  |
 | `h2`              | `text-3xl md:text-4xl tracking-tight` | 1.875rem a 2.25rem  |
 | `h3`              | `text-lg` o `text-xl`                 | 1.125rem a 1.25rem  |
 | Texto destacado   | `text-lg` (`md:text-xl`)              | 1.125rem (1.25rem)  |
 | Cuerpo            | `text-base`                           | 1rem, interlineado 1.6 en `body` |
 | Pequeño           | `text-sm`                             | 0.875rem            |
+
+Decisión: en la ficha de producto el `h1` es el nombre del producto y usa el tamaño de `h2`,
+porque comparte columna con el precio y nombres largos como "Cafetera de espresso Ladera Pro"
+ocuparían tres líneas a `text-6xl`. El precio de la ficha (`text-3xl`) sigue siendo el dato
+más llamativo después del nombre.
 
 Reglas: un solo `h1` por página, sin saltos de nivel; el texto de 0.875rem no usa `ink-500`
 salvo el precio anterior tachado, que siempre acompaña al precio vigente.
@@ -219,16 +225,24 @@ El espacio de imagen se reserva siempre con la proporción para evitar saltos de
 | Botón `primary`       | `bg-buy-700 text-white`, píldora | `bg-buy-800`                       | Foco global                            |
 | Botón `secondary`     | Borde `ink-900`, sin fondo, píldora | `bg-neutral-100` / `bg-neutral-200` | Foco global                       |
 | Botón `dark`          | `bg-ink-900 text-white`, píldora | `bg-ink-700`                       | Acción del hero                        |
-| Botón no disponible   | `bg-neutral-200 text-ink-700` (7.06:1), píldora, `cursor-not-allowed`; en tarjetas dice "Próximamente" | Sin cambios: no tiene hover ni estado activo | `aria-disabled="true"`, enfocable y descrito por una nota visible |
+| Botón no disponible   | `bg-neutral-200 text-ink-700` (7.06:1), píldora, `cursor-not-allowed`; en la ficha dice "Agregar al carrito" | Sin cambios: no tiene hover ni estado activo | `aria-disabled="true"`, enfocable y descrito por una nota visible |
 | Precio normal         | `text-buy-700`                  | —                                   | —                                      |
 | Precio de oferta      | `text-sale-700` y precio anterior `ink-500` tachado (`<del>`) | — | Texto oculto "Precio de oferta" y "Precio anterior" |
 | Cinta de descuento    | Banda diagonal `bg-promo-600 text-white`, por ejemplo "-18%" | —     | Lectores de pantalla oyen "18% de descuento" |
 | Pestaña o chip activo | Subrayado `ink-900` (pestaña) o píldora `ink-900` con texto `white` (chip) | — | `aria-current="true"` solo si la sección está a la vista |
-| Producto agotado      | Insignia `ink-900` / `white` con el texto "Agotado" | —               | El estado se comunica con texto, no solo con color |
+| Producto agotado      | Insignia `ink-900` / `white` con el texto "Agotado" | —               | El estado se comunica con texto, no solo con color; en la ficha la nota del botón dice "Agotado" |
+| Opción de color       | Círculo de 32 px con borde `neutral-500` dentro de un área de 44 px | Hover: anillo `neutral-500`; elegida: anillo `ink-900` de 2 px y nombre junto a la leyenda | Foco: contorno exterior `ink-900` separado 2 px, distinto del anillo de selección |
 
-Estados de datos por vista (carga, vacío, error y éxito): se definirán con cada módulo
-(catálogo, ficha, carrito). La portada usa datos estáticos; su único estado alterno es el
-vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
+Estados de datos por vista (carga, vacío, error y éxito):
+
+- **Portada:** datos estáticos; su único estado alterno es el vacío de `ProductGrid` (por
+  ejemplo, "Por ahora no hay promociones activas.").
+- **Ficha de producto:** se prerenderiza, así que no tiene estado de carga. Éxito: la ficha
+  completa. No encontrado: el 404 de la tienda ("No encontramos este producto"). Sin
+  relacionados: la sección "También te puede interesar" no se muestra. La compra está "no
+  disponible" mientras no exista el carrito, o "Agotado" si no hay existencias. El estado de
+  error (falla de la fuente de datos) se definirá con la conexión a Shopify.
+- **Carrito y catálogo:** se definirán con su módulo.
 
 ## Reglas de uso
 
@@ -257,6 +271,11 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 | `IconButton`  | `src/components/IconButton.tsx`  | Botón o enlace circular de 44 px con icono y contador opcional |
 | Iconos        | `src/components/icons.tsx`       | SVG propios en línea: interfaz (corazón, lupa, persona, bolsa, menú, cerrar, flechas), secciones (grano, cafetera, taza, hoja, etiqueta), ayuda y redes genéricas |
 | `Breadcrumb`  | `src/components/Breadcrumb.tsx`  | Ruta de navegación para páginas interiores           |
+| `ProductDetail` | `src/components/ProductDetail.tsx` | Contenido de la ficha: foto, nombre, precio, color, compra y descripción |
+| `ProductMedia` | `src/components/ProductMedia.tsx` | Espacio de la imagen con cinta de descuento e insignia de agotado (tarjeta y ficha) |
+| `ProductPrice` | `src/components/ProductPrice.tsx` | Precio normal en verde o de oferta con tachado y nota (tarjeta y ficha) |
+| `ColorSelector` | `src/components/ColorSelector.tsx` | Grupo de opciones de color con círculos (componente cliente) |
+| `NotFoundContent` | `src/components/NotFoundContent.tsx` | Aviso 404 con acciones para volver a la portada |
 | `Hero`        | `src/components/Hero.tsx`        | Hero partido con el `h1` y la barra de pestañas      |
 | `HeroTabs`    | `src/components/HeroTabs.tsx`    | Barra "Filtro" con pestañas a las secciones          |
 | `SectionNav`  | `src/components/SectionNav.tsx`  | Sub-header fijo con desplegable y chips de categoría |
@@ -377,7 +396,9 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 ### Breadcrumb
 
 - **Propósito:** ubicar a la persona en páginas interiores (catálogo, ficha). No se muestra en
-  la portada.
+  la portada. En la ficha la ruta es Inicio > categoría (enlace al ancla de su sección en la
+  portada, por ejemplo `/#cafe`, según `CATEGORY_SECTIONS` de `store-sections.ts`) > producto.
+- **Celular:** si el nombre del producto no cabe, el último nivel pasa a una segunda línea.
 - **Props:** `items` (`{ label, href? }[]`), de la portada a la página actual.
 - **Contenido:** niveles anteriores como enlaces `ink-700` (hover `ink-900` subrayado);
   separadores con la flecha derecha en `ink-500`; el último nivel en `ink-900`, sin enlace.
@@ -445,7 +466,8 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 
 - **Propósito:** sección de catálogo con presencia de boutique.
 - **Props:** `id`, `title`, `description`, `note` opcional (recibe el id `<id>-nota`) y
-  `children`.
+  `children`. La portada ya no pasa `note`: la nota de "Vista previa" desapareció cuando las
+  tarjetas empezaron a enlazar a la ficha.
 - **Contenido:** banner `banner-texture` con título `h2` en mayúsculas blancas, descripción y
   nota en `neutral-100`; debajo, el contenido sube 96 px (112 px desde `md`) para que las
   tarjetas blancas se monten sobre la franja oscura.
@@ -466,38 +488,95 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 ### ProductCard
 
 - **Propósito:** mostrar un producto en listados.
-- **Props:** `product` (`Product` del dominio) y `purchaseNoteId` opcional.
-- **Contenido (centrado):** imagen reservada `neutral-100`; cinta diagonal `promo-600` en la
-  esquina superior izquierda con el porcentaje de `getDiscountPercentage`; insignia "Agotado"
-  arriba a la derecha; círculos de `colorOptions`; nombre en negritas (`h3`); notas de sabor en
-  píldoras si las hay; frase corta; precio; botón `primary` "Ver detalles y comprar" a ancho
-  completo (o "Próximamente" atenuado mientras la compra no esté disponible).
-- **Precio:** sin descuento, `buy-700` en negritas. Con descuento, precio anterior tachado
-  `ink-500`, precio de oferta `sale-700` en negritas y la nota "*Reflejado al final de tu
-  compra".
+- **Props:** `product` (`Product` del dominio).
+- **Contenido (centrado):** `ProductMedia` (imagen reservada `neutral-100`, cinta diagonal
+  `promo-600` con el porcentaje de `getDiscountPercentage` e insignia "Agotado"); círculos de
+  `colorOptions`; nombre en negritas (`h3`); notas de sabor en píldoras si las hay; frase
+  corta; `ProductPrice`; botón `primary` "Ver detalles y comprar" a ancho completo, que enlaza
+  a `/productos/<handle>` (`productHref` de `product-links.ts`).
 - **Colores:** círculos de 20 px con borde `neutral-500` (3:1) para que se distingan los tonos
-  claros. El color viene del producto, no de la paleta: es la única excepción a los tokens.
-- **Botón de compra sin ficha:** decisión: mientras no existan las fichas, el botón es
-  `<button aria-disabled="true">` descrito por la nota visible del banner ("Vista previa: la
-  ficha de cada producto y la compra se habilitarán próximamente."). Así no se publica un enlace
-  roto y el botón sigue siendo enfocable, de modo que los lectores de pantalla anuncian que no
-  está disponible y el motivo. Se ve deshabilitado (fondo `neutral-200`, texto `ink-700`, sin
-  hover ni estado activo, cursor `not-allowed`) y dice "Próximamente" en lugar de "Ver detalles y
-  comprar", para no prometer una acción que no ocurre al pulsarlo. Cuando exista la ficha basta
-  con dejar de pasar `purchaseNoteId` y el botón vuelve a ser el verde "Ver detalles y comprar",
-  enlazado a `/productos/<handle>`.
-- **Estados:** disponible, en oferta, agotado y compra no disponible (combinables).
+  claros. El color viene del producto, no de la paleta: es la única excepción a los tokens. En la
+  tarjeta son informativos; se eligen en la ficha.
+- **Botón:** siempre es el enlace verde, también si el producto está agotado, porque la ficha
+  explica el estado y ofrece relacionados. El estado "Próximamente" y la prop `purchaseNoteId`
+  se retiraron al existir la ficha.
+- **Estados:** disponible, en oferta y agotado (combinables).
 - **Celular:** imagen 4:3. **Desde `md`:** imagen 4:5. Tarjeta blanca con borde `neutral-200` y
   radio `lg`; el bloque de precio y botón queda al pie aunque las descripciones difieran.
 - **Accesibilidad:** `<article>`; imagen decorativa. La cinta "-18%" se lee "18% de descuento";
-  los precios llevan textos ocultos "Precio anterior:" y "Precio de oferta:"; los colores son una
-  lista `aria-label="Colores disponibles"` con el nombre de cada color en texto oculto (y en
-  `title` para quien usa ratón). El asterisco de la nota se oculta.
+  los colores son una lista `aria-label="Colores disponibles"` con el nombre de cada color en
+  texto oculto (y en `title` para quien usa ratón).
+
+### ProductMedia
+
+- **Propósito:** reservar el espacio de la foto de un producto y mostrar sus marcas.
+- **Props:** `product` y `variant` (`card` o `detail`).
+- **Proporciones:** `card` usa 4:3 en celular y 4:5 desde `md`. `detail` usa 4:3 hasta `lg` y
+  4:5 desde `lg` (dos columnas). Decisión: en tableta la foto de la ficha ocupa todo el ancho y a
+  4:5 mediría unos 900 px de alto, lo que alejaría el precio y el botón de la primera pantalla.
+- **Marcas:** cinta diagonal `promo-600` con el descuento (más ancha en `detail`) e insignia
+  píldora `ink-900` "Agotado" arriba a la derecha.
+- **Accesibilidad:** el espacio de la imagen es `aria-hidden` mientras no haya foto; cuando la
+  haya, llevará el nombre del producto como texto alternativo. La cinta se lee "18% de
+  descuento".
+
+### ProductPrice
+
+- **Propósito:** mostrar el precio con el mismo tratamiento en toda la tienda.
+- **Props:** `product` y `size` (`card`, centrado, `text-xl`; `detail`, alineado a la
+  izquierda, `text-3xl`).
+- **Estados:** sin descuento, `buy-700` en negritas. Con descuento real, precio anterior tachado
+  (`<del>`, `ink-500`), precio de oferta `sale-700` en negritas y la nota "*Reflejado al final
+  de tu compra".
+- **Accesibilidad:** textos ocultos "Precio anterior:" y "Precio de oferta:"; el asterisco de la
+  nota se oculta.
+
+### ColorSelector
+
+- **Propósito:** elegir el color de un producto en la ficha.
+- **Props:** `colors` y `name` (nombre del grupo, `color-<handle>`).
+- **Comportamiento:** componente cliente con el color elegido en estado local; el primero queda
+  elegido al cargar. El nombre del color elegido se muestra junto a la leyenda ("Color:
+  Grafito"). Aún no cambia precio ni existencias porque los datos de ejemplo no tienen variantes
+  por color.
+- **Estados:** reposo, hover, elegido y foco (ver la tabla de estados).
+- **Accesibilidad:** `<fieldset>` con `<legend>` "Color" y `<input type="radio">` nativos
+  visualmente ocultos, por lo que el navegador aporta el rol, el nombre del grupo, Tab para
+  entrar y las flechas para cambiar. Cada opción se nombra con el color en texto oculto; el
+  nombre repetido junto a la leyenda es `aria-hidden` para no anunciarlo dos veces. Áreas de
+  44 px y foco con contorno exterior visible además del anillo de selección.
+
+### ProductDetail
+
+- **Propósito:** contenido principal de la ficha de producto.
+- **Props:** `product`.
+- **Contenido (en orden):** `ProductMedia` (`detail`); nombre como `h1`; notas de sabor en
+  píldoras si las hay; `ProductPrice` (`detail`); `ColorSelector` si hay colores; botón
+  "Agregar al carrito" con su nota; separador `neutral-200` y "Descripción" (`h2`).
+- **Compra:** decisión: la tienda aún no tiene carrito (el contador del encabezado es fijo), así
+  que el botón es `Button unavailable` (`aria-disabled`, enfocable) descrito por la nota visible
+  "La compra aún no está disponible en esta demostración.". Si el producto está agotado, la nota
+  dice "Agotado" en `ink-900` y negritas. No se simula un carrito.
+- **Celular y tableta:** una columna; foto, nombre, precio, color y botón quedan seguidos para
+  que la decisión de compra no requiera recorrer la descripción. **Desde `lg`:** dos columnas
+  iguales, foto a la izquierda y datos a la derecha.
+- **Accesibilidad:** `<article>`; un solo `h1`. El botón se anuncia como no disponible y lee el
+  motivo con `aria-describedby`.
+
+### NotFoundContent
+
+- **Propósito:** que una dirección inexistente no deje a la persona sin salida.
+- **Props:** `title` (`h1`) y `description`.
+- **Contenido:** "Error 404" pequeño en mayúsculas, título, explicación, botón `dark` "Ir a la
+  portada" (acción principal) y botón `secondary` "Ver promociones". Lo usan `app/not-found.tsx`
+  ("No encontramos esta página") y `app/productos/[handle]/not-found.tsx` ("No encontramos este
+  producto"). Encabezado y pie del layout siguen visibles.
+- **Celular:** botones apilados a ancho completo. **Desde `sm`:** en una fila.
 
 ### ProductGrid
 
 - **Propósito:** listar productos con la misma rejilla en toda la tienda.
-- **Props:** `products`; `emptyMessage` y `purchaseNoteId` opcionales.
+- **Props:** `products`; `emptyMessage` opcional.
 - **Estados:** con productos (lista) y vacío (tarjeta blanca con el mensaje, sin lista vacía).
 - **Celular:** una columna. **Desde `sm`:** dos. **Desde `lg`:** tres. Separación de 24 px.
 - **Accesibilidad:** `<ul>` con un `<li>` por tarjeta, para que se anuncie el número de productos.
@@ -560,6 +639,11 @@ vacío de `ProductGrid` (por ejemplo, "Por ahora no hay promociones activas.").
 
 De arriba abajo, en todas las páginas: enlace "Saltar al contenido" (solo visible con foco),
 `DemoNotice`, `AnnouncementBar` y `Header`. El orden de tabulación sigue el mismo orden.
+
+## Orden de la ficha de producto
+
+Ruta de navegación, `ProductDetail` (foto y datos) y, si hay otros productos de la misma
+categoría, la sección `muted` "También te puede interesar" con hasta tres `ProductCard`.
 
 ## Orden de la portada
 
