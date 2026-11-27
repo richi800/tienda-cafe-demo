@@ -89,7 +89,7 @@ export default async function HomePage() {
     {
       id: "cafe",
       title: "Café",
-      description: "Grano entero en bolsas de 340 g, listo para tu método favorito.",
+      description: "Café en grano y molido de Chiapas, Veracruz y Oaxaca, listo para tu método favorito.",
       products: productsIn(products, "coffee"),
     },
     {

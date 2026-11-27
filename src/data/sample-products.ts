@@ -10,15 +10,16 @@
 import type { Product, ProductImage } from "@/domain/product";
 
 /**
- * Foto de estudio de la bolsa de café en grano. Por ahora la comparten todos los productos de
- * la categoría café; cafeteras y accesorios aún no tienen foto. Medidas reales del archivo.
+ * Crea la foto de estudio de un producto. Todas las fotos de producto miden 1200 x 1200 px;
+ * las pruebas comparan estas medidas con las del archivo.
+ *
+ * @param fileName - Nombre del archivo dentro de `public/imagenes/productos/`.
+ * @param alt - Descripción del empaque, sin transcribir sus textos.
+ * @returns La imagen lista para asignar a `Product.image`.
  */
-export const COFFEE_BAG_IMAGE: ProductImage = {
-  src: "/imagenes/productos/cafe-bolsa-ladera.webp",
-  alt: "Bolsa blanca resellable de café con grano tostado visible, sobre fondo blanco",
-  width: 1200,
-  height: 1200,
-};
+function productImage(fileName: string, alt: string): ProductImage {
+  return { src: `/imagenes/productos/${fileName}`, alt, width: 1200, height: 1200 };
+}
 
 /** Catálogo de ejemplo. Los precios están en pesos mexicanos. */
 export const sampleProducts: readonly Product[] = [
@@ -26,10 +27,14 @@ export const sampleProducts: readonly Product[] = [
     id: "sample-1",
     handle: "cafe-de-altura-chiapas",
     title: "Café de altura Chiapas",
-    description: "Grano entero de tueste medio con notas de chocolate y nuez. Bolsa de 340 g.",
+    description:
+      "Café en grano de origen único y tueste medio, con notas de chocolate, caramelo y cítricos. Bolsa de 1 kg.",
     category: "coffee",
-    image: COFFEE_BAG_IMAGE,
-    flavorNotes: ["Chocolate", "Nuez"],
+    image: productImage(
+      "cafe-bolsa-verde-chiapas.webp",
+      "Bolsa de papel verde oscuro con el borde superior doblado y sellado con una etiqueta dorada, sobre fondo blanco",
+    ),
+    flavorNotes: ["Chocolate", "Caramelo", "Cítricos"],
     price: { amount: "220.00", currencyCode: "MXN" },
     compareAtPrice: { amount: "260.00", currencyCode: "MXN" },
     availableForSale: true,
@@ -38,9 +43,13 @@ export const sampleProducts: readonly Product[] = [
     id: "sample-2",
     handle: "espresso-veracruz",
     title: "Espresso Veracruz",
-    description: "Mezcla de tueste oscuro pensada para espresso, con cuerpo intenso. Bolsa de 340 g.",
+    description:
+      "Café molido de tueste oscuro pensado para espresso, con cuerpo intenso. Lata de 500 g.",
     category: "coffee",
-    image: COFFEE_BAG_IMAGE,
+    image: productImage(
+      "cafe-lata-tueste-oscuro.webp",
+      "Lata cilíndrica negra con tapa dorada de rosca, sobre fondo blanco",
+    ),
     flavorNotes: ["Cacao", "Caramelo oscuro"],
     price: { amount: "195.00", currencyCode: "MXN" },
     availableForSale: true,
@@ -51,7 +60,10 @@ export const sampleProducts: readonly Product[] = [
     title: "Descafeinado Oaxaca",
     description: "Descafeinado por proceso de agua, suave y dulce. Bolsa de 340 g.",
     category: "coffee",
-    image: COFFEE_BAG_IMAGE,
+    image: productImage(
+      "cafe-bolsa-ladera.webp",
+      "Bolsa blanca resellable de café con grano tostado visible, sobre fondo blanco",
+    ),
     flavorNotes: ["Panela", "Frutos rojos suaves"],
     price: { amount: "210.00", currencyCode: "MXN" },
     availableForSale: false,

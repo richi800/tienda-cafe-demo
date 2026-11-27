@@ -38,6 +38,12 @@ describe("sampleProducts", () => {
     }
   });
 
+  it("da a cada producto una foto distinta", () => {
+    const sources = sampleProducts.flatMap((product) => (product.image ? [product.image.src] : []));
+
+    expect(new Set(sources).size).toBe(sources.length);
+  });
+
   it("declara fotos que existen en public con sus medidas reales y alt sin texto del empaque", () => {
     const images = sampleProducts.flatMap((product) => (product.image ? [product.image] : []));
 

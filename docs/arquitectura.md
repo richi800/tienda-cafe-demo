@@ -76,8 +76,8 @@ misma forma, de modo que la interfaz se puede construir sin depender de la API.
 
 - **Productos:** `Product.image` (`ProductImage`: `src`, `alt`, `width` y `height`, en
   `src/domain/product.ts`) equivale a `Image` de la Storefront API (`url`, `altText`,
-  `width`, `height`). Hoy los datos de ejemplo apuntan a `public/imagenes/productos/` (los tres
-  cafés comparten `COFFEE_BAG_IMAGE`); con Shopify el adaptador llenará el campo con la imagen
+  `width`, `height`). Hoy los datos de ejemplo apuntan a `public/imagenes/productos/` (cada café
+  tiene su propia foto); con Shopify el adaptador llenará el campo con la imagen
   destacada del producto y su URL del CDN de Shopify, que habrá que permitir en
   `images.remotePatterns`. Los componentes no conocen rutas de archivos: `ProductMedia` usa lo
   que trae el producto.

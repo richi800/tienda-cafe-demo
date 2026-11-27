@@ -196,17 +196,19 @@ El espacio de imagen se reserva siempre con la proporción para evitar saltos de
 
 Las fotos viven en `public/imagenes/` y se muestran con `next/image`, siempre con su `width` y
 `height` reales y un `alt` descriptivo en español. `images.unoptimized` hace que se sirvan tal
-cual (sin el optimizador de Vercel), por lo que los archivos ya vienen en WebP (de 27 KB la
-bolsa a 234 KB el cafetal).
+cual (sin el optimizador de Vercel), por lo que los archivos ya vienen en WebP (el más pesado, el cafetal, se recomprimió a 168 KB).
 
 | Archivo                                   | Medidas    | Dónde se usa                         | Ajuste                                     |
 | ----------------------------------------- | ---------- | ------------------------------------ | ------------------------------------------ |
 | `portada/set-cafeteria-ladera.webp`       | 1200 x 1200 | Mitad de imagen del hero            | `object-cover object-[50%_65%]` en 4:3 (celular); completa en 1:1 (desde `md`) |
-| `productos/cafe-bolsa-ladera.webp`        | 1200 x 1200 | Tarjetas y fichas de los productos de café | `object-contain` sobre `white` en 4:3 y 4:5 |
+| `productos/cafe-bolsa-verde-chiapas.webp` | 1200 x 1200 | Tarjeta y ficha de Café de altura Chiapas | `object-contain` sobre `white` en 4:3 y 4:5 |
+| `productos/cafe-lata-tueste-oscuro.webp`  | 1200 x 1200 | Tarjeta y ficha de Espresso Veracruz | `object-contain` sobre `white` en 4:3 y 4:5 |
+| `productos/cafe-bolsa-ladera.webp`        | 1200 x 1200 | Tarjeta y ficha de Descafeinado Oaxaca | `object-contain` sobre `white` en 4:3 y 4:5 |
 | `estilo/cafetal-4x3.webp`                 | 1200 x 900 | Sección "La diferencia" de la portada | Proporción natural (`h-auto w-full`), radio `lg` |
 
 Las fotos de la portada se declaran en `src/components/editorial-images.ts` (`HERO_IMAGE` y
-`ORIGIN_IMAGE`); la de los cafés, en los datos (`Product.image`).
+`ORIGIN_IMAGE`); las de los cafés, una por producto, en los datos (`Product.image`). Los datos de cada
+café (presentación, peso y notas de sabor) coinciden con lo que muestra su empaque.
 
 Reglas:
 
@@ -233,10 +235,10 @@ Reglas:
   `cafe-bolsa-microlote` y `bolsa-en-cocina`). Los originales recibidos están en
   `public/imagenes/recibidas/`, que está en `.gitignore` para que no se publiquen.
 - **Pendientes de las imágenes (no del código):**
-  - La etiqueta de la bolsa de café todavía dice "LANDERA MICRO-LOTE" junto al código QR.
+  - La etiqueta de la bolsa translúcida (Descafeinado Oaxaca) todavía dice "LANDERA MICRO-LOTE" junto al código QR.
   - La caja del hero tiene textos en inglés y "single origin".
   - El letrero del cafetal repite "CAFETERO".
-- **Panorámica sin usar:** `estilo/cafetal-panoramica.webp` (1600 x 873) no se publica porque
+- **Panorámica sin usar:** `cafetal-panoramica.webp` (1600 x 873) está en `recibidas/` porque
   ninguna sección de ancho completo la necesita; "La diferencia" usa media columna en 4:3.
 
 ## Texturas
