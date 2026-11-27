@@ -72,6 +72,23 @@ se evaluará al conectar Shopify, porque obligaría a consultar el catálogo en 
 Mientras no exista la conexión con Shopify, `src/data/sample-products.ts` ofrece productos con la
 misma forma, de modo que la interfaz se puede construir sin depender de la API.
 
+### Imágenes
+
+- **Productos:** `Product.image` (`ProductImage`: `src`, `alt`, `width` y `height`, en
+  `src/domain/product.ts`) equivale a `Image` de la Storefront API (`url`, `altText`,
+  `width`, `height`). Hoy los datos de ejemplo apuntan a `public/imagenes/productos/` (los tres
+  cafés comparten `COFFEE_BAG_IMAGE`); con Shopify el adaptador llenará el campo con la imagen
+  destacada del producto y su URL del CDN de Shopify, que habrá que permitir en
+  `images.remotePatterns`. Los componentes no conocen rutas de archivos: `ProductMedia` usa lo
+  que trae el producto.
+- **Editoriales:** la foto del hero (`HERO_IMAGE` en `Hero.tsx`) y la de "La diferencia"
+  (`src/app/page.tsx`) son parte del contenido fijo de la portada, como sus textos, y viven en
+  `public/imagenes/portada/` y `public/imagenes/estilo/`.
+- `public/imagenes/recibidas/` guarda los originales y está en `.gitignore`: todo lo que hay
+  en `public/` se sirve tal cual, así que no se publica nada que no se use.
+- Una prueba de `sample-products.test.ts` lee la cabecera de cada WebP declarado y comprueba que
+  existe y que `width` y `height` coinciden con el archivo.
+
 Las páginas no importan esos datos directamente: piden el catálogo al repositorio
 `src/data/products.ts` (`getProducts`, `getProductByHandle` y `getRelatedProducts`). Sus funciones
 ya son asíncronas para que, al cambiar la fuente a la Storefront API, solo cambie su interior.

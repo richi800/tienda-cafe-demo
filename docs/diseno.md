@@ -192,6 +192,40 @@ Es la única elevación. La separación entre superficies se logra con fondos al
 
 El espacio de imagen se reserva siempre con la proporción para evitar saltos de diseño.
 
+## Imágenes
+
+Las fotos viven en `public/imagenes/` y se muestran con `next/image`, siempre con su `width` y
+`height` reales y un `alt` descriptivo en español. `images.unoptimized` hace que se sirvan tal
+cual (sin el optimizador de Vercel), por lo que los archivos ya vienen en WebP y a un tamaño
+razonable (de 30 a 45 KB).
+
+| Archivo                                   | Medidas    | Dónde se usa                         | Ajuste                                     |
+| ----------------------------------------- | ---------- | ------------------------------------ | ------------------------------------------ |
+| `portada/set-caja-lata.webp`              | 896 x 896  | Mitad de imagen del hero             | `object-cover object-center` en 4:3 (celular) y 1:1 (desde `md`) |
+| `productos/cafe-bolsa-microlote.webp`     | 1200 x 1200 | Tarjetas y fichas de los productos de café | `object-contain` sobre `white` en 4:3 y 4:5 |
+| `estilo/bolsa-en-cocina.webp`             | 896 x 672  | Sección "La diferencia" de la portada | Proporción natural (`h-auto w-full`), radio `lg` |
+
+Reglas:
+
+- **Productos:** `object-contain` sobre fondo `white`, para que el producto nunca se corte sin
+  importar la proporción del espacio (4:3 o 4:5). En la ficha, con foto, el marco lleva borde
+  `neutral-200` porque el fondo de la foto y el de la página son iguales. Sin foto se conserva el
+  espacio reservado `neutral-100` (cafeteras y accesorios, por ahora).
+- **Ambiente y editorial:** `object-cover`. En el hero, en celular la foto cuadrada se recorta
+  por igual arriba y abajo (`object-center`) para no cortar el texto del empaque; desde `md` se ve
+  completa.
+- **Carga:** el hero y la foto de la ficha son el elemento principal de la primera pantalla:
+  `loading="eager"` y `fetchPriority="high"`. Decisión: no se usa `preload` (que en Next.js 16
+  sustituye a `priority`, ya obsoleto) porque la guía de `next/image` lo desaconseja cuando el
+  elemento más grande cambia según el ancho; en celular, el más grande de la portada es el
+  titular, no la foto. Todas las demás imágenes usan `loading="lazy"`.
+- **Texto alternativo:** describe lo que se ve, sin transcribir el texto impreso de los
+  empaques. La foto del hero no se asocia a ningún producto ni a un origen.
+- **Fotos provisionales:** los empaques de estas tres fotos dicen "Landera" por error; la marca
+  es "Café Ladera". Deben reemplazarse por versiones que digan "Ladera" en cuanto existan. Los
+  originales recibidos están en `public/imagenes/recibidas/`, que está en `.gitignore` para
+  que no se publiquen.
+
 ## Texturas
 
 - `banner-texture` (utilidad en `globals.css`): degradado a 135 grados de `espresso-900` a
@@ -411,14 +445,15 @@ Estados de datos por vista (carga, vacío, error y éxito):
 - **Props:** ninguna; el texto es fijo. Exporta `HERO_ID` (`inicio`), que observa el sub-header.
 - **Contenido:** bloque `clay-200` con categoría pequeña en mayúsculas (`ink-700`), titular
   en negritas (`h1`), subtítulo de producto nuevo y botón `dark` "Conoce la Ladera Pro"
-  (a `#cafeteras`); a la derecha, el espacio de la imagen de ambiente en `neutral-200`.
+  (a `#cafeteras`); a la derecha, la foto de ambiente (`HERO_IMAGE`, ver Imágenes) sobre un
+  espacio reservado `neutral-200`.
 - **Celular:** texto arriba e imagen abajo con proporción 4:3 (`--aspect-hero-compact`); botón a
   ancho completo. **Desde `md`:** dos columnas iguales a todo el ancho de la ventana; la imagen
   es cuadrada (`--aspect-hero`) y el bloque de color se estira a su altura.
 - **Barra de pestañas:** `HeroTabs` dentro de `Container`, subida 32 px (`-mt-8`) para montarse
   sobre el borde inferior del hero.
-- **Accesibilidad:** único `h1` de la portada; la sección se nombra con él. La imagen es
-  decorativa (`aria-hidden`) mientras no haya foto.
+- **Accesibilidad:** único `h1` de la portada; la sección se nombra con él. La foto lleva un
+  `alt` descriptivo.
 
 ### HeroTabs
 
@@ -510,14 +545,17 @@ Estados de datos por vista (carga, vacío, error y éxito):
 ### ProductMedia
 
 - **Propósito:** reservar el espacio de la foto de un producto y mostrar sus marcas.
-- **Props:** `product` y `variant` (`card` o `detail`).
+- **Props:** `product` y `variant` (`card` o `detail`). La foto sale de `product.image`; el
+  componente no conoce rutas de archivos.
+- **Con foto:** `next/image` con `object-contain` sobre `white` (ver Imágenes); en `detail`, carga
+  inmediata y prioritaria y borde `neutral-200`. **Sin foto:** espacio reservado `neutral-100`.
 - **Proporciones:** `card` usa 4:3 en celular y 4:5 desde `md`. `detail` usa 4:3 hasta `lg` y
   4:5 desde `lg` (dos columnas). Decisión: en tableta la foto de la ficha ocupa todo el ancho y a
   4:5 mediría unos 900 px de alto, lo que alejaría el precio y el botón de la primera pantalla.
 - **Marcas:** cinta diagonal `promo-600` con el descuento (más ancha en `detail`) e insignia
   píldora `ink-900` "Agotado" arriba a la derecha.
-- **Accesibilidad:** el espacio de la imagen es `aria-hidden` mientras no haya foto; cuando la
-  haya, llevará el nombre del producto como texto alternativo. La cinta se lee "18% de
+- **Accesibilidad:** la foto lleva el `alt` de los datos; el espacio reservado sin foto es
+  `aria-hidden`. La cinta se lee "18% de
   descuento".
 
 ### ProductPrice
@@ -648,6 +686,7 @@ categoría, la sección `muted` "También te puede interesar" con hasta tres `Pr
 ## Orden de la portada
 
 Hero con `HeroTabs`, `SectionNav` (fijo, aparece tras el hero), cuatro `CategorySection`
-(Promociones, Café, Cafeteras y Accesorios), La diferencia, Suscripción, ¿Necesitas ayuda? (FAQ
+(Promociones, Café, Cafeteras y Accesorios), La diferencia (foto de ambiente y los tres
+puntos; en celular apilados, desde `lg` en dos columnas), Suscripción, ¿Necesitas ayuda? (FAQ
 y contacto) y Términos y condiciones. `HelpWidget` está en el layout y aparece en todas las
 páginas.
