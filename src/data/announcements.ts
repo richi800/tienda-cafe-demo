@@ -20,9 +20,9 @@ export const announcements: readonly Announcement[] = [
     href: "/#cafe",
   },
   {
-    id: "machines-sale",
-    message: "Hasta 18% de descuento en cafeteras seleccionadas",
-    href: "/#promociones",
+    id: "shipping-time",
+    message: "Enviamos a todo México en 2 a 4 días hábiles",
+    href: "/#cafe",
   },
   {
     id: "subscription",

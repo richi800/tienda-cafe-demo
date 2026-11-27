@@ -33,8 +33,8 @@ const DIFFERENTIATORS: readonly Differentiator[] = [
     text: "Tostamos en pequeños lotes cada semana para que el café llegue con todo su aroma.",
   },
   {
-    title: "Equipo",
-    text: "Elegimos cafeteras y molinos que probamos con nuestro propio café antes de ofrecerlos.",
+    title: "Frescura",
+    text: "Cada bolsa indica su fecha de tueste para que sepas cuándo está en su mejor momento.",
   },
 ];
 
@@ -119,7 +119,7 @@ export default async function HomePage() {
       <Section
         id="ayuda"
         title="¿Necesitas ayuda?"
-        description="Respuestas rápidas sobre café, cafeteras, envíos y esta tienda de demostración."
+        description="Respuestas rápidas sobre café, envíos y esta tienda de demostración."
         tone="muted"
       >
         <Faq items={faqs} />

@@ -98,7 +98,7 @@ export function buildHomeCatalog(products: readonly Product[]): HomeCatalogSecti
     {
       id: "promociones",
       title: "Promociones",
-      description: "Precios especiales por tiempo limitado en café, cafeteras y accesorios.",
+      description: "Precios especiales por tiempo limitado en productos seleccionados.",
       bannerImages: [],
       content: contentFor(promotions, {
         title: "Sin promociones por ahora",
@@ -126,7 +126,7 @@ export function buildHomeCatalog(products: readonly Product[]): HomeCatalogSecti
       bannerImages: machines.length > 0 ? machineImages : [],
       content: contentFor(machines, {
         title: "Próximamente",
-        text: "Estamos probando cafeteras de espresso y de goteo con nuestro propio café antes de ofrecerlas.",
+        text: "Pronto encontrarás aquí cafeteras para preparar espresso y café filtrado en casa. Mientras tanto, conoce nuestros cafés.",
         images: machineImages,
         action: SEE_COFFEE,
       }),
@@ -134,11 +134,11 @@ export function buildHomeCatalog(products: readonly Product[]): HomeCatalogSecti
     {
       id: CATEGORY_SECTIONS.accessories.id,
       title: "Accesorios",
-      description: "Molinos, espumadores y tazas para completar tu barra de café.",
+      description: "Tazas y utensilios para preparar y servir tu café.",
       bannerImages: accessories.length > 0 ? [CUPS_IMAGE] : [],
       content: contentFor(accessories, {
         title: "Próximamente",
-        text: "Pronto tendremos tazas, molinos y espumadores elegidos para acompañar nuestro café.",
+        text: "Pronto encontrarás aquí accesorios para preparar y servir tu café. Mientras tanto, conoce nuestros cafés.",
         images: [CUPS_IMAGE],
         action: SEE_COFFEE,
       }),

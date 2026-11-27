@@ -20,6 +20,15 @@ describe("Hero", () => {
     expect(img).toContain("object-cover object-[50%_65%]");
   });
 
+  it("presenta el café con un único h1 y lleva a la sección Café", () => {
+    const html = renderToStaticMarkup(<Hero />);
+
+    expect(html.match(/<h1/g)).toHaveLength(1);
+    expect(html).toMatch(/<h1[^>]*>De Chiapas, Veracruz y Oaxaca a tu taza<\/h1>/);
+    expect(html).toMatch(/<a [^>]*href="\/#cafe"[^>]*>Conoce nuestros cafés<\/a>/);
+    expect(html).not.toContain("Ladera Pro");
+  });
+
   it("reserva el espacio de la foto con las proporciones del hero", () => {
     const html = renderToStaticMarkup(<Hero />);
 

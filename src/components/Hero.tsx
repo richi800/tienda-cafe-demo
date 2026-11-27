@@ -16,8 +16,8 @@ import { HERO_TAB_SECTIONS } from "./store-sections";
 export const HERO_ID = "inicio";
 
 /**
- * Muestra el hero partido: a la izquierda un bloque de color con categoría, titular,
- * novedad y la acción del bloque; a la derecha, la foto de ambiente (`HERO_IMAGE` de
+ * Muestra el hero partido: a la izquierda un bloque de color con etiqueta, titular sobre el
+ * origen del café, subtítulo y la acción del bloque (ir a la sección Café); a la derecha, la foto de ambiente (`HERO_IMAGE` de
  * `editorial-images.ts`). Debajo, montada sobre el borde inferior, la barra de pestañas por
  * categoría.
  *
@@ -32,20 +32,21 @@ export function Hero() {
       <div className="grid md:grid-cols-2">
         <div className="flex flex-col justify-center bg-clay-200 px-gutter pt-12 pb-16 md:px-12 md:py-16 xl:px-16">
           <p className="text-sm font-semibold tracking-wide text-ink-700 uppercase">
-            Cafeteras de espresso
+            Café de especialidad
           </p>
           <h1
             id="hero-titulo"
             className="mt-3 font-display text-4xl font-bold tracking-tight text-balance text-ink-900 lg:text-5xl xl:text-6xl"
           >
-            Tu barra de café, en casa
+            De Chiapas, Veracruz y Oaxaca a tu taza
           </h1>
           <p className="mt-4 max-w-md text-lg text-ink-700">
-            Nueva Ladera Pro: espresso de 15 bares y vaporizador para leche, en tres acabados.
+            Tostamos en pequeños lotes cada semana para que cada bolsa llegue fresca y con todo su
+            aroma.
           </p>
           <div className="mt-8">
-            <Button href="/#cafeteras" variant="dark" className="w-full sm:w-auto">
-              Conoce la Ladera Pro
+            <Button href="/#cafe" variant="dark" className="w-full sm:w-auto">
+              Conoce nuestros cafés
             </Button>
           </div>
         </div>

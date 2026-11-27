@@ -10,7 +10,7 @@ export default function ProductNotFound() {
   return (
     <NotFoundContent
       title="No encontramos este producto"
-      description="Puede que el enlace esté incompleto o que el producto ya no esté en el catálogo. Vuelve a la portada para ver el café, las cafeteras y los accesorios disponibles."
+      description="Puede que el enlace esté incompleto o que el producto ya no esté en el catálogo. Vuelve a la portada para ver nuestros cafés y el resto del catálogo."
     />
   );
 }

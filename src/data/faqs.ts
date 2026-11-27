@@ -1,5 +1,6 @@
 /**
- * Preguntas frecuentes de ejemplo sobre café, cafeteras y la tienda de demostración.
+ * Preguntas frecuentes de ejemplo sobre café, envíos y la tienda de demostración. No mencionan
+ * modelos de cafeteras ni accesorios: el catálogo viene de Shopify y puede no tenerlos.
  *
  * @packageDocumentation
  */
@@ -20,9 +21,9 @@ export const faqs: readonly FaqItem[] = [
   },
   {
     id: "devoluciones",
-    question: "¿Puedo devolver una cafetera o un accesorio?",
+    question: "¿Puedo devolver mi café?",
     answer:
-      "Sí, dentro de los 30 días posteriores a la entrega, sin uso y en su empaque original. El café no admite devoluciones una vez abierto.",
+      "Sí, si la bolsa llega dañada o la devuelves cerrada dentro de los 7 días posteriores a la entrega. Por higiene, el café abierto no admite devoluciones.",
   },
   {
     id: "facturacion",
@@ -38,9 +39,9 @@ export const faqs: readonly FaqItem[] = [
   },
   {
     id: "molienda",
-    question: "¿Qué molienda necesito para mi cafetera?",
+    question: "¿Qué molienda necesito?",
     answer:
-      "Fina para espresso, media para cafetera de goteo y gruesa para prensa francesa. Si compras grano entero, muélelo justo antes de preparar.",
+      "Fina para espresso, media para goteo o filtro y gruesa para prensa francesa. Si compras grano entero, muélelo justo antes de preparar.",
   },
   {
     id: "conservar",
@@ -49,16 +50,16 @@ export const faqs: readonly FaqItem[] = [
       "En su bolsa con válvula, bien cerrada, lejos de la luz y del calor. No lo guardes en el refrigerador: absorbe humedad y olores.",
   },
   {
-    id: "descalcificar",
-    question: "¿Cada cuánto debo descalcificar la Ladera Pro?",
+    id: "frescura",
+    question: "¿Cuándo se tostó mi café?",
     answer:
-      "Cada uno a tres meses, según la dureza del agua. Usar agua filtrada alarga el tiempo entre descalcificaciones.",
+      "Tostamos en pequeños lotes cada semana y cada bolsa indica su fecha de tueste. Para disfrutarlo en su mejor momento, prepáralo dentro de las cuatro semanas siguientes.",
   },
   {
-    id: "garantia",
-    question: "¿Las cafeteras tienen garantía?",
+    id: "grano-o-molido",
+    question: "¿Me conviene el café en grano o molido?",
     answer:
-      "Las cafeteras y los molinos incluyen un año de garantía contra defectos de fabricación.",
+      "El grano entero conserva mejor el aroma; el molido es más práctico si no tienes molino. La descripción de cada café indica su presentación.",
   },
   {
     id: "suscripcion",
