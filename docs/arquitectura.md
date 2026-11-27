@@ -81,13 +81,14 @@ misma forma, de modo que la interfaz se puede construir sin depender de la API.
   destacada del producto y su URL del CDN de Shopify, que habrá que permitir en
   `images.remotePatterns`. Los componentes no conocen rutas de archivos: `ProductMedia` usa lo
   que trae el producto.
-- **Editoriales:** la foto del hero (`HERO_IMAGE` en `Hero.tsx`) y la de "La diferencia"
-  (`src/app/page.tsx`) son parte del contenido fijo de la portada, como sus textos, y viven en
-  `public/imagenes/portada/` y `public/imagenes/estilo/`.
+- **Editoriales:** la foto del hero y la de "La diferencia" (`HERO_IMAGE` y `ORIGIN_IMAGE` en
+  `src/components/editorial-images.ts`) son parte del contenido fijo de la portada, como sus
+  textos, y viven en `public/imagenes/portada/` y `public/imagenes/estilo/`.
 - `public/imagenes/recibidas/` guarda los originales y está en `.gitignore`: todo lo que hay
   en `public/` se sirve tal cual, así que no se publica nada que no se use.
-- Una prueba de `sample-products.test.ts` lee la cabecera de cada WebP declarado y comprueba que
-  existe y que `width` y `height` coinciden con el archivo.
+- `readWebpSize` (`src/lib/images/webp-size.ts`) lee las medidas de la cabecera de un WebP sin
+  dependencias. Lo usan `sample-products.test.ts` y `editorial-images.test.ts` para comprobar que
+  cada foto declarada existe y que su `width` y `height` coinciden con el archivo.
 
 Las páginas no importan esos datos directamente: piden el catálogo al repositorio
 `src/data/products.ts` (`getProducts`, `getProductByHandle` y `getRelatedProducts`). Sus funciones

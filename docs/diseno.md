@@ -196,14 +196,17 @@ El espacio de imagen se reserva siempre con la proporción para evitar saltos de
 
 Las fotos viven en `public/imagenes/` y se muestran con `next/image`, siempre con su `width` y
 `height` reales y un `alt` descriptivo en español. `images.unoptimized` hace que se sirvan tal
-cual (sin el optimizador de Vercel), por lo que los archivos ya vienen en WebP y a un tamaño
-razonable (de 30 a 45 KB).
+cual (sin el optimizador de Vercel), por lo que los archivos ya vienen en WebP (de 27 KB la
+bolsa a 234 KB el cafetal).
 
 | Archivo                                   | Medidas    | Dónde se usa                         | Ajuste                                     |
 | ----------------------------------------- | ---------- | ------------------------------------ | ------------------------------------------ |
-| `portada/set-caja-lata.webp`              | 896 x 896  | Mitad de imagen del hero             | `object-cover object-center` en 4:3 (celular) y 1:1 (desde `md`) |
-| `productos/cafe-bolsa-microlote.webp`     | 1200 x 1200 | Tarjetas y fichas de los productos de café | `object-contain` sobre `white` en 4:3 y 4:5 |
-| `estilo/bolsa-en-cocina.webp`             | 896 x 672  | Sección "La diferencia" de la portada | Proporción natural (`h-auto w-full`), radio `lg` |
+| `portada/set-cafeteria-ladera.webp`       | 1200 x 1200 | Mitad de imagen del hero            | `object-cover object-[50%_65%]` en 4:3 (celular); completa en 1:1 (desde `md`) |
+| `productos/cafe-bolsa-ladera.webp`        | 1200 x 1200 | Tarjetas y fichas de los productos de café | `object-contain` sobre `white` en 4:3 y 4:5 |
+| `estilo/cafetal-4x3.webp`                 | 1200 x 900 | Sección "La diferencia" de la portada | Proporción natural (`h-auto w-full`), radio `lg` |
+
+Las fotos de la portada se declaran en `src/components/editorial-images.ts` (`HERO_IMAGE` y
+`ORIGIN_IMAGE`); la de los cafés, en los datos (`Product.image`).
 
 Reglas:
 
@@ -211,20 +214,30 @@ Reglas:
   importar la proporción del espacio (4:3 o 4:5). En la ficha, con foto, el marco lleva borde
   `neutral-200` porque el fondo de la foto y el de la página son iguales. Sin foto se conserva el
   espacio reservado `neutral-100` (cafeteras y accesorios, por ahora).
-- **Ambiente y editorial:** `object-cover`. En el hero, en celular la foto cuadrada se recorta
-  por igual arriba y abajo (`object-center`) para no cortar el texto del empaque; desde `md` se ve
-  completa.
+- **Ambiente y editorial:** `object-cover`. En el hero, en celular (4:3) la foto cuadrada pierde
+  una cuarta parte de su alto y la barra de pestañas tapa además los 32 px inferiores. Decisión:
+  el recorte se fija al 65 % vertical (`object-[50%_65%]`) y no al centro, porque con
+  `object-center` la lata y el frasco quedaban bajo la barra. Así el grupo de productos queda
+  centrado en la parte visible. Desde `md` la foto se ve completa.
 - **Carga:** el hero y la foto de la ficha son el elemento principal de la primera pantalla:
   `loading="eager"` y `fetchPriority="high"`. Decisión: no se usa `preload` (que en Next.js 16
   sustituye a `priority`, ya obsoleto) porque la guía de `next/image` lo desaconseja cuando el
   elemento más grande cambia según el ancho; en celular, el más grande de la portada es el
   titular, no la foto. Todas las demás imágenes usan `loading="lazy"`.
 - **Texto alternativo:** describe lo que se ve, sin transcribir el texto impreso de los
-  empaques. La foto del hero no se asocia a ningún producto ni a un origen.
-- **Fotos provisionales:** los empaques de estas tres fotos dicen "Landera" por error; la marca
-  es "Café Ladera". Deben reemplazarse por versiones que digan "Ladera" en cuanto existan. Los
-  originales recibidos están en `public/imagenes/recibidas/`, que está en `.gitignore` para
-  que no se publiquen.
+  empaques ni de los letreros. La foto del hero no se asocia a ningún producto ni a un origen.
+  Una prueba lo vigila (`editorial-images.test.ts` y `sample-products.test.ts`), junto con las
+  medidas reales de cada archivo.
+- **Fotos reemplazadas:** las tres fotos provisionales, cuyos empaques decían "Landera", se
+  sustituyeron por versiones con "Ladera" y se eliminaron del repositorio (`set-caja-lata`,
+  `cafe-bolsa-microlote` y `bolsa-en-cocina`). Los originales recibidos están en
+  `public/imagenes/recibidas/`, que está en `.gitignore` para que no se publiquen.
+- **Pendientes de las imágenes (no del código):**
+  - La etiqueta de la bolsa de café todavía dice "LANDERA MICRO-LOTE" junto al código QR.
+  - La caja del hero tiene textos en inglés y "single origin".
+  - El letrero del cafetal repite "CAFETERO".
+- **Panorámica sin usar:** `estilo/cafetal-panoramica.webp` (1600 x 873) no se publica porque
+  ninguna sección de ancho completo la necesita; "La diferencia" usa media columna en 4:3.
 
 ## Texturas
 
