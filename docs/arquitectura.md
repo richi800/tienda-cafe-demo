@@ -39,9 +39,16 @@ no obliga a tocar la interfaz.
 
 ### Ficha de producto
 
-- `generateStaticParams` devuelve el `handle` de todos los productos de `getProducts`, así que
-  el build prerenderiza todas las fichas sin secretos ni red.
-- La página espera `params` (es una `Promise` en esta versión de Next.js), busca el producto
+- `generateStaticParams` devuelve el `handle` de todos los productos de `getProducts`: con
+  Shopify configurado, los de la tienda; sin variables (CI), los de ejemplo. El build no requiere
+  secretos en ningún caso.
+- La página solo envuelve el contenido en `<Suspense>`; `params` se lee dentro, en
+  `ProductContent` (`product-content.tsx`, junto a la ruta). Leerlo fuera de `<Suspense>`
+  hacía que la validación de navegación instantánea avisara en desarrollo ("encountered URL data
+  during prerendering"), porque el App Shell dependía de la URL. El espacio reservado
+  (`ProductPageFallback`) conserva el alto de la foto. `product-content.tsx` existe porque
+  `page.tsx` solo puede exportar los campos que define Next.js y el contenido se prueba aparte.
+- `ProductContent` espera `params` (es una `Promise` en esta versión de Next.js), busca el producto
   con `getProductByHandle` y, si no existe, llama a `notFound()`, que muestra
   `src/app/productos/[handle]/not-found.tsx` ("No encontramos este producto").
 - `generateMetadata` usa el nombre y la descripción del producto como título y descripción.
@@ -69,17 +76,44 @@ se evaluará al conectar Shopify, porque obligaría a consultar el catálogo en 
 4. La página pasa esos objetos a los componentes de `src/components`, que solo se encargan de
    mostrarlos; por ejemplo, el precio se muestra con `formatPrice` de `src/domain/money.ts`.
 
-Mientras no exista la conexión con Shopify, `src/data/sample-products.ts` ofrece productos con la
-misma forma, de modo que la interfaz se puede construir sin depender de la API.
+### Conexión con Shopify
+
+- `src/lib/shopify/storefront.ts` (`storefrontRequest`) envía la consulta GraphQL con `fetch`
+  y el token público del canal Headless en el encabezado `X-Shopify-Storefront-Access-Token`.
+  Los errores (estado HTTP, errores GraphQL) nunca incluyen el token.
+- `src/lib/shopify/products.ts` define `PRODUCTS_QUERY` y adapta cada producto a `Product`
+  (`mapShopifyProduct`):
+  - **Precio:** el de la primera variante, con el `currencyCode` que mande la API (no se fuerza
+    MXN). `compareAtPrice` de `null` o 0 se trata como "sin precio anterior".
+  - **Categoría** (`mapCategory`): se deduce del nombre de la categoría de la taxonomía estándar
+    de Shopify (`category.name`, por ejemplo "Coffee Beans & Ground Coffee") y, si falta, de
+    `productType`. Las reglas buscan primero máquinas (maker, machine, grinder…) y luego café;
+    lo demás es accesorio. Decisión: la taxonomía la asigna Shopify al crear el producto, así que
+    no depende de que el administrador llene campos propios. Si más adelante hace falta control
+    fino, se puede pasar a colecciones sin cambiar a quien consume `Product`.
+  - **Notas de sabor:** metafield `custom.flavor_notes` (lista o texto separado por comas); si
+    no existe, la lista queda vacía.
+  - **Foto:** `featuredImage` pedida al CDN con `maxWidth` 1200 y formato WebP, porque Shopify
+    la guarda a 2048 px y la tienda no usa optimizador. Las medidas se escalan a ese ancho. Si
+    falta `altText`, se usa "Foto de <nombre>".
+- `src/data/products.ts` (`getProducts`) es una función `"use cache"` con `cacheLife("hours")`
+  y la etiqueta `products`: las páginas se prerenderizan y Shopify no se consulta en cada visita.
+  Elige la fuente en `loadCatalog`: Shopify si están las tres variables de entorno y responde;
+  si faltan o la API falla, `sample-products.ts` (con un aviso en el log del servidor). El
+  respaldo también queda en caché ese periodo; para una demostración se prefiere eso a una
+  página rota.
+- `next.config.ts` permite `cdn.shopify.com/s/files/**` en `images.remotePatterns`.
+
+`src/data/sample-products.ts` sigue ofreciendo productos con la misma forma para pruebas, CI y
+desarrollo sin `.env.local`.
 
 ### Imágenes
 
 - **Productos:** `Product.image` (`ProductImage`: `src`, `alt`, `width` y `height`, en
   `src/domain/product.ts`) equivale a `Image` de la Storefront API (`url`, `altText`,
   `width`, `height`). Hoy los datos de ejemplo apuntan a `public/imagenes/productos/` (cada café
-  tiene su propia foto); con Shopify el adaptador llenará el campo con la imagen
-  destacada del producto y su URL del CDN de Shopify, que habrá que permitir en
-  `images.remotePatterns`. Los componentes no conocen rutas de archivos: `ProductMedia` usa lo
+  tiene su propia foto); con Shopify el adaptador llena el campo con la imagen
+  destacada del producto desde el CDN de Shopify (permitido en `images.remotePatterns`). Los componentes no conocen rutas de archivos: `ProductMedia` usa lo
   que trae el producto.
 - **Editoriales:** las fotos del hero, de "La diferencia", de los banners de Cafeteras y
   Accesorios y de las miniaturas de categoría se declaran en `src/components/editorial-images.ts`
@@ -96,19 +130,19 @@ misma forma, de modo que la interfaz se puede construir sin depender de la API.
 
 Las páginas no importan esos datos directamente: piden el catálogo al repositorio
 `src/data/products.ts` (`getProducts`, `getProductByHandle` y `getRelatedProducts`). Sus funciones
-ya son asíncronas para que, al cambiar la fuente a la Storefront API, solo cambie su interior.
+son asíncronas porque la fuente puede ser la Storefront API.
 Las reglas de búsqueda y de relacionados son funciones puras del dominio
 (`findProductByHandle` y `selectRelatedProducts` en `src/domain/product.ts`) que reciben la lista
 de productos, por lo que se prueban sin datos reales. El repositorio vive en `src/data` y no en
 `src/domain` porque depende de una fuente de datos concreta.
 
-`Product` incluye `flavorNotes` (notas de sabor como lista de textos). En Shopify provendrán de un
-metafield del producto; el adaptador de `src/lib/shopify` deberá convertirlo a esta forma.
+`Product` incluye `flavorNotes` (notas de sabor como lista de textos). En Shopify provienen del
+metafield `custom.flavor_notes` (ver "Conexión con Shopify").
 
 Además, `Product` tiene:
 
 - `category` (`"coffee" | "machines" | "accessories"`): familia del producto. En Shopify se
-  derivará del tipo de producto o de la colección.
+  deduce de la categoría de la taxonomía estándar (`mapCategory`).
 - `compareAtPrice` opcional: precio antes del descuento; equivale a `compareAtPrice` de la
   variante en la Storefront API.
 - `colorOptions` opcional: colores disponibles (`name` y `hex`). En Shopify vendrán de la opción

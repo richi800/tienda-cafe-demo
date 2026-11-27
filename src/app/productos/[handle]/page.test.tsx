@@ -1,9 +1,13 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { sampleProducts } from "@/data/sample-products";
 
-import ProductPage, { generateMetadata, generateStaticParams } from "./page";
+import { generateMetadata, generateStaticParams } from "./page";
+import { ProductContent } from "./product-content";
+
+// La caché de Next.js solo existe dentro del servidor de Next; en las pruebas no hace nada.
+vi.mock("next/cache", () => ({ cacheLife: vi.fn(), cacheTag: vi.fn() }));
 
 /** Simula las propiedades que Next.js entrega a la página. */
 function propsFor(handle: string): PageProps<"/productos/[handle]"> {
@@ -15,7 +19,7 @@ function propsFor(handle: string): PageProps<"/productos/[handle]"> {
 
 /** Renderiza a HTML la página del handle indicado. */
 async function renderPage(handle: string) {
-  return renderToStaticMarkup(await ProductPage(propsFor(handle)));
+  return renderToStaticMarkup(await ProductContent(propsFor(handle)));
 }
 
 describe("ficha de producto", () => {
@@ -54,7 +58,7 @@ describe("ficha de producto", () => {
   });
 
   it("lanza el 404 de la tienda si el handle no existe", async () => {
-    await expect(ProductPage(propsFor("producto-inexistente"))).rejects.toMatchObject({
+    await expect(ProductContent(propsFor("producto-inexistente"))).rejects.toMatchObject({
       digest: expect.stringContaining("404"),
     });
   });

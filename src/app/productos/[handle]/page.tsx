@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-import { Breadcrumb } from "@/components/Breadcrumb";
-import { Container } from "@/components/Container";
-import { ProductDetail } from "@/components/ProductDetail";
-import { ProductGrid } from "@/components/ProductGrid";
-import { Section } from "@/components/Section";
-import { CATEGORY_SECTIONS } from "@/components/store-sections";
-import { getProductByHandle, getProducts, getRelatedProducts } from "@/data/products";
+import { getProductByHandle, getProducts } from "@/data/products";
+
+import { ProductContent, ProductPageFallback } from "./product-content";
 
 /**
  * Exige que la ficha completa sea estática. Además de impedir que un cambio futuro la vuelva
@@ -19,8 +15,8 @@ import { getProductByHandle, getProducts, getRelatedProducts } from "@/data/prod
 export const ensureStatic = "navigation";
 
 /**
- * Prerenderiza la ficha de todos los productos del catálogo durante el build. Los datos son
- * locales, así que el build no necesita secretos.
+ * Prerenderiza la ficha de todos los productos del catálogo durante el build: los de Shopify
+ * si está configurado, o los de ejemplo si no (el build no necesita secretos).
  *
  * @returns Un objeto `{ handle }` por producto.
  */
@@ -56,40 +52,17 @@ export async function generateMetadata({
  * productos relacionados de la misma categoría. Un `handle` inexistente muestra el 404 de la
  * tienda (`not-found.tsx`).
  *
+ * `params` se lee dentro de `<Suspense>`: así el App Shell de la ruta (encabezado, pie y el
+ * espacio reservado) no depende de la URL y la navegación puede mostrarse al instante. Con
+ * `ensureStatic = "navigation"` la ficha completa sigue prerenderizada.
+ *
  * @param props - Propiedades de la página.
- * @returns El contenido de la ficha.
+ * @returns La ficha, con un espacio reservado mientras se resuelve.
  */
-export default async function ProductPage({ params }: PageProps<"/productos/[handle]">) {
-  const { handle } = await params;
-  const product = await getProductByHandle(handle);
-
-  if (product === undefined) {
-    notFound();
-  }
-
-  const category = CATEGORY_SECTIONS[product.category];
-  const related = await getRelatedProducts(product);
-
+export default function ProductPage({ params }: PageProps<"/productos/[handle]">) {
   return (
-    <>
-      <Container className="pt-4 pb-section">
-        <Breadcrumb
-          items={[
-            { label: "Inicio", href: "/" },
-            { label: category.label, href: `/#${category.id}` },
-            { label: product.title },
-          ]}
-        />
-        <div className="mt-4">
-          <ProductDetail product={product} />
-        </div>
-      </Container>
-
-      {related.length > 0 && (
-        <Section id="relacionados" title="También te puede interesar" tone="muted">
-          <ProductGrid products={related} />
-        </Section>
-      )}
-    </>
+    <Suspense fallback={<ProductPageFallback />}>
+      <ProductContent params={params} />
+    </Suspense>
   );
 }
