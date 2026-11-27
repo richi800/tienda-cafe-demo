@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { CategorySection } from "@/components/CategorySection";
+import { ORIGIN_IMAGE } from "@/components/editorial-images";
 import { Faq } from "@/components/Faq";
 import { Hero, HERO_ID } from "@/components/Hero";
 import { ProductGrid } from "@/components/ProductGrid";
@@ -44,17 +45,6 @@ const DIFFERENTIATORS: readonly Differentiator[] = [
     text: "Elegimos cafeteras y molinos que probamos con nuestro propio café antes de ofrecerlos.",
   },
 ];
-
-/**
- * Foto de ambiente de "La diferencia", con sus medidas reales. Se carga en diferido porque
- * queda lejos de la primera pantalla.
- */
-const KITCHEN_IMAGE = {
-  src: "/imagenes/estilo/bolsa-en-cocina.webp",
-  alt: "Bolsa de café en grano sobre la barra de una cocina, junto a una tetera eléctrica de cuello de ganso",
-  width: 896,
-  height: 672,
-} as const;
 
 const PROMOTION_TERMS: readonly string[] = [
   `Envío gratis en pedidos desde $${FREE_SHIPPING_THRESHOLD_MXN} MXN dentro de México.`,
@@ -140,10 +130,10 @@ export default async function HomePage() {
         <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
           {/* width y height reservan el espacio con la proporción real (4:3) antes de cargar. */}
           <Image
-            src={KITCHEN_IMAGE.src}
-            alt={KITCHEN_IMAGE.alt}
-            width={KITCHEN_IMAGE.width}
-            height={KITCHEN_IMAGE.height}
+            src={ORIGIN_IMAGE.src}
+            alt={ORIGIN_IMAGE.alt}
+            width={ORIGIN_IMAGE.width}
+            height={ORIGIN_IMAGE.height}
             loading="lazy"
             className="h-auto w-full rounded-lg bg-neutral-100"
           />

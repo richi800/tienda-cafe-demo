@@ -14,7 +14,7 @@ import type { Product, ProductImage } from "@/domain/product";
  * la categoría café; cafeteras y accesorios aún no tienen foto. Medidas reales del archivo.
  */
 export const COFFEE_BAG_IMAGE: ProductImage = {
-  src: "/imagenes/productos/cafe-bolsa-microlote.webp",
+  src: "/imagenes/productos/cafe-bolsa-ladera.webp",
   alt: "Bolsa blanca resellable de café con grano tostado visible, sobre fondo blanco",
   width: 1200,
   height: 1200,

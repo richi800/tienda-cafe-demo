@@ -4,30 +4,9 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { getDiscountPercentage } from "@/domain/product";
+import { readWebpSize } from "@/lib/images/webp-size";
 
 import { sampleProducts } from "./sample-products";
-
-/**
- * Lee el ancho y el alto de un archivo WebP desde su cabecera (formatos VP8, VP8L y VP8X).
- *
- * @param file - Contenido del archivo.
- * @returns Las medidas en píxeles.
- * @throws {Error} Si el archivo no es WebP.
- */
-function readWebpSize(file: Buffer): { width: number; height: number } {
-  const chunk = file.toString("ascii", 12, 16);
-  if (chunk === "VP8 ") {
-    return { width: file.readUInt16LE(26) & 0x3fff, height: file.readUInt16LE(28) & 0x3fff };
-  }
-  if (chunk === "VP8L") {
-    const bits = file.readUInt32LE(21);
-    return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
-  }
-  if (chunk === "VP8X") {
-    return { width: file.readUIntLE(24, 3) + 1, height: file.readUIntLE(27, 3) + 1 };
-  }
-  throw new Error(`No es un archivo WebP reconocible: ${chunk}`);
-}
 
 describe("sampleProducts", () => {
   it("usa identificadores y handles únicos", () => {

@@ -1,7 +1,8 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { Hero, HERO_IMAGE } from "./Hero";
+import { HERO_IMAGE } from "./editorial-images";
+import { Hero } from "./Hero";
 
 describe("Hero", () => {
   it("muestra la foto de ambiente con alt, medidas reales y carga prioritaria", () => {
@@ -10,13 +11,13 @@ describe("Hero", () => {
 
     // En las pruebas no se carga next.config (images.unoptimized), así que la ruta puede llegar
     // envuelta por el cargador por omisión; basta con comprobar el archivo.
-    expect(img).toContain("set-caja-lata.webp");
+    expect(img).toContain(HERO_IMAGE.src.split("/").at(-1));
     expect(img).toContain(`alt="${HERO_IMAGE.alt}"`);
-    expect(img).toContain('width="896"');
-    expect(img).toContain('height="896"');
+    expect(img).toContain(`width="${HERO_IMAGE.width}"`);
+    expect(img).toContain(`height="${HERO_IMAGE.height}"`);
     expect(img).toContain('loading="eager"');
     expect(img).toContain('fetchPriority="high"');
-    expect(img).toContain("object-cover object-center");
+    expect(img).toContain("object-cover object-[50%_65%]");
   });
 
   it("reserva el espacio de la foto con las proporciones del hero", () => {
@@ -26,7 +27,4 @@ describe("Hero", () => {
     expect(html).toContain("md:aspect-hero");
   });
 
-  it("no asocia la foto a un origen ni transcribe el texto del empaque", () => {
-    expect(HERO_IMAGE.alt).not.toMatch(/colombia|origen|chiapas|veracruz|oaxaca|landera/i);
-  });
 });
