@@ -131,8 +131,8 @@ Escala (pasos de Tailwind; celular, y desde `md` cuando cambia):
 | Pequeño           | `text-sm`                             | 0.875rem            |
 
 Decisión: en la ficha de producto el `h1` es el nombre del producto y usa el tamaño de `h2`,
-porque comparte columna con el precio y nombres largos como "Cafetera de espresso Ladera Pro"
-ocuparían tres líneas a `text-6xl`. El precio de la ficha (`text-3xl`) sigue siendo el dato
+porque comparte columna con el precio y nombres largos (por ejemplo "Cafetera de espresso Ladera
+Pro", de los datos de ejemplo) ocuparían tres líneas a `text-6xl`. El precio de la ficha (`text-3xl`) sigue siendo el dato
 más llamativo después del nombre.
 
 Reglas: un solo `h1` por página, sin saltos de nivel; el texto de 0.875rem no usa `ink-500`
@@ -324,6 +324,11 @@ Estados de datos por vista (carga, vacío, error y éxito):
 - Rojo, azul y verde solo con su significado (promoción, oferta, compra). No se usan como
   decoración.
 - Textos de interfaz en español, breves y orientados a la acción.
+- Textos fijos y catálogo: el catálogo viene de Shopify (hoy solo café) o, sin variables de
+  entorno, de los datos de ejemplo (con cafeteras y accesorios). Los textos fijos de la portada,
+  los avisos, las preguntas frecuentes y el 404 deben tener sentido en ambos casos: no nombran
+  modelos (por ejemplo la Ladera Pro), no anuncian descuentos que no existan y no prometen
+  fechas. Los nombres de producto solo aparecen cuando llegan con los datos.
 - Imágenes: tamaño reservado (proporción o `width`/`height`), `loading="lazy"` fuera de la
   primera pantalla y sin el optimizador de Vercel (`images.unoptimized` en `next.config.ts`).
 - Logo: `public/brand/logo.svg`, proporcionado por el dueño. Si no existe, el encabezado muestra
@@ -480,11 +485,13 @@ Estados de datos por vista (carga, vacío, error y éxito):
 
 ### Hero
 
-- **Propósito:** presentar la novedad de la tienda y repartir a las secciones.
+- **Propósito:** presentar el café de la tienda y repartir a las secciones.
 - **Props:** ninguna; el texto es fijo. Exporta `HERO_ID` (`inicio`), que observa el sub-header.
-- **Contenido:** bloque `clay-200` con categoría pequeña en mayúsculas (`ink-700`), titular
-  en negritas (`h1`), subtítulo de producto nuevo y botón `dark` "Conoce la Ladera Pro"
-  (a `#cafeteras`); a la derecha, la foto de ambiente (`HERO_IMAGE`, ver Imágenes) sobre un
+- **Contenido:** bloque `clay-200` con la etiqueta "Café de especialidad" en mayúsculas
+  (`ink-700`), el titular "De Chiapas, Veracruz y Oaxaca a tu taza" en negritas (`h1`), el
+  subtítulo sobre el tueste en pequeños lotes y el botón `dark` "Conoce nuestros cafés" (a
+  `/#cafe`). Decisión: el hero habla del café porque es la única categoría con productos
+  garantizados en Shopify; no nombra modelos de cafeteras ni accesorios; a la derecha, la foto de ambiente (`HERO_IMAGE`, ver Imágenes) sobre un
   espacio reservado `neutral-200`.
 - **Celular:** texto arriba e imagen abajo con proporción 4:3 (`--aspect-hero-compact`); botón a
   ancho completo. **Desde `md`:** dos columnas iguales a todo el ancho de la ventana; la imagen
@@ -702,7 +709,9 @@ Estados de datos por vista (carga, vacío, error y éxito):
 
 ### Faq
 
-- **Propósito:** resolver dudas sobre café, cafeteras, envíos y la demostración.
+- **Propósito:** resolver dudas sobre café (frescura, conservación, molienda, grano o molido),
+  envíos, devoluciones de café y la demostración. No menciona modelos de cafeteras ni
+  accesorios.
 - **Props:** `items` (`FaqItem[]` del dominio) e `initialCount` (4 por defecto).
 - **Comportamiento:** cada pregunta es `<details>`/`<summary>` (abre sin JavaScript); solo las
   primeras cuatro se ven y "Mostrar más (n)" revela el resto y lleva el foco a la primera nueva;
